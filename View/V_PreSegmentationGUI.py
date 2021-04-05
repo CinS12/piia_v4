@@ -25,7 +25,6 @@ class PreSegmentationGUI:
         scale_percent : int
            image resize value (default = 100)
         """
-
         cv2.destroyAllWindows()
         # Crear la finestra
         self.popup = tk.Toplevel()

@@ -60,7 +60,8 @@ class Pressure_img:
         WARNING: Needs validation!
     """
 
-    def __init__(self):
+    def __init__(self, parent):
+        self.parent=parent
         self.img_origin = None
         self.img = None
         self.mask = None
@@ -89,9 +90,9 @@ class Pressure_img:
             path to the image's directory
         """
         # Select ROI
-        fromCenter = False
         showCrosshair = False
-        r = cv2.selectROI("Image", im, fromCenter, showCrosshair)
+        fromCenter = False
+        r = cv2.selectROI("Image", im, showCrosshair, fromCenter)
         # Crop image
         img_cv2_mask = im[int(r[1]):int(r[1] + r[3]), int(r[0]):int(r[0] + r[2])]
         #img_cv2_mask = im
@@ -102,7 +103,8 @@ class Pressure_img:
         """
          Closes all cv2 windows.
         """
-
+        cv2.destroyWindow("Image")
+        cv2.destroyWindow("Segmentation")
         cv2.destroyAllWindows()
 
     def scale_image(self, img, scale_percent):
@@ -176,17 +178,13 @@ class Pressure_img:
         """
 
         if (tissue == "Perimeter"):
-            print("ARA PERIMETRE")
             self.previous_roi = im.copy()
         if len(args) == 0:
-            print("TANCADA")
             self.previous_roi = im.copy()
         for ar in args:
             if ar == 2:
-                print("RING INT")
-                #self.previous_roi = im.copy()
+                pass
             else:
-                print("RING EXT")
                 self.previous_roi = im.copy()
 
 
@@ -337,12 +335,19 @@ class Pressure_img:
 
         height, width, channel = im.shape
         cv2.namedWindow("Segmentation")
-        cv2.setMouseCallback('Segmentation', draw, param=mask_points)
+        cv2.setMouseCallback("Segmentation", draw, param=mask_points)
         while (1):
-            cv2.imshow('Segmentation', im)
+            cv2.imshow("Segmentation", im)
             k = cv2.waitKey(1) & 0xFF
+            try:
+                print("Checking root: ", self.parent.winfo_exists())
+            except:
+                break
+
             if k == 27:
                 break
+
+
 
     def flash_reduction(self, img_cv2_mask):
         """

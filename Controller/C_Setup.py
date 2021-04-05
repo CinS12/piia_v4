@@ -122,7 +122,7 @@ class ControllerSetup:
         image_tk : PIL Image
            image ready to be loaded in a label
         """
-        pressure_img = Pressure_img()
+        pressure_img = Pressure_img(self.parent)
         self.pressure_img = pressure_img
         self.pressure_img.img_origin = image_original
         self.pressure_img.loaded = True
