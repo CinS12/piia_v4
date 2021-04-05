@@ -3,11 +3,10 @@ sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
 It is the application's dynamic data structure,
 independent of the user interface. It directly manages the data.
 """
-
+from PIL import ImageTk
 from datetime import datetime
 from tkinter import filedialog
 import cv2
-from PIL import ImageTk
 from pubsub import pub
 
 class MetadataManager:

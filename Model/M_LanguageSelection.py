@@ -1,5 +1,5 @@
 import json
-from pubsub import pub
+
 PATH_LANGUAGE = "../resources/Language"
 class ModelLanguageSelection:
     def __init__(self):

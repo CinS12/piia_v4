@@ -5,10 +5,11 @@ that contain image files and metadata files. The files must be "txt" and "jpg".
 """
 
 from pubsub import pub
+from PIL import ImageTk, Image
 import os, os.path
 import json
 import cv2
-from PIL import ImageTk, Image
+
 
 PATH_METADATA_DIR = "../resources/Metadata"
 PATH_IMG_DIR = "../resources/Images"

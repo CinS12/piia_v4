@@ -3,14 +3,10 @@ sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
 algorithm author:: Pau Nonell Isach <pau.nonell@students.salle.url.edu>
 Class to detect the target in the image.
 """
+from PIL import Image
 import cv2
 import numpy as np
 from pubsub import pub
-from PIL import Image
-import scipy
-import math
-from scipy.spatial import distance
-import matplotlib.pyplot as plt
 
 
 class TargetDetector:

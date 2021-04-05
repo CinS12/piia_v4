@@ -1,9 +1,5 @@
-import ctypes
-import sys
-
 from pubsub import pub
 
-from Controller import C_Setup
 from Model import M_LanguageSelection
 from View import V_LanguageSelection
 import tkinter as tk

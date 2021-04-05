@@ -1,6 +1,6 @@
+from PIL import ImageTk
 from tkinter import filedialog
 import cv2
-from PIL import ImageTk
 from pubsub import pub
 
 class ImageReader:

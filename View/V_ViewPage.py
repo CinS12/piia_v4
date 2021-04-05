@@ -43,7 +43,7 @@ class ViewPage(Page):
         self.llista = tk.Listbox(self.p2_frame_list, yscrollcommand=scrollbar.set)
         self.llista.pack(side=tk.LEFT, fill=tk.BOTH)
         scrollbar.config(command=self.llista.yview)
-        self.p2_frame_elements = tk.Frame(self.page)
+        self.p2_frame_elements = tk.Frame(self.page, borderwidth=2, relief="groove")
         self.p2_frame_img = tk.Frame(self.p2_frame_elements)
         self.p2_frame_metadata = tk.Frame(self.p2_frame_elements)
         self.p2_label_metadata_code = ttk.Label(self.p2_frame_metadata, text="", font=FONT_MSG)

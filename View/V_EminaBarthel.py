@@ -8,7 +8,8 @@ FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
 
 class EminaBarthel:
-    def __init__(self):
+    def __init__(self, lang):
+        self.lang = lang
         self.popup_tr_ant = []
         self.popup_tr_top = []
         return
@@ -35,7 +36,7 @@ class EminaBarthel:
         label = ttk.Label(self.popup, text=title, font=FONT_TITOL)
         label.pack(pady=10)
         text = tk.Text(self.popup, font=FONT_TITOL, relief=tk.GROOVE, width=70, height=3, wrap=tk.WORD)
-        text.insert(tk.END, BARTHEL_DESCRIPTION, "desc")
+        text.insert(tk.END, self.lang.BARTHEL_DESCRIPTION, "desc")
         text.config(state=tk.DISABLED)
         text.tag_configure("desc", justify="center")
         text.config(pady=10, padx=10)
@@ -127,12 +128,12 @@ class EminaBarthel:
         x = (ws / 2) - (w / 2)
         y = (hs / 3) - (h / 3)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.popup.wm_title("Calcular escala Barthel")
+        self.popup.wm_title("Calcular escala Emina")
 
         label = ttk.Label(self.popup, text=title, font=FONT_BENVINGUDA)
         label.pack(pady=10)
         text = tk.Text(self.popup, font=FONT_TITOL, relief=tk.GROOVE, width=70, height=3, wrap=tk.WORD)
-        text.insert(tk.END, EMINA_DESCRIPTION, "desc")
+        text.insert(tk.END, self.lang.EMINA_DESCRIPTION, "desc")
         text.config(state=tk.DISABLED)
         text.tag_configure("desc", justify="center")
         text.config(pady=10, padx=10)

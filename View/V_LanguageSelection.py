@@ -12,7 +12,6 @@ class ViewLanguageSelection():
         self.parent = parent
         return
     def ask_lang(self):
-        #popup = tk.Toplevel()
         popup = self.parent
         ws = popup.winfo_screenwidth()
         hs = popup.winfo_screenheight()

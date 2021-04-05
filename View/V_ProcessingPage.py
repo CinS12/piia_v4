@@ -1,24 +1,25 @@
 import tkinter as tk
 from tkinter import ttk
 from pubsub import pub
-from pathlib import Path
 from PIL import ImageTk, Image
 from tkcalendar import DateEntry
 from View import V_EminaBarthel
 import cv2
 from View.V_Page import Page
+
 FONT_BENVINGUDA = ("Verdana", 12)
 FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
-from language_CAT import *
+
 
 class ProcessingPage(Page):
     def __init__(self, parent, lang):
         self.container = parent
         self.lang = lang
+        #self.kk = V_ScrollableFrame.Scrollable(self.container)
         self.page = tk.Frame(self.container)
         self.elements_page()
-        self.emina_barthel = V_EminaBarthel.EminaBarthel()
+        self.emina_barthel = V_EminaBarthel.EminaBarthel(lang)
         return
 
     def elements_page(self):
@@ -29,7 +30,7 @@ class ProcessingPage(Page):
         p1_button_1 = ttk.Button(self.page, text=self.lang.IMAGE_LOAD, command=self.carregar_imatge)
         p1_button_2 = ttk.Button(self.page, text=self.lang.BACK, command=self.tornar_main)
         self.p1_button_img = ttk.Button(self.page, text=self.lang.IMAGE_PROCESSING, command=self.processar_img)
-        path = Path(__file__).parent / "../resources/load_img.png"
+        path = "../resources/load_img.png"
         img = ImageTk.PhotoImage(Image.open(path))
         self.p1_img_label = tk.Label(self.page, image=img)
         self.p1_img_label.image = img
@@ -41,8 +42,11 @@ class ProcessingPage(Page):
         self.p1_data_frame.grid(row=2, column=3, pady=5, padx=1, sticky="n")
         p1_button_2.grid(row=1, column=2, pady=20, padx=20, sticky="w")
         self.p1_label_2.grid(row=1, column=1, padx=5, pady=0, sticky="n")
-        self.p1_data_camps.grid(row=2, column=1, pady=20, padx=10)
         self.p1_button_3.grid(row=3, column=1, pady=10, padx=10, sticky="e")
+        self.p1_data_camps.grid(row=2, column=1, pady=20, padx=10)
+        self.canvas.grid(row=0, column=0, sticky="news")
+
+
 
     def carregar_imatge(self):
         """
@@ -67,135 +71,162 @@ class ProcessingPage(Page):
         self.p1_data_frame = tk.Frame(self.page, borderwidth=2, relief="groove")
         self.p1_label_2 = ttk.Label(self.p1_data_frame, text=self.lang.META_TITLE, font=FONT_BENVINGUDA)
 
-        self.p1_data_camps = ttk.Frame(self.p1_data_frame, borderwidth=2, relief="groove")
-        self.p1_data_label = ttk.Label(self.p1_data_camps, text=self.lang.META_DATA_FILL, font=FONT_TITOL)
+        self.p1_data_camps = tk.Frame(self.p1_data_frame, borderwidth=2, relief="groove")
+
+        self.p1_data_camps.grid_rowconfigure(0, weight=1)
+        self.p1_data_camps.grid_columnconfigure(0, weight=1)
+        self.p1_data_camps.grid_propagate(False)
+
+        # Add a canvas in that frame
+        self.canvas = tk.Canvas(self.p1_data_camps)
+
+        # Link a scrollbar to the canvas
+        vsb = tk.Scrollbar(self.p1_data_camps, orient="vertical", command=self.canvas.yview)
+        vsb.grid(row=0, column=1, sticky='ns')
+        self.canvas.configure(yscrollcommand=vsb.set)
+
+        self.frame_widgets = tk.Frame(self.canvas)
+        self.canvas.create_window((0, 0), window=self.frame_widgets, anchor='nw')
+        self.elements_metadata()
+        self.frame_widgets.update_idletasks()
+        # Set the canvas scrolling region
+        self.p1_data_camps.config(width=450, height=450)
+        self.canvas.config(scrollregion=self.canvas.bbox("all"))
+        # Submit
+        self.p1_button_3 = ttk.Button(self.p1_data_frame, text=self.lang.META_SAVE, command=self.apretar_boto_3)
+
+    def elements_metadata(self):
+        self.p1_data_label = ttk.Label(self.frame_widgets, text=self.lang.META_DATA_FILL, font=FONT_TITOL)
         self.p1_data_label.grid(row=1, column=1, padx=5, pady=10, sticky="w")
-        #Codi
-        code_label = ttk.Label(self.p1_data_camps, text=self.lang.META_CODE, font=FONT_MSG)
+        # Codi
+        code_label = ttk.Label(self.frame_widgets, text=self.lang.META_CODE, font=FONT_MSG)
         code_label.grid(row=2, column=1, padx=0, pady=10)
-        self.code_entry = ttk.Entry(self.p1_data_camps)
+        self.code_entry = ttk.Entry(self.frame_widgets)
         self.code_entry.insert(tk.END, '')
         self.code_entry.grid(row=2, column=2, padx=0, pady=10)
-        #Edat
-        age_label = ttk.Label(self.p1_data_camps, text=self.lang.META_YEAR, font=FONT_MSG)
+        # Edat
+        age_label = ttk.Label(self.frame_widgets, text=self.lang.META_YEAR, font=FONT_MSG)
         age_label.grid(row=3, column=1, padx=0, pady=10)
-        self.age_pers_entry = ttk.Entry(self.p1_data_camps)
+        self.age_pers_entry = ttk.Entry(self.frame_widgets)
         self.age_pers_entry.insert(tk.END, '')
         self.age_pers_entry.grid(row=3, column=2, padx=0, pady=10)
-        #Sexe
-        gender_pers_label = ttk.Label(self.p1_data_camps, text=self.lang.META_SEX, font=FONT_MSG)
+        # Sexe
+        gender_pers_label = ttk.Label(self.frame_widgets, text=self.lang.META_SEX, font=FONT_MSG)
         gender_pers_label.grid(row=4, column=1, padx=5, pady=10)
-        self.gender_combobox = ttk.Combobox(self.p1_data_camps, state="readonly", width=17, justify="left")
+        self.gender_combobox = ttk.Combobox(self.frame_widgets, state="readonly", width=17, justify="left")
         self.gender_combobox["values"] = [self.lang.META_MAN, self.lang.META_WOMAN, self.lang.META_OTHER]
         self.gender_combobox.grid(row=4, column=2, padx=5, pady=10)
-        #Temps immobilització
-        temps_imm = ttk.Label(self.p1_data_camps, text=self.lang.META_IMMOBILIZATION, font=FONT_MSG)
+        # Temps immobilització
+        temps_imm = ttk.Label(self.frame_widgets, text=self.lang.META_IMMOBILIZATION, font=FONT_MSG)
         temps_imm.grid(row=6, column=1, padx=0, pady=10)
-        self.temps_imm_entry = ttk.Entry(self.p1_data_camps, width=6)
+        self.temps_imm_entry = ttk.Entry(self.frame_widgets, width=6)
         self.temps_imm_entry.insert(tk.END, '')
         self.temps_imm_entry.grid(row=6, column=2, padx=0, pady=10, sticky="w")
-        self.temps_imm_combobox = ttk.Combobox(self.p1_data_camps, state="readonly", width=9, justify="left")
+        self.temps_imm_combobox = ttk.Combobox(self.frame_widgets, state="readonly", width=9, justify="left")
         self.temps_imm_combobox["values"] = [self.lang.META_DAYS, self.lang.META_WEEKS, self.lang.META_MONTHS]
         self.temps_imm_combobox.current(0)
         self.temps_imm_combobox.grid(row=6, column=2, padx=5, pady=10, sticky="e")
-        #Temps hospitalització
-        temps_hosp = ttk.Label(self.p1_data_camps, text=self.lang.META_HOSPITALIZATION, font=FONT_MSG)
+        # Temps hospitalització
+        temps_hosp = ttk.Label(self.frame_widgets, text=self.lang.META_HOSPITALIZATION, font=FONT_MSG)
         temps_hosp.grid(row=7, column=1, padx=0, pady=10)
-        self.temps_hosp_entry = ttk.Entry(self.p1_data_camps, width=6)
+        self.temps_hosp_entry = ttk.Entry(self.frame_widgets, width=6)
         self.temps_hosp_entry.insert(tk.END, '')
         self.temps_hosp_entry.grid(row=7, column=2, padx=0, pady=10, sticky="w")
-        self.temps_hosp_combobox = ttk.Combobox(self.p1_data_camps, state="readonly", width=9, justify="left")
+        self.temps_hosp_combobox = ttk.Combobox(self.frame_widgets, state="readonly", width=9, justify="left")
         self.temps_hosp_combobox["values"] = [self.lang.META_DAYS, self.lang.META_WEEKS, self.lang.META_MONTHS]
         self.temps_hosp_combobox.current(0)
         self.temps_hosp_combobox.grid(row=7, column=2, padx=5, pady=10, sticky="e")
         # Temps institucionalització
-        temps_inst = ttk.Label(self.p1_data_camps, text=self.lang.META_INST, font=FONT_MSG)
+        temps_inst = ttk.Label(self.frame_widgets, text=self.lang.META_INST, font=FONT_MSG)
         temps_inst.grid(row=8, column=1, padx=0, pady=10)
-        self.temps_inst_entry = ttk.Entry(self.p1_data_camps, width=6)
+        self.temps_inst_entry = ttk.Entry(self.frame_widgets, width=6)
         self.temps_inst_entry.insert(tk.END, '')
         self.temps_inst_entry.grid(row=8, column=2, padx=0, pady=10, sticky="w")
-        self.temps_inst_combobox = ttk.Combobox(self.p1_data_camps, state="readonly", width=9, justify="left")
+        self.temps_inst_combobox = ttk.Combobox(self.frame_widgets, state="readonly", width=9, justify="left")
         self.temps_inst_combobox["values"] = [self.lang.META_DAYS, self.lang.META_WEEKS, self.lang.META_MONTHS]
         self.temps_inst_combobox.current(0)
         self.temps_inst_combobox.grid(row=8, column=2, padx=5, pady=10, sticky="e")
-        #Data
-        date_label = ttk.Label(self.p1_data_camps, text=self.lang.META_DATE, font=FONT_MSG)
+        # Data
+        date_label = ttk.Label(self.frame_widgets, text=self.lang.META_DATE, font=FONT_MSG)
         date_label.grid(row=9, column=1, padx=5, pady=10)
-        self.cal_data_entry = DateEntry(self.p1_data_camps, dateformat=3, width=12, background='darkblue',
-                        foreground='white', borderwidth=4)
+        self.cal_data_entry = DateEntry(self.frame_widgets, dateformat=3, width=12, background='darkblue',
+                                        foreground='white', borderwidth=4)
         self.cal_data_entry.grid(row=9, column=2, sticky='nsew')
         # Escala EMINA
-        emina_label = ttk.Label(self.p1_data_camps, text=self.lang.META_EMINA, font=FONT_MSG)
+        emina_label = ttk.Label(self.frame_widgets, text=self.lang.META_EMINA, font=FONT_MSG)
         emina_label.grid(row=10, column=1, padx=0, pady=10)
-        self.emina_scale = tk.Scale(self.p1_data_camps, from_=0, to=15, resolution=1, orient=tk.HORIZONTAL)
+        self.emina_scale = tk.Scale(self.frame_widgets, from_=0, to=15, resolution=1, orient=tk.HORIZONTAL)
         self.emina_scale.grid(row=10, column=2, padx=0, pady=10)
-        barthel_button = ttk.Button(self.p1_data_camps, text="Calcular",
+        barthel_button = ttk.Button(self.frame_widgets, text="Calcular",
                                     command=lambda: self.emina_barthel.popup_emina(self.lang.META_EMINA))
         barthel_button.grid(row=10, column=3, pady=10, padx=0)
-        #Escala Barthel
-        barthel_label = ttk.Label(self.p1_data_camps, text=self.lang.META_BARTHEL, font=FONT_MSG)
+        # Escala Barthel
+        barthel_label = ttk.Label(self.frame_widgets, text=self.lang.META_BARTHEL, font=FONT_MSG)
         barthel_label.grid(row=11, column=1, padx=0, pady=10)
-        self.barthel_scale = tk.Scale(self.p1_data_camps, from_=0, to=100, resolution=1, orient=tk.HORIZONTAL)
+        self.barthel_scale = tk.Scale(self.frame_widgets, from_=0, to=100, resolution=1, orient=tk.HORIZONTAL)
         self.barthel_scale.grid(row=11, column=2, padx=0, pady=10)
-        barthel_button = ttk.Button(self.p1_data_camps, text=self.lang.META_CALCULATE,
+        barthel_button = ttk.Button(self.frame_widgets, text=self.lang.META_CALCULATE,
                                     command=lambda: self.emina_barthel.popup_barthel(self.lang.META_BARTHEL))
         barthel_button.grid(row=11, column=3, pady=10, padx=0)
-        #Contenció mecànica
-        self.contencio=""
-        conten_label = ttk.Label(self.p1_data_camps, text=self.lang.META_CONTENTION, font=FONT_MSG)
+        # Contenció mecànica
+        self.contencio = ""
+        conten_label = ttk.Label(self.frame_widgets, text=self.lang.META_CONTENTION, font=FONT_MSG)
         conten_label.grid(row=12, column=1, padx=0, pady=10)
-        self.conten_radiobutton_si = ttk.Radiobutton(self.p1_data_camps, variable="conten", text=self.lang.YES, value="si", command=self.ask_time)
-        self.conten_radiobutton_no = ttk.Radiobutton(self.p1_data_camps, variable="conten", text=self.lang.NO, value="no", command=self.no_time)
+        self.conten_radiobutton_si = ttk.Radiobutton(self.frame_widgets, variable="conten", text=self.lang.YES,
+                                                     value="si", command=self.ask_time)
+        self.conten_radiobutton_no = ttk.Radiobutton(self.frame_widgets, variable="conten", text=self.lang.NO,
+                                                     value="no", command=self.no_time)
         self.conten_radiobutton_si.grid(row=12, column=2, padx=0, pady=10, sticky="w")
         self.conten_radiobutton_no.grid(row=13, column=2, padx=0, pady=10, sticky="w")
-        self.temps_conten_entry = ttk.Entry(self.p1_data_camps, width=6)
+        self.temps_conten_entry = ttk.Entry(self.frame_widgets, width=6)
         self.temps_conten_entry.insert(tk.END, '')
-        self.temps_conten_combobox = ttk.Combobox(self.p1_data_camps, state="readonly", width=9, justify="left")
+        self.temps_conten_combobox = ttk.Combobox(self.frame_widgets, state="readonly", width=9, justify="left")
         self.temps_conten_combobox["values"] = [self.lang.META_DAYS, self.lang.META_WEEKS, self.lang.META_MONTHS]
         self.temps_conten_combobox.current(0)
-        #Grau de la nafra
-        grade_label = ttk.Label(self.p1_data_camps, text=self.lang.META_GRADE, font=FONT_MSG)
+        # Grau de la nafra
+        grade_label = ttk.Label(self.frame_widgets, text=self.lang.META_GRADE, font=FONT_MSG)
         grade_label.grid(row=14, column=1, padx=0, pady=10)
-        self.grade_combobox = ttk.Combobox(self.p1_data_camps, state="readonly", width=9, justify="left")
+        self.grade_combobox = ttk.Combobox(self.frame_widgets, state="readonly", width=9, justify="left")
         self.grade_combobox["values"] = [1, 2, 3, 4]
         self.grade_combobox.grid(row=14, column=2, padx=5, pady=10, sticky="w")
-        #Cultiu de l’exsudat
-        self.cultiu=""
-        cultiu_label = ttk.Label(self.p1_data_camps, text=self.lang.META_EXO, font=FONT_MSG)
+        # Cultiu de l’exsudat
+        self.cultiu = ""
+        cultiu_label = ttk.Label(self.frame_widgets, text=self.lang.META_EXO, font=FONT_MSG)
         cultiu_label.grid(row=15, column=1, padx=0, pady=10)
-        self.cultiu_radiobutton_positive = ttk.Radiobutton(self.p1_data_camps, variable="cultiu", text=self.lang.META_POSITIVE, value="positive", command=self.cultiu_si)
-        self.cultiu_radiobutton_negative = ttk.Radiobutton(self.p1_data_camps, variable="cultiu", text=self.lang.META_NEGATIVE, value="negative", command=self.cultiu_no)
+        self.cultiu_radiobutton_positive = ttk.Radiobutton(self.frame_widgets, variable="cultiu",
+                                                           text=self.lang.META_POSITIVE, value="positive",
+                                                           command=self.cultiu_si)
+        self.cultiu_radiobutton_negative = ttk.Radiobutton(self.frame_widgets, variable="cultiu",
+                                                           text=self.lang.META_NEGATIVE, value="negative",
+                                                           command=self.cultiu_no)
         self.cultiu_radiobutton_positive.grid(row=15, column=2, padx=0, pady=10, sticky="w")
         self.cultiu_radiobutton_negative.grid(row=15, column=2, padx=0, pady=10, sticky="e")
-        #Proteïnes totals
-        protein_label = ttk.Label(self.p1_data_camps, text=self.lang.META_PROTEIN, font=FONT_MSG)
+        # Proteïnes totals
+        protein_label = ttk.Label(self.frame_widgets, text=self.lang.META_PROTEIN, font=FONT_MSG)
         protein_label.grid(row=16, column=1, padx=0, pady=10)
-        self.protein_entry = ttk.Entry(self.p1_data_camps, width=6)
+        self.protein_entry = ttk.Entry(self.frame_widgets, width=6)
         self.protein_entry.insert(tk.END, '')
         self.protein_entry.grid(row=16, column=2, padx=0, pady=10, sticky="w")
-        protein_unit_label = ttk.Label(self.p1_data_camps, text="g/l", font=FONT_MSG)
+        protein_unit_label = ttk.Label(self.frame_widgets, text="g/l", font=FONT_MSG)
         protein_unit_label.grid(row=16, column=2, padx=0, pady=10)
-        #Albúmina
-        albumina_label = ttk.Label(self.p1_data_camps, text=self.lang.META_ALB, font=FONT_MSG)
+        # Albúmina
+        albumina_label = ttk.Label(self.frame_widgets, text=self.lang.META_ALB, font=FONT_MSG)
         albumina_label.grid(row=17, column=1, padx=0, pady=10)
-        self.albumina_entry = ttk.Entry(self.p1_data_camps, width=6)
+        self.albumina_entry = ttk.Entry(self.frame_widgets, width=6)
         self.albumina_entry.insert(tk.END, '')
         self.albumina_entry.grid(row=17, column=2, padx=0, pady=10, sticky="w")
-        albumina_unit_label = ttk.Label(self.p1_data_camps, text="g/l", font=FONT_MSG)
+        albumina_unit_label = ttk.Label(self.frame_widgets, text="g/l", font=FONT_MSG)
         albumina_unit_label.grid(row=17, column=2, padx=0, pady=10)
-        #Tractament
-        tr_label = ttk.Label(self.p1_data_camps, text=self.lang.META_TREATMENT, font=FONT_MSG)
+        # Tractament
+        tr_label = ttk.Label(self.frame_widgets, text=self.lang.META_TREATMENT, font=FONT_MSG)
         tr_label.grid(row=18, column=1, padx=5, pady=10)
-        tr_ant_button = ttk.Button(self.p1_data_camps, text=self.lang.META_ANTIBIOTIC,
-                                     command=lambda: self.emina_barthel.entry_popup_tr_ant(self.lang.META_ANTIBIOTIC))
+        tr_ant_button = ttk.Button(self.frame_widgets, text=self.lang.META_ANTIBIOTIC,
+                                   command=lambda: self.emina_barthel.entry_popup_tr_ant(self.lang.META_ANTIBIOTIC))
         tr_ant_button.grid(row=18, column=2, pady=10, padx=0, sticky="e")
-        tr_top_button = ttk.Button(self.p1_data_camps, text=self.lang.META_TOPIC,
+        tr_top_button = ttk.Button(self.frame_widgets, text=self.lang.META_TOPIC,
                                    command=lambda: self.emina_barthel.entry_popup_tr_top(
                                        self.lang.META_TOPIC))
         tr_top_button.grid(row=18, column=3, pady=10, padx=0)
-        #Submit
-        self.p1_button_3 = ttk.Button(self.p1_data_frame, text=self.lang.META_SAVE, command=self.apretar_boto_3)
-
 
     def ask_time(self):
         """
@@ -238,7 +269,8 @@ class ProcessingPage(Page):
                 self.temps_imm_combobox, self.temps_hosp_entry, self.temps_hosp_combobox, self.temps_inst_entry,
                 self.temps_inst_combobox, self.cal_data_entry, self.emina_scale, self.barthel_scale,
                 self.contencio, self.temps_conten_entry, self.temps_conten_combobox, self.grade_combobox, self.cultiu,
-                self.protein_entry, self.albumina_entry, self.emina_barthel.popup_tr_ant, self.emina_barthel.popup_tr_top]
+                self.protein_entry, self.albumina_entry, self.emina_barthel.popup_tr_ant,
+                self.emina_barthel.popup_tr_top]
         pub.sendMessage("BUTTON_3_PRESSED", data=data)
 
     def tornar_main(self):
@@ -322,7 +354,8 @@ class ProcessingPage(Page):
         Resets image label (after processing process).
         """
 
-        path = Path(__file__).parent / "../resources/load_img.png"
+        # path = Path(__file__).parent / "../resources/load_img.png"
+        path = "../resources/load_img.png"
         img = ImageTk.PhotoImage(Image.open(path))
         self.p1_img_label.configure(image=img)
         self.p1_img_label.image = img
