@@ -1,3 +1,5 @@
+import ctypes
+
 import cv2
 from pubsub import pub
 import tkinter as tk
@@ -32,8 +34,8 @@ class SegmentationGUI:
         self.popup_img = tk.Toplevel()
         ws = self.popup_img.winfo_screenwidth()
         hs = self.popup_img.winfo_screenheight()
-        w = 1000
-        h = 750
+        w = 1100
+        h = 600
         x = (ws / 2) - (w / 2)
         y = (hs / 2) - (h / 2)
         self.popup_img.geometry('%dx%d+%d+%d' % (w, h, x, y))
@@ -43,9 +45,13 @@ class SegmentationGUI:
                           text=self.lang.SEG_DESC,
                           font=FONT_TITOL)
         title.configure(anchor="center")
+        #Frame pels widgets
+        self.widgets = tk.Frame(self.popup_img)
+        self.widgets_img = tk.Frame(self.widgets)
+        self.widgets_data = tk.Frame(self.widgets)
         # Frame per les dades
-        balance_frame = ttk.Frame(self.popup_img, borderwidth=2, relief="groove")
-        data_frame = ttk.Frame(self.popup_img)
+        balance_frame = ttk.Frame(self.widgets_data, borderwidth=2, relief="groove")
+        data_frame = ttk.Frame(self.widgets_data)
         accept_frame = ttk.Frame(self.popup_img)
         # Botons GUI
         button_balance = ttk.Button(balance_frame, text=self.lang.SEG_WHITE,
@@ -69,7 +75,7 @@ class SegmentationGUI:
         self.label_necrosis = ttk.Label(data_frame, text="Zones seleccionades: 0", font=FONT_MSG)
         self.label_slough = ttk.Label(data_frame, text="Zones seleccionades: 0", font=FONT_MSG)
         # Carregar la roi
-        self.img_show = tk.Label(self.popup_img, image=img_imgtk_mask)
+        self.img_show = tk.Label(self.widgets_img, image=img_imgtk_mask)
 
         # Col·locar els elements
         button_balance.grid(row=1, column=1, padx=5, pady=5)
@@ -89,10 +95,13 @@ class SegmentationGUI:
         button_helper_slough.grid(row=5, column=0, padx=5, pady=5)
 
         title.pack(pady=10)
+        self.widgets.pack(pady=10)
+        self.widgets_img.pack(side=tk.LEFT)
+        self.widgets_data.pack(side=tk.RIGHT, padx=10)
         balance_frame.pack(pady=5, padx=5)
         data_frame.pack(pady=5, padx=5)
         self.img_show.pack(pady=10)
-        accept_frame.pack(pady=10, padx=10)
+        accept_frame.pack(pady=10, padx=0)
 
         # Add tool tips to tissue buttons
         ToolTip.CreateToolTip(button_helper_granulation, text=self.lang.HELPER_GRANULATION)
@@ -129,8 +138,14 @@ class SegmentationGUI:
         title = ttk.Label(popup, text=title, font=FONT_TITOL)
         title.configure(anchor="center")
         title.pack(side="top", fill="x", pady=10)
-        label_description = ttk.Label(popup, text=description, font=FONT_MSG)
-        label_description.pack(pady=5)
+        #label_description = ttk.Label(popup, text=description, font=FONT_MSG)
+        text = tk.Text(popup, font=FONT_TITOL, relief=tk.GROOVE, width=65, height=2, wrap=tk.WORD)
+        text.insert(tk.END, description, "desc")
+        text.config(state=tk.DISABLED)
+        text.tag_configure("desc", justify="center")
+        #text.config(pady=10, padx=10)
+        text.pack(pady=5)
+        #label_description.pack(pady=5)
         # Carregar la imatge
         img = cv2.imread(path, cv2.IMREAD_COLOR)
         im_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -201,10 +216,12 @@ class SegmentationGUI:
         self.popup = tk.Toplevel()
         ws = self.popup.winfo_screenwidth()
         hs = self.popup.winfo_screenheight()
-        w = 1920
-        h = 1080
+        user32 = ctypes.windll.user32
+        screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+        w = screensize[0]
+        h = screensize[1]
         x = (ws / 2) - (w / 2)
-        y = (hs / 3) - (h / 3)
+        y = (hs / 2) - (h / 2)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
         self.popup.wm_title("Confirm white balance")
         # Definir títol del popup
@@ -295,10 +312,12 @@ class SegmentationGUI:
         self.popup = tk.Toplevel()
         ws = self.popup.winfo_screenwidth()
         hs = self.popup.winfo_screenheight()
-        w = 1920
-        h = 1080
+        user32 = ctypes.windll.user32
+        screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+        w = screensize[0]
+        h = screensize[1]
         x = (ws / 2) - (w / 2)
-        y = (hs / 3) - (h / 3)
+        y = (hs / 2) - (h / 2)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
         self.popup.wm_title("Confirmar regió")
         # Definir títol del popup

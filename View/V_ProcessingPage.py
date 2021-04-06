@@ -41,11 +41,11 @@ class ProcessingPage(Page):
         p1_button_1.grid(row=1, column=1, pady=10, padx=20, sticky="SW")
         self.p1_img_label.grid(row=2, column=1, pady=0, padx=20, sticky="N")
         self.p1_data_frame.grid(row=2, column=3, pady=5, padx=20, sticky="n")
-        p1_button_2.pack(pady=10)
+        p1_button_2.pack(pady=0)
         self.widgets.pack()
         self.p1_label_2.grid(row=1, column=1, padx=5, pady=0, sticky="n")
         self.p1_button_3.grid(row=3, column=1, pady=10, padx=10, sticky="e")
-        self.p1_data_camps.grid(row=2, column=1, pady=20, padx=10)
+        self.p1_data_camps.grid(row=2, column=1, pady=10, padx=10)
         self.canvas.grid(row=0, column=0, sticky="news")
 
     def carregar_imatge(self):
