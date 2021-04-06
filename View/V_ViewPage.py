@@ -20,14 +20,16 @@ class ViewPage(Page):
         """
                Creates the frame and main labels of page_2's UI (View images).
                """
+        self.widgets = tk.Frame(self.page)
         p2_label_2 = ttk.Label(self.page, text="Visualitzar imatges", font=FONT_BENVINGUDA)
         p2_button_1 = ttk.Button(self.page, text="Enrere", command=self.tornar_main)
         self.crear_elements_viewer()
         self.page.grid(row=0, column=0, sticky="NESW")
         p2_label_2.pack(pady=20)
         p2_button_1.pack(pady=0)
-        self.p2_frame_list.pack(pady=20)
-        self.p2_frame_elements.pack(pady=20)
+        self.widgets.pack()
+        self.p2_frame_list.pack(pady=15, padx=10, expand=False, side=tk.RIGHT)
+        self.p2_frame_elements.pack(pady=20, padx=10, side=tk.LEFT)
         self.p2_frame_img.grid(row=1, column=1, pady=20, padx=20, sticky="w")
         self.p2_frame_metadata.grid(row=1, column=2, pady=20, padx=20, sticky="w")
     def crear_elements_viewer(self):
@@ -35,15 +37,15 @@ class ViewPage(Page):
         Creates and places the main frames and labels of page 2 (View images).
         """
 
-        self.p2_frame_list = tk.Frame(self.page, borderwidth=2, relief="groove")
+        self.p2_frame_list = tk.Frame(self.widgets, borderwidth=2, relief="groove")
         self.p2_label_info = ttk.Label(self.p2_frame_list, text="Elements trobats: ", font=FONT_TITOL)
         self.p2_label_info.pack()
         scrollbar = tk.Scrollbar(self.p2_frame_list)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-        self.llista = tk.Listbox(self.p2_frame_list, yscrollcommand=scrollbar.set)
-        self.llista.pack(side=tk.LEFT, fill=tk.BOTH)
+        self.llista = tk.Listbox(self.p2_frame_list, yscrollcommand=scrollbar.set, width=15, height=30)
+        self.llista.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar.config(command=self.llista.yview)
-        self.p2_frame_elements = tk.Frame(self.page, borderwidth=2, relief="groove")
+        self.p2_frame_elements = tk.Frame(self.widgets, borderwidth=2, relief="groove")
         self.p2_frame_img = tk.Frame(self.p2_frame_elements)
         self.p2_frame_metadata = tk.Frame(self.p2_frame_elements)
         self.p2_label_metadata_code = ttk.Label(self.p2_frame_metadata, text="", font=FONT_MSG)

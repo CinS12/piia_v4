@@ -16,7 +16,7 @@ class ProcessingPage(Page):
     def __init__(self, parent, lang):
         self.container = parent
         self.lang = lang
-        #self.kk = V_ScrollableFrame.Scrollable(self.container)
+        # self.kk = V_ScrollableFrame.Scrollable(self.container)
         self.page = tk.Frame(self.container)
         self.elements_page()
         self.emina_barthel = V_EminaBarthel.EminaBarthel(lang)
@@ -26,27 +26,27 @@ class ProcessingPage(Page):
         """
         Creates the frame and main labels of page_1's UI (Process images).
         """
+        self.widgets = tk.Frame(self.page)
         p1_label_1 = ttk.Label(self.page, text=self.lang.TITLE_PROCESSING, font=FONT_BENVINGUDA)
-        p1_button_1 = ttk.Button(self.page, text=self.lang.IMAGE_LOAD, command=self.carregar_imatge)
+        p1_button_1 = ttk.Button(self.widgets, text=self.lang.IMAGE_LOAD, command=self.carregar_imatge)
         p1_button_2 = ttk.Button(self.page, text=self.lang.BACK, command=self.tornar_main)
-        self.p1_button_img = ttk.Button(self.page, text=self.lang.IMAGE_PROCESSING, command=self.processar_img)
+        self.p1_button_img = ttk.Button(self.widgets, text=self.lang.IMAGE_PROCESSING, command=self.processar_img)
         path = "../resources/load_img.png"
         img = ImageTk.PhotoImage(Image.open(path))
-        self.p1_img_label = tk.Label(self.page, image=img)
+        self.p1_img_label = tk.Label(self.widgets, image=img)
         self.p1_img_label.image = img
         self.crear_camps_dades()
         self.page.grid(row=0, column=0, sticky="NESW")
-        p1_label_1.grid(row=0, column=2, pady=10, padx=1)
-        p1_button_1.grid(row=1, column=1, pady=0, padx=20, sticky="SW")
+        p1_label_1.pack(pady=20, padx=0)
+        p1_button_1.grid(row=1, column=1, pady=10, padx=20, sticky="SW")
         self.p1_img_label.grid(row=2, column=1, pady=0, padx=20, sticky="N")
-        self.p1_data_frame.grid(row=2, column=3, pady=5, padx=1, sticky="n")
-        p1_button_2.grid(row=1, column=2, pady=20, padx=20, sticky="w")
+        self.p1_data_frame.grid(row=2, column=3, pady=5, padx=20, sticky="n")
+        p1_button_2.pack(pady=10)
+        self.widgets.pack()
         self.p1_label_2.grid(row=1, column=1, padx=5, pady=0, sticky="n")
         self.p1_button_3.grid(row=3, column=1, pady=10, padx=10, sticky="e")
         self.p1_data_camps.grid(row=2, column=1, pady=20, padx=10)
         self.canvas.grid(row=0, column=0, sticky="news")
-
-
 
     def carregar_imatge(self):
         """
@@ -68,7 +68,7 @@ class ProcessingPage(Page):
 
         self.popup_tr_ant = []
         self.popup_tr_top = []
-        self.p1_data_frame = tk.Frame(self.page, borderwidth=2, relief="groove")
+        self.p1_data_frame = tk.Frame(self.widgets, borderwidth=2, relief="groove")
         self.p1_label_2 = ttk.Label(self.p1_data_frame, text=self.lang.META_TITLE, font=FONT_BENVINGUDA)
 
         self.p1_data_camps = tk.Frame(self.p1_data_frame, borderwidth=2, relief="groove")
@@ -227,7 +227,6 @@ class ProcessingPage(Page):
                                    command=lambda: self.emina_barthel.entry_popup_tr_top(
                                        self.lang.META_TOPIC))
         tr_top_button.grid(row=18, column=3, pady=10, padx=0)
-
     def ask_time(self):
         """
         Places the widgets of contention's time field.
@@ -294,7 +293,7 @@ class ProcessingPage(Page):
         Places the button to process image.
         """
 
-        self.p1_button_img.grid(row=1, column=1, pady=0, padx=20, sticky="SE")
+        self.p1_button_img.grid(row=1, column=1, pady=10, padx=20, sticky="SE")
 
     def update_main_label(self, img_tk):
         img_mask_rgb = cv2.cvtColor(img_tk, cv2.COLOR_BGR2RGB)

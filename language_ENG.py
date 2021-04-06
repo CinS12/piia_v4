@@ -69,5 +69,5 @@ class LangENG:
 
         # SEGMENTATION GUI
         self.HELPER_GRANULATION = "Granulation tissue often appears as red, bumpy tissue that is described as “cobblestone-like” in appearance."
-        self.HELPER_NECROSIS = "Necrosis tissue is composed of dead granulation tissue, muscle, fat, tendon or skin."
+        self.HELPER_NECROSIS = "Necrosis tissue is black or brown, composed of dead granulation tissue, muscle, fat, tendon or skin."
         self.HELPER_SLOUGH = "Slough can be identified as a stringy white/yellow/green/brown mass that may or may not be firmly attached to surrounding tissue."

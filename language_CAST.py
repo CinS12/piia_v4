@@ -69,5 +69,5 @@ class LangCAST:
 
         # SEGMENTATION GUI
         self.HELPER_GRANULATION = "El tejido granuloso suele tener un aspecto rojizo i abultado, parecido a un guijarro."
-        self.HELPER_NECROSIS = "El tejido necrotico está compuesto por restos de tejido granulado, músculo, grasa, tendón y/o piel muerta."
+        self.HELPER_NECROSIS = "El tejido necrotico suele ser negro o marrón está compuesto por restos de tejido granulado, músculo, grasa, tendón y/o piel muerta."
         self.HELPER_SLOUGH = "El tejido esfacelo se identifica como una masa fibrosa blanca/amarilla/verde/marrón que puede no estar adherida a la zona afectada."

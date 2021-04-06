@@ -3,7 +3,6 @@ from pubsub import pub
 import tkinter as tk
 from tkinter import ttk
 from PIL import ImageTk, Image
-from pathlib import Path
 from View.V_ToolTip import ToolTip
 
 FONT_BENVINGUDA = ("Verdana", 12)
@@ -34,9 +33,9 @@ class SegmentationGUI:
         ws = self.popup_img.winfo_screenwidth()
         hs = self.popup_img.winfo_screenheight()
         w = 1000
-        h = 1100
+        h = 750
         x = (ws / 2) - (w / 2)
-        y = (hs / 3) - (h / 3)
+        y = (hs / 2) - (h / 2)
         self.popup_img.geometry('%dx%d+%d+%d' % (w, h, x, y))
         self.popup_img.wm_title(self.lang.SEG_TITLE)
         # Definir títol del popup
@@ -49,15 +48,18 @@ class SegmentationGUI:
         data_frame = ttk.Frame(self.popup_img)
         accept_frame = ttk.Frame(self.popup_img)
         # Botons GUI
-        button_balance = ttk.Button(balance_frame, text=self.lang.SEG_WHITE, command=lambda: self.whitebalance(img_cv2_mask))
+        button_balance = ttk.Button(balance_frame, text=self.lang.SEG_WHITE,
+                                    command=lambda: self.whitebalance(img_cv2_mask))
         button_perimeter = ttk.Button(data_frame, text=self.lang.SEG_PERIMETER, command=self.ask_perimeter)
         button_granulation = ttk.Button(data_frame, text=self.lang.SEG_GRANULATION, command=self.roi_granulation)
         button_necrosis = ttk.Button(data_frame, text="Necrosis", command=self.roi_necrosis)
         button_slough = ttk.Button(data_frame, text="Slough", command=self.roi_slough)
         button_accept = ttk.Button(accept_frame, text="Accept", command=self.img_processed_accepted)
-        button_helper_granulation = tk.Button(data_frame, text="?", height=1, width=2)
-        button_helper_necrosis = tk.Button(data_frame, text="?", height=1, width=2)
-        button_helper_slough = tk.Button(data_frame, text="?", height=1, width=2)
+        button_helper_granulation = tk.Button(data_frame, text="?", height=1, width=2,
+                                              command=lambda: self.show_example(0))
+        button_helper_necrosis = tk.Button(data_frame, text="?", height=1, width=2,
+                                           command=lambda: self.show_example(1))
+        button_helper_slough = tk.Button(data_frame, text="?", height=1, width=2, command=lambda: self.show_example(2))
         # Labels de la GUI
         self.label_balance = tk.Label(balance_frame, text="Eina en desenvolupament, requereix supervisió.", fg="black",
                                       font=FONT_MSG)
@@ -98,6 +100,48 @@ class SegmentationGUI:
         ToolTip.CreateToolTip(button_helper_slough, text=self.lang.HELPER_SLOUGH)
 
         self.popup_img.mainloop()
+
+    def show_example(self, tissue):
+        if tissue == 0:
+            title = "Exemple Granulation"
+            path = "../resources/ex_granulation.png"
+            description = self.lang.HELPER_GRANULATION
+        else:
+            if tissue == 1:
+                title = "Exemple Necrosis"
+                path = "../resources/ex_necrosis.png"
+                description = self.lang.HELPER_NECROSIS
+            else:
+                if tissue == 2:
+                    title = "Exemple Slough"
+                    path = "../resources/ex_slough.png"
+                    description = self.lang.HELPER_SLOUGH
+        # Crear la finestra
+        popup = tk.Toplevel()
+        ws = popup.winfo_screenwidth()
+        hs = popup.winfo_screenheight()
+        w = 650
+        h = 500
+        x = (ws / 2) - (w / 2)
+        y = (hs / 2) - (h / 2)
+        popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        popup.wm_title(title)
+        title = ttk.Label(popup, text=title, font=FONT_TITOL)
+        title.configure(anchor="center")
+        title.pack(side="top", fill="x", pady=10)
+        label_description = ttk.Label(popup, text=description, font=FONT_MSG)
+        label_description.pack(pady=5)
+        # Carregar la imatge
+        img = cv2.imread(path, cv2.IMREAD_COLOR)
+        im_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        im = Image.fromarray(im_rgb)
+        img_imgtk_mask = ImageTk.PhotoImage(image=im)
+        self.confirmation_img = tk.Label(popup, image=img_imgtk_mask)
+        self.confirmation_img.pack(pady=30)
+        # Botons GUI
+        button1 = ttk.Button(popup, text=self.lang.OK, command=popup.destroy)
+        button1.pack()
+        popup.mainloop()
 
     def whitebalance(self, img_cv2_mask):
         """
@@ -332,11 +376,11 @@ class SegmentationGUI:
         frame = tk.Frame(self.popup)
         frame.pack()
         # Carregar les imatges
-        path = Path(__file__).parent / "../resources/anella.png"
+        path = "../resources/anella.png"
         img_a = ImageTk.PhotoImage(Image.open(path))
         img_anella = tk.Label(frame, image=img_a)
         img_anella.grid(row=1, column=1, padx=5, pady=5)
-        path = Path(__file__).parent / "../resources/tancat.png"
+        path = "../resources/tancat.png"
         img_t = ImageTk.PhotoImage(Image.open(path))
         img_tancat = tk.Label(frame, image=img_t)
         img_tancat.grid(row=1, column=2, padx=5, pady=5)

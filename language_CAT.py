@@ -5,6 +5,11 @@ WARNING: choose language options still in development (no functional).
 
 class LangCAT:
     def __init__(self):
+        #BASICS
+        self.YES = "Sí"
+        self.NO = "No"
+        self.OK = "Ok"
+
         # MENU
         self.LANG = "Idioma"
 
@@ -42,8 +47,6 @@ class LangCAT:
         self.META_BARTHEL = "Escala Barthel"
         self.META_CALCULATE = "Calcular"
         self.META_CONTENTION = "Contenció Mecànica"
-        self.YES = "Sí"
-        self.NO = "No"
         self.META_GRADE = "Grau de la nafra"
         self.META_EXO = "Cultiu de l'exsudat"
         self.META_POSITIVE = "Positiu"
@@ -70,7 +73,7 @@ class LangCAT:
         # SEGMENTATION GUI
         # Surce: https://www.woundsource.com/blog/identifying-types-tissues-found-pressure-ulcers
         self.HELPER_GRANULATION = "El teixit granulós sol tenir un aspecte vermellós i abultat, semblant a un còdol."
-        self.HELPER_NECROSIS = "El teixit necrotic està compost per restes de teixit, múscul, greix, tendó o pell morta."
+        self.HELPER_NECROSIS = "El teixit necrotic sol ser negre o marró i està compost per restes de teixit, múscul, greix, tendó o pell morta."
         self.HELPER_SLOUGH = "El teixit esfàcel és identificat com una massa fibrosa blanca/groga/verda/marró que pot no estar adherida a la zona afectada."
         self.SEG_TITLE = "Eina de segmentació"
         self.SEG_DESC = "Selecciona el perímetre total i els diferents tipus de teixits de la ferida:"

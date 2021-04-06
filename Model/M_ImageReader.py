@@ -60,7 +60,7 @@ class ImageReader:
         width = int(img.shape[1])
         height = int(img.shape[0])
         #Resolució proposada: 1080 x 720
-        if (width > 1080 or height > 720):
+        if (width > 960 or height > 720):
             img = self.resize_img(img, 50)
         else:
             self.image_size_ok = True
@@ -80,7 +80,7 @@ class ImageReader:
         width = int(img.shape[1] * scale_percent / 100)
         height = int(img.shape[0] * scale_percent / 100)
         dim = (width, height)
-        print(dim)
+        print("Dimensió: ", dim)
         # resize image
         resized = cv2.resize(img, dim, interpolation=cv2.INTER_AREA)
         img = resized

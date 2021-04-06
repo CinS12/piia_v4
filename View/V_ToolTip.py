@@ -1,4 +1,8 @@
 import tkinter as tk
+from PIL import ImageTk, Image
+import cv2
+from tkinter import ttk
+
 FONT_BENVINGUDA = ("Verdana", 12)
 FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)

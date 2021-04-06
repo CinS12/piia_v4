@@ -31,9 +31,9 @@ class PreSegmentationGUI:
         ws = self.popup.winfo_screenwidth()
         hs = self.popup.winfo_screenheight()
         w = 1000
-        h = 1100
+        h = 700
         x = (ws / 2) - (w / 2)
-        y = (hs / 3) - (h / 3)
+        y = (hs / 2) - (h / 2)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
         self.popup.wm_title(self.lang.PRE_CONFIRM_REGION)
         # Definir títol del popup
