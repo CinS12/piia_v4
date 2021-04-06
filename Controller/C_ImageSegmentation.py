@@ -27,6 +27,11 @@ class ControllerImageSegmentation:
         pub.subscribe(self.roi_confirmated, "ROI_CONFIRMATED")
 
         pub.subscribe(self.roi_ko, "ROI_KO")
+
+        pub.subscribe(self.update_perimeter_count, "UPDATE_PERIMETER_COUNT")
+        pub.subscribe(self.update_granulation_count, "UPDATE_GRANULATION_COUNT")
+        pub.subscribe(self.update_necrosis_count, "UPDATE_NECROSIS_COUNT")
+        pub.subscribe(self.update_slough_count, "UPDATE_SLOUGH_COUNT")
         return
 
     def segmentation_gui(self, img_imgtk_mask, img_cv2_mask):
@@ -194,3 +199,46 @@ class ControllerImageSegmentation:
 
     def roi_ko(self):
         self.pressure_img.mask = self.pressure_img.previous_roi
+
+    def update_perimeter_count(self):
+        """
+        Updates the View of perimeter label.
+        """
+
+        print("controller - update_perimeter_count!")
+        self.view.processing_gui.update_perimeter_count()
+
+    def update_granulation_count(self, number):
+        """
+        Updates the View of granulation's label with the number of roi's already selected.
+        Parameters
+        ----------
+        number : int
+           number of granulation rois already selected
+        """
+        print("controller - update_granulation_count!")
+        self.view.processing_gui.update_granulation_count(number)
+
+    def update_necrosis_count(self, number):
+        """
+        Updates the View of necrosis's label with the number of roi's already selected.
+        Parameters
+        ----------
+        number : int
+           number of necrosis rois already selected
+        """
+
+        print("controller - update_necrosis_count!")
+        self.view.processing_gui.update_necrosis_count(number)
+
+    def update_slough_count(self, number):
+        """
+        Updates the View of slough's label with the number of roi's already selected.
+        Parameters
+        ----------
+        number : int
+           number of slough rois already selected
+        """
+
+        print("controller - update_slough_count!")
+        self.view.processing_gui.update_slough_count(number)

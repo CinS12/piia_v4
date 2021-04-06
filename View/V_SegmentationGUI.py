@@ -17,6 +17,7 @@ class SegmentationGUI:
     def __init__(self, parent, lang):
         self.lang = lang
         self.container = parent
+
         return
 
     def segmentation_gui(self, img_imgtk_mask, img_cv2_mask):
@@ -469,3 +470,43 @@ class SegmentationGUI:
         button1 = ttk.Button(self.popup, text="Interior", command=lambda: self.ring_int_clicked(tissue=tissue))
         button1.pack()
         self.popup.mainloop()
+
+    def update_perimeter_count(self):
+        """
+        Updates the perimeter selection label as selected.
+        """
+
+        self.label_perimeter["text"] = "Perímetre seleccionat"
+        self.label_perimeter["fg"] = "green"
+
+    def update_granulation_count(self, number):
+        """
+        Update the granulation tissue's label with the number of rois selected.
+        Parameters
+        ----------
+        number : int
+           number of granulation rois already selected
+        """
+
+        self.label_granulation["text"] = "Zones seleccionades: " + str(number)
+
+    def update_necrosis_count(self, number):
+        """
+        Update the necrosis tissue's label with the number of rois selected.
+        Parameters
+        ----------
+        number : int
+           number of necrosis rois already selected
+        """
+
+        self.label_necrosis["text"] = "Zones seleccionades: " + str(number)
+
+    def update_slough_count(self, number):
+        """
+        Update the slough tissue's label with the number of rois selected.
+        Parameters
+        ----------
+        number : int
+           number of slough rois already selected
+        """
+        self.label_slough["text"] = "Zones seleccionades: " + str(number)
