@@ -13,6 +13,7 @@ class PreSegmentationGUI:
     def __init__(self, parent, lang):
         self.container = parent
         self.lang = lang
+        self.code_option = None
         return
 
     def ask_mask_confirmation(self, img_cv2_mask, scale_percent):
@@ -97,12 +98,19 @@ class PreSegmentationGUI:
         label = ttk.Label(popup, text=self.lang.PRE_LABEL_OLD)
         entry_new_ulcer = tk.Entry(popup, width=28, font=FONT_MSG)
         entry_new_ulcer.insert(tk.END, '')
-        label.pack( padx=10)
+        label.pack(padx=10)
         entry_new_ulcer.pack(pady=10)
-        button1 = ttk.Button(popup, text=self.lang.CONTINUE, command=popup.destroy)
+        button1 = ttk.Button(popup, text=self.lang.CONTINUE, command=lambda:self.new_code(popup, entry_new_ulcer.get()))
         button1.pack(pady=10)
         popup.resizable(False, False)
         popup.mainloop()
+
+    def new_code(self, popup, location):
+        if location != "":
+            popup.destroy()
+            pub.sendMessage("NEW_CODE_LOCATION", location=location)
+        else:
+            pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_NEW_LOCATION_EMPTY)
 
     def popup_ask_code(self):
 
@@ -118,34 +126,46 @@ class PreSegmentationGUI:
         label1 = tk.Label(popup, text=self.lang.PRE_ASK_CODE_DESC_1, font=FONT_MSG)
         label1.configure(anchor="center")
         label1.pack(side="top", fill="both", pady=5)
+        entry_new_ulcer = tk.Entry(popup, width=28, font=FONT_MSG)
+        entry_new_ulcer.insert(tk.END, "")
+        combobox_old_ulcer = ttk.Combobox(popup, state="readonly", width=25, justify="left", font=FONT_MSG)
+        combobox_old_ulcer["values"] = [self.lang.META_DAYS, self.lang.META_WEEKS, self.lang.META_MONTHS]
+        combobox_old_ulcer.current(0)
+        code_radiobutton_old = ttk.Radiobutton(popup, variable="code", text=self.lang.PRE_RADIOBUTTON_OLD,
+                                                     value="old", command=lambda:self.old_ulcer_view(label, entry_new_ulcer, combobox_old_ulcer))
+        code_radiobutton_new = ttk.Radiobutton(popup, variable="code", text=self.lang.PRE_RADIOBUTTON_NEW,
+                                                     value="new", command=lambda:self.new_ulcer_view(label, entry_new_ulcer, combobox_old_ulcer))
+        label = ttk.Label(popup, text=self.lang.PRE_LABEL_NEW)
+        code_radiobutton_old.pack()
+        code_radiobutton_new.pack()
 
-        self.code_radiobutton_old = ttk.Radiobutton(popup, variable="code", text=self.lang.PRE_RADIOBUTTON_OLD,
-                                                     value="si", command=self.old_ulcer)
-        self.code_radiobutton_new = ttk.Radiobutton(popup, variable="code", text=self.lang.PRE_RADIOBUTTON_NEW,
-                                                     value="no", command=self.new_ulcer)
-        self.label = ttk.Label(popup, text=self.lang.PRE_LABEL_NEW)
-        self.entry_new_ulcer= tk.Entry(popup, width=28, font=FONT_MSG)
-        self.entry_new_ulcer.insert(tk.END, '')
-        self.combobox_old_ulcer = ttk.Combobox(popup, state="readonly", width=25, justify="left", font=FONT_MSG)
-        self.combobox_old_ulcer["values"] = [self.lang.META_DAYS, self.lang.META_WEEKS, self.lang.META_MONTHS]
-        self.combobox_old_ulcer.current(0)
-        self.code_radiobutton_old.pack()
-        self.code_radiobutton_new.pack()
-
-        button1 = ttk.Button(popup, text=self.lang.CONTINUE, command=popup.destroy)
+        button1 = ttk.Button(popup, text=self.lang.CONTINUE, command=lambda: self.check_option(popup, entry_new_ulcer.get(), combobox_old_ulcer.get()))
         button1.pack(pady=10, side="bottom")
         popup.resizable(False, False)
         popup.mainloop()
 
-    def new_ulcer(self):
-        self.combobox_old_ulcer.pack_forget()
-        self.label.pack(side=tk.LEFT, padx=10)
-        self.entry_new_ulcer.pack(pady=10)
+    def check_option(self, popup, new_ulcer, old_ulcer):
+        if self.code_option is not None:
+            if self.code_option == 0:
+                if new_ulcer != "":
+                    print(new_ulcer)
+                    popup.destroy()
+                else:
+                    pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_NEW_LOCATION_EMPTY)
+            else:
+                print(old_ulcer)
+                popup.destroy()
+        else:
+            pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_CODE_RADIOBUTTONS)
 
-        self.contencio = "si"
+    def new_ulcer_view(self, label, entry_new_ulcer, combobox_old_ulcer):
+        combobox_old_ulcer.pack_forget()
+        label.pack(side=tk.LEFT, padx=10)
+        entry_new_ulcer.pack(pady=10)
+        self.code_option = 0
 
-    def old_ulcer(self):
-        self.label.pack(side=tk.LEFT, padx=10)
-        self.entry_new_ulcer.pack_forget()
-        self.combobox_old_ulcer.pack(pady=5)
-        self.contencio = "no"
+    def old_ulcer_view(self, label, entry_new_ulcer, combobox_old_ulcer):
+        label.pack(side=tk.LEFT, padx=10)
+        entry_new_ulcer.pack_forget()
+        combobox_old_ulcer.pack(pady=5)
+        self.code_option = 1

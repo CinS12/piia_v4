@@ -1,4 +1,5 @@
 from pubsub import pub
+
 from View import V_Setup
 from Model.M_PressureImage import Pressure_img
 from Controller import C_Metadata, C_ImagePreSegmentation, C_ImageSegmentation
@@ -37,9 +38,6 @@ class ControllerSetup:
         pub.subscribe(self.load_image_i, "IMAGE_LOAD_i")
         pub.subscribe(self.load_metadata_i, "METADATA_LOAD_i")
 
-        pub.subscribe(self.check_code_request, "CHECK_CODE_REQUEST")
-        pub.subscribe(self.code_checked, "CODE_CHECKED")
-
         self.language_manager = C_LanguageSelection.LanguageSelection(self.parent)
 
 
@@ -54,7 +52,7 @@ class ControllerSetup:
         self.view = V_Setup.ViewSetup(self.parent, lang)
         self.metadata = C_Metadata.ControllerMetadata(self.model_metadata, self.view)
         self.file_data_manager = M_FileDataManager.FileDataManager()
-        self.img_pre_segmentation = C_ImagePreSegmentation.ControllerImagePreSegmentation(self.view)
+        self.img_pre_segmentation = C_ImagePreSegmentation.ControllerImagePreSegmentation(self.view, lang)
         self.img_segmentation = C_ImageSegmentation.ControllerImageSegmentation(self.view)
         self.parent.mainloop()
 
@@ -65,7 +63,7 @@ class ControllerSetup:
         self.view = V_Setup.ViewSetup(self.parent, lang)
         self.metadata = C_Metadata.ControllerMetadata(self.model_metadata, self.view)
         self.file_data_manager = M_FileDataManager.FileDataManager()
-        self.img_pre_segmentation = C_ImagePreSegmentation.ControllerImagePreSegmentation(self.view)
+        self.img_pre_segmentation = C_ImagePreSegmentation.ControllerImagePreSegmentation(self.view, self.file_data_manager, lang)
         self.img_segmentation = C_ImageSegmentation.ControllerImageSegmentation(self.view)
 
     def button_1_pressed(self):
@@ -236,15 +234,3 @@ class ControllerSetup:
 
         print("controller - load_metadata_i")
         self.view.view_page.load_metadata_i(metadata)
-
-    def check_code_request(self, code):
-        if code != "":
-            self.file_data_manager.check_code(code)
-        else:
-            print("Codi buit")
-
-    def code_checked(self, existence):
-        if existence:
-            self.view.pre_processing_gui.popup_ask_code()
-        else:
-            self.view.pre_processing_gui.popup_new_code()

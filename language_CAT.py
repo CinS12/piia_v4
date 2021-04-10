@@ -59,6 +59,7 @@ class LangCAT:
         self.META_ANTIBIOTIC = "Antibiòtic"
         self.META_TOPIC = "Tòpic"
         self.META_SAVE = "Guardar"
+        self.META_EMPTY_CODE = "Escriu el codi per validar-lo"
 
         self.CODE_ERROR = "El codi ha de contenir 4 dígits"
         self.AGE_RROR = "L'any de naixement ha de contenir 4 enters"
@@ -75,12 +76,14 @@ class LangCAT:
         self.PRE_NEW_CODE_TITLE = "Nou pacient"
         self.PRE_NEW_CODE_DESC_1 = "Es registrarà un nou pacient."
         self.PRE_LABEL_OLD = "Introdueix la localització de la ferida:"
+        self.PRE_NEW_LOCATION_EMPTY = "S'ha d'omplir el camp: localització."
 
         self.PRE_ASK_CODE_TITLE = "Pacient existent"
         self.PRE_ASK_CODE_DESC_1 = "Seleccionar opció:"
         self.PRE_RADIOBUTTON_OLD = "Afegir imatge d'una ferida registrada."
         self.PRE_RADIOBUTTON_NEW = "Registrar una nova ferida."
         self.PRE_LABEL_NEW = "Localització:"
+        self.PRE_CODE_RADIOBUTTONS = "Selecciona una opció"
 
         # SEGMENTATION GUI
         # Surce: https://www.woundsource.com/blog/identifying-types-tissues-found-pressure-ulcers
