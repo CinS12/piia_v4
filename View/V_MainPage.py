@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from pubsub import pub
 from View.V_Page import Page
+
 FONT_BENVINGUDA = ("Verdana", 12)
 FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
@@ -21,13 +22,13 @@ class MainPage(Page):
 
         self.page = tk.Frame(self.container)
         p0_label_0 = ttk.Label(self.page, text=self.lang.MAIN_TITLE, font=FONT_BENVINGUDA)
-        p0_button_1 = ttk.Button(self.page, text=self.lang.BUTTON_1, command=self.apretar_boto_1)
-        p0_button_2 = ttk.Button(self.page, text=self.lang.BUTTON_2, command=self.apretar_boto_2)
+        p0_button_1 = ttk.Button(self.page, text=self.lang.BUTTON_1, command=self.apretar_boto_1, width=30)
+        p0_button_2 = ttk.Button(self.page, text=self.lang.BUTTON_2, command=self.apretar_boto_2, width=30)
 
         self.page.grid(row=0, column=0, sticky="NESW")
         p0_label_0.pack(pady=20)
-        p0_button_1.pack()
-        p0_button_2.pack()
+        p0_button_1.pack(ipadx=0, pady=5)
+        p0_button_2.pack(ipadx=0, pady=5)
 
     def apretar_boto_1(self):
         """

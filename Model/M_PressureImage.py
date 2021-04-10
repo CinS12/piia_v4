@@ -8,7 +8,12 @@ import cv2
 import numpy as np
 from peakdetect import peakdetect
 from pubsub import pub
+
+import language_CAST
+import language_CAT
+import language_ENG
 from Model.M_TargetDetector import TargetDetector
+
 
 class Pressure_img:
     """
@@ -60,8 +65,9 @@ class Pressure_img:
         WARNING: Needs validation!
     """
 
-    def __init__(self, parent):
-        self.parent=parent
+    def __init__(self, parent, lang):
+        self.parent = parent
+        self.lang = lang
         self.img_origin = None
         self.img = None
         self.mask = None
@@ -79,6 +85,12 @@ class Pressure_img:
         self.target_detector = None
         self.ring_ext = None
         self.ring_int = None
+        if self.lang == 0:
+            self.lang = language_CAT.LangCAT()
+        if self.lang == 1:
+            self.lang = language_CAST.LangCAST()
+        if self.lang == 2:
+            self.lang = language_ENG.LangENG()
         return
 
     def crop_image(self, im):
@@ -92,11 +104,11 @@ class Pressure_img:
         # Select ROI
         showCrosshair = False
         fromCenter = False
-        r = cv2.selectROI("Image", im, showCrosshair, fromCenter)
+        r = cv2.selectROI(self.lang.MODEL_PRESSURE_IMG, im, showCrosshair, fromCenter)
         # Crop image
         img_cv2_mask = im[int(r[1]):int(r[1] + r[3]), int(r[0]):int(r[0] + r[2])]
-        #img_cv2_mask = im
-        #Ask user for confirmation
+        # img_cv2_mask = im
+        # Ask user for confirmation
         pub.sendMessage("ASK_MASK_CONFIRMATION", img_cv2_mask=img_cv2_mask, scale_factor=100)
 
     def close_all(self):
@@ -137,11 +149,11 @@ class Pressure_img:
         scale_factor: int
             value of the resize scale (default = 100)
         """
-        #Save image to class atributte
+        # Save image to class atributte
         self.img = img_cv2_mask
-        #Scale image
+        # Scale image
         img_cv2_mask = self.scale_image(img_cv2_mask, scale_factor)
-        #Create GUI
+        # Create GUI
         self.target_detector = TargetDetector(img_cv2_mask)
         pub.sendMessage("SEGMENTATION_GUI", img_imgtk_mask=img_imgtk_mask, img_cv2_mask=img_cv2_mask)
 
@@ -187,7 +199,6 @@ class Pressure_img:
             else:
                 self.previous_roi = im.copy()
 
-
         class Point:
             """
            Class that allows the free shape cropping with its methods and attributes.
@@ -211,14 +222,15 @@ class Pressure_img:
             def __init__(self, x, y):
                 self.x = x
                 self.y = y
+
         color = (255, 255, 255)
         thickness = 4
 
         # Dibuixar a la imatge
         global drawing
-        drawing= False  # true if mouse is pressed
+        drawing = False  # true if mouse is pressed
         global mode
-        mode= True  # if True, draw rectangle. Press 'm' to toggle to curve
+        mode = True  # if True, draw rectangle. Press 'm' to toggle to curve
 
         # mouse callback function
         def draw(event, former_x, former_y, flags, param):
@@ -265,7 +277,7 @@ class Pressure_img:
                     current_former_x = former_x
                     current_former_y = former_y
                 roi(self.img, punts)
-                #roi(im, punts)
+                # roi(im, punts)
 
         mask_points = []
 
@@ -323,14 +335,14 @@ class Pressure_img:
                     pub.sendMessage("ASK_ROI_CONFIRMATION", img_cv2_mask=img, img_cv2_roi=sub, tissue=tissue,
                                     scale_factor=100, px_perimeter=px_perimeter, ring=2)
                     return masked
-            if(tissue=="Perimeter"):
+            if (tissue == "Perimeter"):
                 cm_perimeter = px_perimeter * self.target_detector.px_dist
                 cm_perimeter = round(cm_perimeter, 2)
                 self.perimetre_cm = cm_perimeter
             pub.sendMessage("ASK_ROI_CONFIRMATION", img_cv2_mask=img, img_cv2_roi=masked, tissue=tissue,
                             scale_factor=100, px_perimeter=px_perimeter, ring=0)
-            #cv2.imshow(tissue+"Tissue", masked)
-            #cv2.imwrite("result.jpg", masked)
+            # cv2.imshow(tissue+"Tissue", masked)
+            # cv2.imwrite("result.jpg", masked)
             return masked
 
         height, width, channel = im.shape
@@ -346,8 +358,6 @@ class Pressure_img:
 
             if k == 27:
                 break
-
-
 
     def flash_reduction(self, img_cv2_mask):
         """

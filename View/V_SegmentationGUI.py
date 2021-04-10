@@ -59,22 +59,22 @@ class SegmentationGUI:
                                     command=lambda: self.whitebalance(img_cv2_mask))
         button_perimeter = ttk.Button(data_frame, text=self.lang.SEG_PERIMETER, command=self.ask_perimeter)
         button_granulation = ttk.Button(data_frame, text=self.lang.SEG_GRANULATION, command=self.roi_granulation)
-        button_necrosis = ttk.Button(data_frame, text="Necrosis", command=self.roi_necrosis)
-        button_slough = ttk.Button(data_frame, text="Slough", command=self.roi_slough)
-        button_accept = ttk.Button(accept_frame, text="Accept", command=self.img_processed_accepted)
+        button_necrosis = ttk.Button(data_frame, text=self.lang.SEG_NECROSIS, command=self.roi_necrosis)
+        button_slough = ttk.Button(data_frame, text=self.lang.SEG_SLOUGH, command=self.roi_slough)
+        button_accept = ttk.Button(accept_frame, text=self.lang.ACCEPT, command=self.img_processed_accepted)
         button_helper_granulation = tk.Button(data_frame, text="?", height=1, width=2,
                                               command=lambda: self.show_example(0))
         button_helper_necrosis = tk.Button(data_frame, text="?", height=1, width=2,
                                            command=lambda: self.show_example(1))
         button_helper_slough = tk.Button(data_frame, text="?", height=1, width=2, command=lambda: self.show_example(2))
         # Labels de la GUI
-        self.label_balance = tk.Label(balance_frame, text="Eina en desenvolupament, requereix supervisió.", fg="black",
+        self.label_balance = tk.Label(balance_frame, text=self.lang.SEG_WHITEBALANCE_DESC, fg="black",
                                       font=FONT_MSG)
-        self.label_perimeter = tk.Label(data_frame, text="Selecciona el perímetre total de la ferida", fg="black",
+        self.label_perimeter = tk.Label(data_frame, text=self.lang.SEG_PERIMETER_DESC, fg="black",
                                         font=FONT_MSG)
-        self.label_granulation = ttk.Label(data_frame, text="Zones seleccionades: 0", font=FONT_MSG)
-        self.label_necrosis = ttk.Label(data_frame, text="Zones seleccionades: 0", font=FONT_MSG)
-        self.label_slough = ttk.Label(data_frame, text="Zones seleccionades: 0", font=FONT_MSG)
+        self.label_granulation = ttk.Label(data_frame, text=(self.lang.SEG_SELECTED_ZONES + "0"), font=FONT_MSG)
+        self.label_necrosis = ttk.Label(data_frame, text=(self.lang.SEG_SELECTED_ZONES + "0"), font=FONT_MSG)
+        self.label_slough = ttk.Label(data_frame, text=(self.lang.SEG_SELECTED_ZONES + "0"), font=FONT_MSG)
         # Carregar la roi
         self.img_show = tk.Label(self.widgets_img, image=img_imgtk_mask)
 
@@ -113,17 +113,17 @@ class SegmentationGUI:
 
     def show_example(self, tissue):
         if tissue == 0:
-            title = "Exemple Granulation"
+            title = self.lang.SEG_GRANULATION_EX
             path = "../resources/ex_granulation.png"
             description = self.lang.HELPER_GRANULATION
         else:
             if tissue == 1:
-                title = "Exemple Necrosis"
+                title = self.lang.SEG_NECROSIS_EX
                 path = "../resources/ex_necrosis.png"
                 description = self.lang.HELPER_NECROSIS
             else:
                 if tissue == 2:
-                    title = "Exemple Slough"
+                    title = self.lang.SEG_SLOUGH_EX
                     path = "../resources/ex_slough.png"
                     description = self.lang.HELPER_SLOUGH
         # Crear la finestra
@@ -224,7 +224,7 @@ class SegmentationGUI:
         x = (ws / 2) - (w / 2)
         y = (hs / 2) - (h / 2)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.popup.wm_title("Confirm white balance")
+        self.popup.wm_title(self.lang.SEG_CONFIRM_WB)
         # Definir títol del popup
         title = ttk.Label(self.popup, text="White Balance Correction", font=FONT_TITOL)
         label_warning = ttk.Label(self.popup,
@@ -488,7 +488,7 @@ class SegmentationGUI:
            number of granulation rois already selected
         """
 
-        self.label_granulation["text"] = "Zones seleccionades: " + str(number)
+        self.label_granulation["text"] = self.lang.SEG_SELECTED_ZONES + str(number)
 
     def update_necrosis_count(self, number):
         """
@@ -499,7 +499,7 @@ class SegmentationGUI:
            number of necrosis rois already selected
         """
 
-        self.label_necrosis["text"] = "Zones seleccionades: " + str(number)
+        self.label_necrosis["text"] = self.lang.SEG_SELECTED_ZONES + str(number)
 
     def update_slough_count(self, number):
         """
@@ -509,4 +509,4 @@ class SegmentationGUI:
         number : int
            number of slough rois already selected
         """
-        self.label_slough["text"] = "Zones seleccionades: " + str(number)
+        self.label_slough["text"] = self.lang.SEG_SELECTED_ZONES + str(number)

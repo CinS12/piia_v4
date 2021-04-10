@@ -21,12 +21,12 @@ class ViewPage(Page):
                Creates the frame and main labels of page_2's UI (View images).
                """
         self.widgets = tk.Frame(self.page)
-        p2_label_2 = ttk.Label(self.page, text="Visualitzar imatges", font=FONT_BENVINGUDA)
+        p2_label_2 = ttk.Label(self.page, text="Consultar base de dades", font=FONT_BENVINGUDA)
         p2_button_1 = ttk.Button(self.page, text="Enrere", command=self.tornar_main)
         self.crear_elements_viewer()
         self.page.grid(row=0, column=0, sticky="NESW")
         p2_label_2.pack(pady=20)
-        p2_button_1.pack(pady=0)
+        p2_button_1.pack(pady=0, ipadx=15)
         self.widgets.pack()
         self.p2_frame_list.pack(pady=15, padx=10, expand=False, side=tk.RIGHT)
         self.p2_frame_elements.pack(pady=20, padx=10, side=tk.LEFT)
@@ -127,4 +127,4 @@ class ViewPage(Page):
         self.p2_frame_metadata.configure(borderwidth = 2, relief = "groove")
         self.p2_label_metadata_code.config(text="Codi: "+metadata["metadata"]["code"])
         self.p2_label_metadata_grade.config(text="Grau: " + metadata["metadata"]["grade"])
-        self.p2_label_metadata_cm.config(text="Perímetre: " + str(metadata["perimetre_cm"])+" cm")
+        self.p2_label_metadata_cm.config(text="Data: " + metadata["metadata"]["date"])

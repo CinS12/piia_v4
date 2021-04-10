@@ -9,21 +9,22 @@ class LangCAT:
         self.YES = "Sí"
         self.NO = "No"
         self.OK = "Ok"
-
+        self.ACCEPT = "Acceptar"
+        self.CONTINUE = "Continuar"
         # MENU
         self.LANG = "Idioma"
 
         # MAIN PAGE
         self.MAIN_TITLE = "Anotació d'imatges d'úlceres de pressió" #"Pressure Injuries Image Analysis"
-        self.BUTTON_1 = "Processar imatges"
-        self.BUTTON_2 = "Visualitzar imatges"
+        self.BUTTON_1 = "Afegir imatge a la base de dades"
+        self.BUTTON_2 = "Consultar base de dades"
         # Source: (https://ca.wikipedia.org/wiki/Escala_de_Barthel)
         self.BARTHEL_DESCRIPTION = "Escala ordinal utilitzada per mesurar l'acompliment en activitats de la vida diària bàsiques (AVDB)."
         # Source: (https://www.murciasalud.es/preevid/1103)
         self.EMINA_DESCRIPTION = "L'escala Emina és un instrument de valoració del risc de desenvolupament d'úlceres de pressió en pacients hospitalitzats."
 
         # PROCESSING PAGE
-        self.TITLE_PROCESSING = "Processar imatges"
+        self.TITLE_PROCESSING = self.BUTTON_1
         self.IMAGE_LOAD = "Carrega imatge"
         self.BACK = "Enrere"
         self.IMAGE_PROCESSING = "Processar imatge"
@@ -31,6 +32,7 @@ class LangCAT:
         self.META_TITLE = "Recull de dades"
         self.META_DATA_FILL = "Omplir els camps següents:"
         self.META_CODE = "Codi"
+        self.META_CHECK = "Comprovar"
         self.META_YEAR = "Any neixament"
         self.META_SEX = "Sexe"
         self.META_MAN = "Home"
@@ -70,6 +72,16 @@ class LangCAT:
         self.PRE_CONFIRM_REGION = "Confirmar regió"
         self.PRE_CORRECT_REGION = "És correcte la regió seleccionada?"
 
+        self.PRE_NEW_CODE_TITLE = "Nou pacient"
+        self.PRE_NEW_CODE_DESC_1 = "Es registrarà un nou pacient."
+        self.PRE_LABEL_OLD = "Introdueix la localització de la ferida:"
+
+        self.PRE_ASK_CODE_TITLE = "Pacient existent"
+        self.PRE_ASK_CODE_DESC_1 = "Seleccionar opció:"
+        self.PRE_RADIOBUTTON_OLD = "Afegir imatge d'una ferida registrada."
+        self.PRE_RADIOBUTTON_NEW = "Registrar una nova ferida."
+        self.PRE_LABEL_NEW = "Localització:"
+
         # SEGMENTATION GUI
         # Surce: https://www.woundsource.com/blog/identifying-types-tissues-found-pressure-ulcers
         self.HELPER_GRANULATION = "El teixit granulós sol tenir un aspecte vermellós i abultat, semblant a un còdol."
@@ -80,3 +92,15 @@ class LangCAT:
         self.SEG_WHITE = "Balanç de blancs"
         self.SEG_PERIMETER = "Perímetre"
         self.SEG_GRANULATION = "Granulós"
+        self.SEG_NECROSIS = "Necròtic"
+        self.SEG_SLOUGH = "Esfàcel"
+        self.SEG_WHITEBALANCE_DESC = "Eina en desenvolupament, requereix supervisió."
+        self.SEG_PERIMETER_DESC = "Selecciona el perímetre total de la ferida"
+        self.SEG_SELECTED_ZONES = "Zones seleccionades: "
+        self.SEG_GRANULATION_EX = "Exemple Granulation"
+        self.SEG_NECROSIS_EX = "Exemple Necrosis"
+        self.SEG_SLOUGH_EX = "Exemple Slough"
+        self.SEG_CONFIRM_WB = "Confirm white balance"
+
+        # MODEL PRESSURE IMAGE
+        self.MODEL_PRESSURE_IMG = "Seleccionar zona rectangular: Marcador + Ferida. ENTER per acceptar."

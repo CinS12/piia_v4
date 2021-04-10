@@ -41,7 +41,7 @@ class ProcessingPage(Page):
         p1_button_1.grid(row=1, column=1, pady=10, padx=20, sticky="SW")
         self.p1_img_label.grid(row=2, column=1, pady=0, padx=20, sticky="N")
         self.p1_data_frame.grid(row=2, column=3, pady=5, padx=20, sticky="n")
-        p1_button_2.pack(pady=0)
+        p1_button_2.pack(pady=0, ipadx=15)
         self.widgets.pack()
         self.p1_label_2.grid(row=1, column=1, padx=5, pady=0, sticky="n")
         self.p1_button_3.grid(row=3, column=1, pady=10, padx=10, sticky="e")
@@ -104,6 +104,9 @@ class ProcessingPage(Page):
         self.code_entry = ttk.Entry(self.frame_widgets)
         self.code_entry.insert(tk.END, '')
         self.code_entry.grid(row=2, column=2, padx=0, pady=10)
+        self.button_check = ttk.Button(self.frame_widgets, text=self.lang.META_CHECK,
+                                       command=lambda: self.check_code(self.code_entry.get()))
+        self.button_check.grid(row=2, column=3, padx=0, pady=10)
         # Edat
         age_label = ttk.Label(self.frame_widgets, text=self.lang.META_YEAR, font=FONT_MSG)
         age_label.grid(row=3, column=1, padx=0, pady=10)
@@ -150,7 +153,7 @@ class ProcessingPage(Page):
         date_label = ttk.Label(self.frame_widgets, text=self.lang.META_DATE, font=FONT_MSG)
         date_label.grid(row=9, column=1, padx=5, pady=10)
         self.cal_data_entry = DateEntry(self.frame_widgets, dateformat=3, width=12, background='darkblue',
-                                        foreground='white', borderwidth=4)
+                                        foreground='white', borderwidth=4, date_pattern = "dd-mm-yyyy")
         self.cal_data_entry.grid(row=9, column=2, sticky='nsew')
         # Escala EMINA
         emina_label = ttk.Label(self.frame_widgets, text=self.lang.META_EMINA, font=FONT_MSG)
@@ -359,3 +362,6 @@ class ProcessingPage(Page):
         self.p1_img_label.configure(image=img)
         self.p1_img_label.image = img
         self.p1_button_img.grid_forget()
+
+    def check_code(self, code):
+        pub.sendMessage("CHECK_CODE_REQUEST", code=code)

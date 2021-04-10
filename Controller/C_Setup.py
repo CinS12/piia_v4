@@ -37,6 +37,9 @@ class ControllerSetup:
         pub.subscribe(self.load_image_i, "IMAGE_LOAD_i")
         pub.subscribe(self.load_metadata_i, "METADATA_LOAD_i")
 
+        pub.subscribe(self.check_code_request, "CHECK_CODE_REQUEST")
+        pub.subscribe(self.code_checked, "CODE_CHECKED")
+
         self.language_manager = C_LanguageSelection.LanguageSelection(self.parent)
 
 
@@ -56,6 +59,7 @@ class ControllerSetup:
         self.parent.mainloop()
 
     def setup_lang_loaded(self, lang):
+        self.lang = lang
         self.model_reader = M_ImageReader.ImageReader()
         self.model_metadata = M_MetadataManager.MetadataManager()
         self.view = V_Setup.ViewSetup(self.parent, lang)
@@ -122,7 +126,7 @@ class ControllerSetup:
         image_tk : PIL Image
            image ready to be loaded in a label
         """
-        pressure_img = Pressure_img(self.parent)
+        pressure_img = Pressure_img(self.parent, self.lang)
         self.pressure_img = pressure_img
         self.pressure_img.img_origin = image_original
         self.pressure_img.loaded = True
@@ -232,3 +236,15 @@ class ControllerSetup:
 
         print("controller - load_metadata_i")
         self.view.view_page.load_metadata_i(metadata)
+
+    def check_code_request(self, code):
+        if code != "":
+            self.file_data_manager.check_code(code)
+        else:
+            print("Codi buit")
+
+    def code_checked(self, existence):
+        if existence:
+            self.view.pre_processing_gui.popup_ask_code()
+        else:
+            self.view.pre_processing_gui.popup_new_code()

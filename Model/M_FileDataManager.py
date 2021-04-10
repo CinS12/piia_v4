@@ -15,6 +15,7 @@ PATH_METADATA_DIR = "../resources/Metadata"
 PATH_IMG_DIR = "../resources/Images"
 PATH_IMG_i = "../resources/Images/Img_"
 PATH_METADATA_i = "../resources/Metadata/Metadata_"
+PATH_CODE_DIR = "../resources/Database/"
 
 class FileDataManager:
     """
@@ -236,3 +237,7 @@ class FileDataManager:
         with open(PATH_METADATA_i + str(i) + ".txt") as json_file:
             data = json.load(json_file)
             pub.sendMessage("METADATA_LOAD_i", metadata=data)
+
+    def check_code(self, code):
+        code_exists = os.path.isdir(PATH_CODE_DIR + str(code))
+        pub.sendMessage("CODE_CHECKED", existence=code_exists)
