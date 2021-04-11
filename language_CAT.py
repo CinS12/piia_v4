@@ -85,6 +85,8 @@ class LangCAT:
         self.PRE_LABEL_NEW = "Localització:"
         self.PRE_CODE_RADIOBUTTONS = "Selecciona una opció"
 
+        self.PRE_LOCATION_REPEATED = "Localització repetida. Escriu-ne una de nova."
+
         # SEGMENTATION GUI
         # Surce: https://www.woundsource.com/blog/identifying-types-tissues-found-pressure-ulcers
         self.HELPER_GRANULATION = "El teixit granulós sol tenir un aspecte vermellós i abultat, semblant a un còdol."

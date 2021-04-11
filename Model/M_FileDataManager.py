@@ -10,12 +10,12 @@ import os, os.path
 import json
 import cv2
 
-
 PATH_METADATA_DIR = "../resources/Metadata"
 PATH_IMG_DIR = "../resources/Images"
 PATH_IMG_i = "../resources/Images/Img_"
 PATH_METADATA_i = "../resources/Metadata/Metadata_"
 PATH_CODE_DIR = "../resources/Database/"
+
 
 class FileDataManager:
     """
@@ -105,13 +105,14 @@ class FileDataManager:
             self.num_files_ok = False
         else:
             self.id = n_img + 1
+
     def load_data(self):
         """
        Checks files's number's and sends it as a request to the Controller
        """
         if self.num_files_ok:
             self.check_files()
-            #Subtract 1 to the id because directory's files start with 1 and arrays with 0
+            # Subtract 1 to the id because directory's files start with 1 and arrays with 0
             pub.sendMessage("DATA_N_ELEMENTS", num=(self.id - 1))
         else:
             pub.sendMessage("DATA_FILES_KO")
@@ -180,7 +181,6 @@ class FileDataManager:
         with open(PATH_METADATA_DIR + "/Metadata_" + str(self.id) + ".txt", "w") as outfile:
             json.dump(metadata_json_object, outfile)
 
-
     def save_metadata(self, metadata, img):
         """
         Creates a JSON object with the image data and metadata and writes it to a txt file.
@@ -227,7 +227,6 @@ class FileDataManager:
         with open(PATH_METADATA_DIR + "/Metadata_" + str(self.id) + ".txt", "w") as outfile:
             json.dump(metadata_json_object, outfile)
 
-
     def save_img(self, img):
         """
         Saves all sub-images from Pressure_img object to a directory.
@@ -273,7 +272,6 @@ class FileDataManager:
         im = ImageTk.PhotoImage(Image.open(PATH_IMG_i + str(i) + "/mask_" + str(i) + ".jpg"))
         pub.sendMessage("IMAGE_LOAD_i", img_tk=im)
 
-
     def load_metadata_i(self, i):
         """
         Reads the metadata file with the specified id from the directory
@@ -289,4 +287,12 @@ class FileDataManager:
 
     def check_code(self, code):
         code_exists = os.path.isdir(PATH_CODE_DIR + str(code))
-        pub.sendMessage("CODE_CHECKED", existence=code_exists)
+        pub.sendMessage("CODE_CHECKED", existence=code_exists, code=code)
+
+    def check_code_location(self, code, location):
+        with open(PATH_CODE_DIR + str(code) + "/patient_ulcers.txt") as json_file:
+            patient_ulcers = json.load(json_file)
+        for ulcers in patient_ulcers["location"]:
+            if ulcers.lower() == location.lower():
+                return False
+        return True

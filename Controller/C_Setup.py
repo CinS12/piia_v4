@@ -97,8 +97,11 @@ class ControllerSetup:
             if self.pressure_img.loaded:
                 if self.pressure_img.processed:
                     if self.img_pre_segmentation.is_checked:
-                        self.file_data_manager.load_data()
-                        self.model_metadata.getData(data)
+                        if self.view.processing_page.code_entry.get() == self.img_pre_segmentation.code:
+                            #self.file_data_manager.load_data()
+                            self.model_metadata.getData(data)
+                        else:
+                            self.view.popupmsg("Codi editat. És necessari comprovar el codi.")
                     else:
                         self.view.popupmsg("És necessari comprovar el codi.")
                 else:

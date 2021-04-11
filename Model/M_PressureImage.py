@@ -352,8 +352,7 @@ class Pressure_img:
             cv2.imshow("Segmentation", im)
             k = cv2.waitKey(1) & 0xFF
             try:
-                pass
-                #print("Checking root: ", self.parent.winfo_exists())
+                aux= self.parent.winfo_exists()
             except:
                 break
 

@@ -84,7 +84,7 @@ class PreSegmentationGUI:
         cv2.destroyAllWindows()
         self.popup.destroy()
 
-    def popup_new_code(self):
+    def popup_new_code(self, code):
 
         popup = tk.Toplevel()
         ws = popup.winfo_screenwidth()
@@ -103,19 +103,19 @@ class PreSegmentationGUI:
         label.pack(padx=10)
         entry_new_ulcer.pack(pady=10)
         button1 = ttk.Button(popup, text=self.lang.CONTINUE,
-                             command=lambda: self.new_code(popup, entry_new_ulcer.get()))
+                             command=lambda: self.new_code(code, popup, entry_new_ulcer.get()))
         button1.pack(pady=10)
         popup.resizable(False, False)
         popup.mainloop()
 
-    def new_code(self, popup, location):
+    def new_code(self, code, popup, location):
         if location != "":
             popup.destroy()
-            pub.sendMessage("NEW_CODE_LOCATION", location=location, new_patient=True)
+            pub.sendMessage("NEW_CODE_LOCATION", location=location, new_patient=True, code=code)
         else:
             pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_NEW_LOCATION_EMPTY)
 
-    def popup_ask_code(self):
+    def popup_ask_code(self, code):
 
         popup = tk.Toplevel()
         ws = popup.winfo_screenwidth()
@@ -145,24 +145,23 @@ class PreSegmentationGUI:
         code_radiobutton_new.pack()
 
         button1 = ttk.Button(popup, text=self.lang.CONTINUE,
-                             command=lambda: self.check_option(popup, entry_new_ulcer.get(), combobox_old_ulcer.get()))
+                             command=lambda: self.check_option(code, popup, entry_new_ulcer.get(), combobox_old_ulcer.get()))
         button1.pack(pady=10, side="bottom")
         popup.resizable(False, False)
         popup.mainloop()
 
-    def check_option(self, popup, new_ulcer, old_ulcer):
+    def check_option(self, code, popup, new_ulcer, old_ulcer):
         if self.code_option is not None:
             if self.code_option == 0:
                 if new_ulcer != "":
-                    # FALTA: COMPROVAR SI LOCALITZACIÓ EXISTEIX (potser a model)
                     # FALTA: COMPROVAR SI EL CODI S'HA CANVIAT (a l'apretar Guardar)
-                    pub.sendMessage("NEW_CODE_LOCATION", location=new_ulcer, new_patient=False)
+                    pub.sendMessage("NEW_CODE_LOCATION", location=new_ulcer, new_patient=False, code=code)
                     popup.destroy()
                 else:
                     pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_NEW_LOCATION_EMPTY)
             else:
                 popup.destroy()
-                pub.sendMessage("OLD_CODE_LOCATION", location=old_ulcer)
+                pub.sendMessage("OLD_CODE_LOCATION", location=old_ulcer, code=code)
         else:
             pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_CODE_RADIOBUTTONS)
 

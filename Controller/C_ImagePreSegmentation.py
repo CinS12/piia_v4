@@ -16,9 +16,10 @@ class ControllerImagePreSegmentation:
         if self.lang == 2:
             self.lang = language_ENG.LangENG()
         self.pressure_img = None
-        self.ulcer_location = ""
+        self.ulcer_location = None
         self.is_new_ulcer = None
         self.is_new_patient = None
+        self.code = None
         pub.subscribe(self.analyse_image, "ANALYSE_IMAGE")
         pub.subscribe(self.ask_mask_confirmation, "ASK_MASK_CONFIRMATION")
         pub.subscribe(self.pre_segmentation_confirmated, "PRE_SEGMENTATION_CONFIRMATED")
@@ -80,22 +81,30 @@ class ControllerImagePreSegmentation:
         else:
             self.view.popupmsg(self.lang.META_EMPTY_CODE)
 
-    def code_checked(self, existence):
+    def code_checked(self, existence, code):
         if existence:
-            self.view.pre_processing_gui.popup_ask_code()
+            self.view.pre_processing_gui.popup_ask_code(code)
         else:
-            self.view.pre_processing_gui.popup_new_code()
+            self.view.pre_processing_gui.popup_new_code(code)
 
-    def new_code_location(self, location, new_patient):
+    def new_code_location(self, location, new_patient, code):
         print("Nova ferida a: ", location)
-        self.ulcer_location = location
-        self.is_new_ulcer = True
-        self.is_new_patient = new_patient
-        self.is_checked = True
+        code_location_ok = True
+        if new_patient == False:
+            code_location_ok = self.file_data_manager.check_code_location(code, location)
+        if code_location_ok:
+            self.ulcer_location = location
+            self.is_new_ulcer = True
+            self.is_new_patient = new_patient
+            self.is_checked = True
+            self.code = code
+        else:
+            self.view.popupmsg(self.lang.PRE_LOCATION_REPEATED)
 
-    def old_code_location(self, location):
+    def old_code_location(self, location, code):
         print("Nova foto de: ", location)
         self.ulcer_location = location
         self.is_new_ulcer = False
         self.is_new_patient = False
         self.is_checked = True
+        self.code = code
