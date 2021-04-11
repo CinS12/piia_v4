@@ -8,20 +8,24 @@ class ControllerImagePreSegmentation:
         self.view = view
         self.file_data_manager = file_data_manager
         self.lang = lang
+        self.is_checked = False
         if self.lang == 0:
             self.lang = language_CAT.LangCAT()
         if self.lang == 1:
             self.lang = language_CAST.LangCAST()
-        if self.lang ==2:
+        if self.lang == 2:
             self.lang = language_ENG.LangENG()
         self.pressure_img = None
         self.ulcer_location = ""
+        self.is_new_ulcer = None
+        self.is_new_patient = None
         pub.subscribe(self.analyse_image, "ANALYSE_IMAGE")
         pub.subscribe(self.ask_mask_confirmation, "ASK_MASK_CONFIRMATION")
         pub.subscribe(self.pre_segmentation_confirmated, "PRE_SEGMENTATION_CONFIRMATED")
         pub.subscribe(self.check_code_request, "CHECK_CODE_REQUEST")
         pub.subscribe(self.code_checked, "CODE_CHECKED")
         pub.subscribe(self.new_code_location, "NEW_CODE_LOCATION")
+        pub.subscribe(self.old_code_location, "OLD_CODE_LOCATION")
 
     def analyse_image(self):
         """
@@ -82,6 +86,16 @@ class ControllerImagePreSegmentation:
         else:
             self.view.pre_processing_gui.popup_new_code()
 
-    def new_code_location(self, location):
-        print("location: ", location)
+    def new_code_location(self, location, new_patient):
+        print("Nova ferida a: ", location)
         self.ulcer_location = location
+        self.is_new_ulcer = True
+        self.is_new_patient = new_patient
+        self.is_checked = True
+
+    def old_code_location(self, location):
+        print("Nova foto de: ", location)
+        self.ulcer_location = location
+        self.is_new_ulcer = False
+        self.is_new_patient = False
+        self.is_checked = True

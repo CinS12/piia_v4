@@ -96,8 +96,11 @@ class ControllerSetup:
         try:
             if self.pressure_img.loaded:
                 if self.pressure_img.processed:
-                    self.file_data_manager.load_data()
-                    self.model_metadata.getData(data)
+                    if self.img_pre_segmentation.is_checked:
+                        self.file_data_manager.load_data()
+                        self.model_metadata.getData(data)
+                    else:
+                        self.view.popupmsg("És necessari comprovar el codi.")
                 else:
                     self.view.popupmsg("És necessari processar la imatge.")
             else:
@@ -173,7 +176,7 @@ class ControllerSetup:
         self.pressure_img.loaded = False
         self.view.processing_page.reset_view()
         try:
-            self.file_data_manager.save_data(self.model_metadata.metadata, self.pressure_img)
+            self.file_data_manager.save_data(self.model_metadata.metadata, self.pressure_img, self.img_pre_segmentation.is_new_patient, self.img_pre_segmentation.is_new_ulcer)
             self.view.popupmsg("Procés finalitzat amb èxit. Prem OK per continuar.")
         except:
             self.view.popupmsg("Error de gestió de fitxers.")

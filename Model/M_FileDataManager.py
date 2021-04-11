@@ -116,7 +116,7 @@ class FileDataManager:
         else:
             pub.sendMessage("DATA_FILES_KO")
 
-    def save_data(self, metadata, img):
+    def save_data(self, metadata, img, new_patient, new_ulcer):
         """
         Calls functions to save the images and metadata
         Parameters
@@ -126,7 +126,8 @@ class FileDataManager:
         img : Pressure_img
            the pressur image object class with all sub-images processed by user
         """
-
+        print("New patient: ", new_patient)
+        print("New ulcer: ", new_ulcer)
         if self.num_files_ok:
             self.save_metadata(metadata, img)
             self.save_img(img)
@@ -178,6 +179,54 @@ class FileDataManager:
         }
         with open(PATH_METADATA_DIR + "/Metadata_" + str(self.id) + ".txt", "w") as outfile:
             json.dump(metadata_json_object, outfile)
+
+
+    def save_metadata(self, metadata, img):
+        """
+        Creates a JSON object with the image data and metadata and writes it to a txt file.
+        Parameters
+        ----------
+        metadata : list
+           a list with all the metadata field's information written by the user
+        img : Pressure_img
+           the pressur image object class with all sub-images processed by user
+        """
+
+        metadata_json_object = {
+            "id": self.id,
+            "metadata": {
+                "code": metadata[0],
+                "age": metadata[1],
+                "gender": metadata[2],
+                "n_imm": metadata[3],
+                "u_imm": metadata[4],
+                "n_hosp": metadata[5],
+                "u_hosp": metadata[6],
+                "n_inst": metadata[7],
+                "u_inst": metadata[8],
+                "date": metadata[9],
+                "escala_emina": metadata[10],
+                "escala_barthel": metadata[11],
+                "conten": metadata[12],
+                "n_conten": metadata[13],
+                "u_conten": metadata[14],
+                "grade": metadata[15],
+                "cultiu": metadata[16],
+                "protein": metadata[17],
+                "albumina": metadata[18],
+                "tr_ant": metadata[19],
+                "tr_top": metadata[20]
+            },
+            "whitebalanced": img.whitebalanced,
+            "perimetre": img.perimetre_done,
+            "perimetre_cm": img.perimetre_cm,
+            "granulation": len(img.granulation),
+            "slough": len(img.slough),
+            "necrosis": len(img.necrosis)
+        }
+        with open(PATH_METADATA_DIR + "/Metadata_" + str(self.id) + ".txt", "w") as outfile:
+            json.dump(metadata_json_object, outfile)
+
 
     def save_img(self, img):
         """

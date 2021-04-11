@@ -259,7 +259,7 @@ class MetadataManager:
             data_error.append("N_INST_ERROR")
         # Date
         try:
-            datetime.strptime(date, "%m/%d/%y")
+            datetime.strptime(date, "%d-%m-%Y")
         except:
             data_error.append("DATE_ERROR")
         # Contenció Mecànica

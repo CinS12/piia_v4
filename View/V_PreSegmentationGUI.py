@@ -8,6 +8,7 @@ FONT_BENVINGUDA = ("Verdana", 12)
 FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
 
+
 class PreSegmentationGUI:
 
     def __init__(self, parent, lang):
@@ -54,7 +55,8 @@ class PreSegmentationGUI:
         self.confirmation_img = tk.Label(self.popup, image=img_imgtk_mask)
         self.confirmation_img.pack(pady=30)
         # Botons GUI
-        button1 = ttk.Button(self.popup, text=self.lang.YES, command=lambda: self.segmentacio_ok(img_imgtk_mask, img_cv2_mask))
+        button1 = ttk.Button(self.popup, text=self.lang.YES,
+                             command=lambda: self.segmentacio_ok(img_imgtk_mask, img_cv2_mask))
         button2 = ttk.Button(self.popup, text=self.lang.NO, command=self.segmentacio_ko)
         button1.pack()
         button2.pack()
@@ -100,7 +102,8 @@ class PreSegmentationGUI:
         entry_new_ulcer.insert(tk.END, '')
         label.pack(padx=10)
         entry_new_ulcer.pack(pady=10)
-        button1 = ttk.Button(popup, text=self.lang.CONTINUE, command=lambda:self.new_code(popup, entry_new_ulcer.get()))
+        button1 = ttk.Button(popup, text=self.lang.CONTINUE,
+                             command=lambda: self.new_code(popup, entry_new_ulcer.get()))
         button1.pack(pady=10)
         popup.resizable(False, False)
         popup.mainloop()
@@ -108,7 +111,7 @@ class PreSegmentationGUI:
     def new_code(self, popup, location):
         if location != "":
             popup.destroy()
-            pub.sendMessage("NEW_CODE_LOCATION", location=location)
+            pub.sendMessage("NEW_CODE_LOCATION", location=location, new_patient=True)
         else:
             pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_NEW_LOCATION_EMPTY)
 
@@ -132,14 +135,17 @@ class PreSegmentationGUI:
         combobox_old_ulcer["values"] = [self.lang.META_DAYS, self.lang.META_WEEKS, self.lang.META_MONTHS]
         combobox_old_ulcer.current(0)
         code_radiobutton_old = ttk.Radiobutton(popup, variable="code", text=self.lang.PRE_RADIOBUTTON_OLD,
-                                                     value="old", command=lambda:self.old_ulcer_view(label, entry_new_ulcer, combobox_old_ulcer))
+                                               value="old", command=lambda: self.old_ulcer_view(label, entry_new_ulcer,
+                                                                                                combobox_old_ulcer))
         code_radiobutton_new = ttk.Radiobutton(popup, variable="code", text=self.lang.PRE_RADIOBUTTON_NEW,
-                                                     value="new", command=lambda:self.new_ulcer_view(label, entry_new_ulcer, combobox_old_ulcer))
+                                               value="new", command=lambda: self.new_ulcer_view(label, entry_new_ulcer,
+                                                                                                combobox_old_ulcer))
         label = ttk.Label(popup, text=self.lang.PRE_LABEL_NEW)
         code_radiobutton_old.pack()
         code_radiobutton_new.pack()
 
-        button1 = ttk.Button(popup, text=self.lang.CONTINUE, command=lambda: self.check_option(popup, entry_new_ulcer.get(), combobox_old_ulcer.get()))
+        button1 = ttk.Button(popup, text=self.lang.CONTINUE,
+                             command=lambda: self.check_option(popup, entry_new_ulcer.get(), combobox_old_ulcer.get()))
         button1.pack(pady=10, side="bottom")
         popup.resizable(False, False)
         popup.mainloop()
@@ -148,13 +154,15 @@ class PreSegmentationGUI:
         if self.code_option is not None:
             if self.code_option == 0:
                 if new_ulcer != "":
-                    print(new_ulcer)
+                    # FALTA: COMPROVAR SI LOCALITZACIÓ EXISTEIX (potser a model)
+                    # FALTA: COMPROVAR SI EL CODI S'HA CANVIAT (a l'apretar Guardar)
+                    pub.sendMessage("NEW_CODE_LOCATION", location=new_ulcer, new_patient=False)
                     popup.destroy()
                 else:
                     pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_NEW_LOCATION_EMPTY)
             else:
-                print(old_ulcer)
                 popup.destroy()
+                pub.sendMessage("OLD_CODE_LOCATION", location=old_ulcer)
         else:
             pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_CODE_RADIOBUTTONS)
 
