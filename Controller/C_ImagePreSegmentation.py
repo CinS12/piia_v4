@@ -83,7 +83,8 @@ class ControllerImagePreSegmentation:
 
     def code_checked(self, existence, code):
         if existence:
-            self.view.pre_processing_gui.popup_ask_code(code)
+            locations = self.file_data_manager.get_locations(code)
+            self.view.pre_processing_gui.popup_ask_code(code, locations)
         else:
             self.view.pre_processing_gui.popup_new_code(code)
 

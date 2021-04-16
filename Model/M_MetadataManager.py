@@ -110,7 +110,7 @@ class MetadataManager:
         img = resized
         return img
 
-    def getData(self, data):
+    def getData(self, data, location):
         """
         Saves the data from the list to the metadata variables.
         Calls the functions to check input data and sends the request.
@@ -163,7 +163,7 @@ class MetadataManager:
         if tot_ple:
             error = self.comprova_errors(code, age, n_imm, n_hosp, n_inst, date, conten, n_conten)
             if error == False:
-                self.metadata = [code, age, gender, n_imm, u_imm, n_hosp, u_hosp, n_inst, u_inst, date, escala_emina,
+                self.metadata = [code, location, age, gender, n_imm, u_imm, n_hosp, u_hosp, n_inst, u_inst, date, escala_emina,
                                  escala_barthel, conten, n_conten, u_conten, grade, cultiu, protein, albumina, tr_ant, tr_top]
                 pub.sendMessage("DATA_OK")
         else:

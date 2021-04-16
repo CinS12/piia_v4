@@ -115,7 +115,7 @@ class PreSegmentationGUI:
         else:
             pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_NEW_LOCATION_EMPTY)
 
-    def popup_ask_code(self, code):
+    def popup_ask_code(self, code, locations):
 
         popup = tk.Toplevel()
         ws = popup.winfo_screenwidth()
@@ -132,7 +132,7 @@ class PreSegmentationGUI:
         entry_new_ulcer = tk.Entry(popup, width=28, font=FONT_MSG)
         entry_new_ulcer.insert(tk.END, "")
         combobox_old_ulcer = ttk.Combobox(popup, state="readonly", width=25, justify="left", font=FONT_MSG)
-        combobox_old_ulcer["values"] = [self.lang.META_DAYS, self.lang.META_WEEKS, self.lang.META_MONTHS]
+        combobox_old_ulcer['values'] = locations
         combobox_old_ulcer.current(0)
         code_radiobutton_old = ttk.Radiobutton(popup, variable="code", text=self.lang.PRE_RADIOBUTTON_OLD,
                                                value="old", command=lambda: self.old_ulcer_view(label, entry_new_ulcer,
@@ -154,7 +154,6 @@ class PreSegmentationGUI:
         if self.code_option is not None:
             if self.code_option == 0:
                 if new_ulcer != "":
-                    # FALTA: COMPROVAR SI EL CODI S'HA CANVIAT (a l'apretar Guardar)
                     pub.sendMessage("NEW_CODE_LOCATION", location=new_ulcer, new_patient=False, code=code)
                     popup.destroy()
                 else:

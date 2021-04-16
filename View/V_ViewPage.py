@@ -126,5 +126,5 @@ class ViewPage(Page):
         """
         self.p2_frame_metadata.configure(borderwidth = 2, relief = "groove")
         self.p2_label_metadata_code.config(text="Codi: "+metadata["metadata"]["code"])
-        self.p2_label_metadata_grade.config(text="Grau: " + metadata["metadata"]["grade"])
+        self.p2_label_metadata_grade.config(text="Grau: " + str(metadata["metadata"]["grade"]))
         self.p2_label_metadata_cm.config(text="Data: " + metadata["metadata"]["date"])

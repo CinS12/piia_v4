@@ -99,7 +99,7 @@ class ControllerSetup:
                     if self.img_pre_segmentation.is_checked:
                         if self.view.processing_page.code_entry.get() == self.img_pre_segmentation.code:
                             #self.file_data_manager.load_data()
-                            self.model_metadata.getData(data)
+                            self.model_metadata.getData(data, self.img_pre_segmentation.ulcer_location)
                         else:
                             self.view.popupmsg("Codi editat. És necessari comprovar el codi.")
                     else:
@@ -178,11 +178,11 @@ class ControllerSetup:
         print("controller - data_ok")
         self.pressure_img.loaded = False
         self.view.processing_page.reset_view()
-        try:
-            self.file_data_manager.save_data(self.model_metadata.metadata, self.pressure_img, self.img_pre_segmentation.is_new_patient, self.img_pre_segmentation.is_new_ulcer)
-            self.view.popupmsg("Procés finalitzat amb èxit. Prem OK per continuar.")
-        except:
-            self.view.popupmsg("Error de gestió de fitxers.")
+        #try:
+        self.file_data_manager.save_data(self.model_metadata.metadata, self.pressure_img, self.img_pre_segmentation.is_new_patient, self.img_pre_segmentation.is_new_ulcer)
+        self.view.popupmsg("Procés finalitzat amb èxit. Prem OK per continuar.")
+        #except:
+        #    self.view.popupmsg("Error de gestió de fitxers.")
 
     def data_files_ko(self):
         """

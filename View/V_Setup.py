@@ -116,8 +116,8 @@ class ViewSetup:
         print("controller - data_ok")
         self.pressure_img.loaded = False
         self.view.reset_view()
-        try:
-            self.save_data_file()
-            self.view.popupmsg("Procés finalitzat amb èxit. Prem OK per continuar.")
-        except:
-            self.view.popupmsg("Error de gestió de fitxers.")
+        #try:
+        self.save_data_file()
+        self.view.popupmsg("Procés finalitzat amb èxit. Prem OK per continuar.")
+        #except:
+         #   self.view.popupmsg("Error de gestió de fitxers.")
