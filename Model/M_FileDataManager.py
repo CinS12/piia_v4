@@ -35,8 +35,6 @@ class FileDataManager:
         Checks or creates the metadata directory
     check_images_dir()
         Checks or creates the images directory
-    check_files()
-        Check if the image and metadata files's number match and set the id
     load_data()
         Sends the id to the Controller
     save_data(metadata, img)
@@ -53,9 +51,7 @@ class FileDataManager:
 
     def __init__(self):
         self.id = None
-        self.num_files_ok = True
         self.check_dir()
-        self.check_files()
         return
 
     def check_dir(self):
@@ -92,30 +88,13 @@ class FileDataManager:
         else:
             print("Successfully created the directory %s " % PATH_IMG_DIR)
 
-    def check_files(self):
-        """
-        Check if the image and metadata files's number match and set the id.
-        Counts and compares all image folders with all metadata txt files.
-        """
-
-        n_metadata = len(
-            [name for name in os.listdir(PATH_METADATA_DIR) if os.path.isfile(os.path.join(PATH_METADATA_DIR, name))])
-        n_img = len([name for name in os.listdir(PATH_IMG_DIR)])
-        if n_metadata != n_img:
-            self.num_files_ok = False
-        else:
-            self.id = n_img + 1
-
     def load_data(self):
-        """
-       Checks files's number's and sends it as a request to the Controller
-       """
-        if self.num_files_ok:
-            self.check_files()
-            # Subtract 1 to the id because directory's files start with 1 and arrays with 0
-            pub.sendMessage("DATA_N_ELEMENTS", num=(self.id - 1))
-        else:
-            pub.sendMessage("DATA_FILES_KO")
+        # try:
+        list = os.listdir(PATH_DATABASE_DIR)
+        pub.sendMessage("DATA_N_PACIENTS", patient_list=list)
+
+    # except:
+    # pub.sendMessage("DATA_FILES_KO")
 
     def save_data(self, metadata, img, new_patient, new_ulcer):
         """
@@ -179,17 +158,16 @@ class FileDataManager:
             "slough": len(img.slough),
             "necrosis": len(img.necrosis)
         }
-        try:
-            if new_patient:
-                self.save_new_patient(metadata, metadata_json_object, img)
+        #try:
+        if new_patient:
+            self.save_new_patient(metadata, metadata_json_object, img)
+        else:
+            if new_ulcer:
+                self.save_new_ulcer(metadata, metadata_json_object, img)
             else:
-                if new_ulcer:
-                    self.save_new_ulcer(metadata, metadata_json_object, img)
-                else:
-                    self.save_old_ulcer(metadata, metadata_json_object, img)
-        except OSError:
-            print("Error de gestió de fitxers.")
-
+                self.save_old_ulcer(metadata, metadata_json_object, img)
+        #except OSError:
+            #print("Error de gestió de fitxers.")
 
     def save_new_patient(self, metadata, metadata_json_object, img):
         os.mkdir(PATH_DATABASE_DIR + metadata[0])
@@ -201,21 +179,21 @@ class FileDataManager:
         with open(PATH_DATABASE_DIR + metadata[0] + "/1/1/Metadata_" + str(metadata[0]) + "_1_1" + ".txt",
                   "w") as outfile:
             json.dump(metadata_json_object, outfile)
-        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/img_origin_1_1.jpg", img.img_origin)
-        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/mask_1_1.jpg", img.mask)
-        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/img_1_1.jpg", img.img)
+        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/img_origin_"+ str(metadata[0]) +"_1_1.jpg", img.img_origin)
+        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/mask_"+ str(metadata[0]) +"_1_1.jpg", img.mask)
+        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/img_"+ str(metadata[0]) +"_1_1.jpg", img.img)
         if img.perimetre_done:
-            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/perimetre_1_1.jpg",
+            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/perimetre_"+ str(metadata[0]) +"_1_1.jpg",
                         img.perimetre)
         for i in range(0, len(img.granulation)):
             cv2.imwrite(
-                PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/granulation_1_1.jpg",
+                PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/granulation_"+ str(metadata[0]) +"_1_1_" + str(i+1) + ".jpg",
                 img.granulation[i])
         for i in range(0, len(img.slough)):
-            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/slough_1_1.jpg",
+            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/slough_"+ str(metadata[0]) +"_1_1_" + str(i+1) + ".jpg",
                         img.slough[i])
         for i in range(0, len(img.necrosis)):
-            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/necrosis_1_1.jpg",
+            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/1/1" + "/necrosis_"+ str(metadata[0]) +"_1_1_" + str(i+1) + ".jpg",
                         img.necrosis[i])
 
     def save_new_ulcer(self, metadata, metadata_json_object, img):
@@ -223,6 +201,7 @@ class FileDataManager:
         locations_list["location"] = []
         with open(PATH_DATABASE_DIR + metadata[0] + "/" + metadata[0] + ".txt") as json_file:
             locations = json.load(json_file)
+            json_file.close()
         i = 1
         for ulcers in locations["location"]:
             locations_list["location"].append(ulcers)
@@ -236,78 +215,83 @@ class FileDataManager:
                 i) + "_1" + ".txt",
                   "w") as outfile:
             json.dump(metadata_json_object, outfile)
-        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1" + "/img_origin_1_1.jpg", img.img_origin)
-        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1" + "/mask_1_1.jpg", img.mask)
-        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1" + "/img_1_1.jpg", img.img)
+        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1" + "/img_origin_" + str(metadata[0]) + "_" + str(i) + "_1.jpg", img.img_origin)
+        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1" + "/mask_"+ str(metadata[0]) + "_" + str(i) + "_1.jpg", img.mask)
+        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1" + "/img_"+ str(metadata[0]) + "_" + str(i) + "_1.jpg", img.img)
         if img.perimetre_done:
-            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1" + "/perimetre_1_1.jpg",
+            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1" + "/perimetre_" + str(metadata[0]) + "_" + str(i) + "1_1.jpg",
                         img.perimetre)
         for j in range(0, len(img.granulation)):
             cv2.imwrite(
-                PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1/granulation_1_1_" + str(j+1) +".jpg",
+                PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1/granulation_"+ str(metadata[0]) + "_" + str(i) + "_1_" + str(j + 1) + ".jpg",
                 img.granulation[j])
         for j in range(0, len(img.slough)):
-            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1/slough_1_1_" + str(j+1) +".jpg",
+            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1/slough_"+ str(metadata[0]) + "_" + str(i) + "_1_" + str(j + 1) + ".jpg",
                         img.slough[j])
         for j in range(0, len(img.necrosis)):
-            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1" + "/necrosis_1_1_" + str(j+1) +".jpg",
+            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/1" + "/necrosis_"+ str(metadata[0]) + "_" + str(i) + "_1_" + str(j + 1) + ".jpg",
                         img.necrosis[j])
 
-    def save_old_ulcer (self, metadata, metadata_json_object, img):
+    def save_old_ulcer(self, metadata, metadata_json_object, img):
         with open(PATH_DATABASE_DIR + metadata[0] + "/" + metadata[0] + ".txt") as json_file:
             locations = json.load(json_file)
-        i = 1
+            json_file.close()
+        i = 0
         for ulcers in locations["location"]:
+            i = i+1
             if ulcers.lower() == metadata[1].lower():
                 n_ulcers = len([name for name in os.listdir(PATH_DATABASE_DIR + metadata[0] + "/" + str(i))])
                 os.mkdir(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(n_ulcers + 1))
-            i = i + 1
-        with open(PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/Metadata_" + str(
-                metadata[0]) + "_" + str(i) + "_" + str(n_ulcers + 1) + ".txt",
-                  "w") as outfile:
-            json.dump(metadata_json_object, outfile)
-        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/img_origin_1_1.jpg", img.img_origin)
-        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/mask_1_1.jpg", img.mask)
-        cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/img_1_1.jpg", img.img)
-        if img.perimetre_done:
-            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/perimetre_1_1.jpg",
+                print("Metadata[0]: "+metadata[0])
+                print("i: "+str(i))
+                print("n_ulcers+1: "+ str(n_ulcers+1))
+                #with open(PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/Metadata_" + str(
+                #        metadata[0]) + "_" + str(i) + "_" + str(n_ulcers + 1) + ".txt",
+                #          "w") as outfile:
+                with open(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(n_ulcers+1) + "/Metadata_" + str(metadata[0]) + "_" + str(i) + "_" + str(n_ulcers+1) + ".txt",
+                          "w") as outfile:
+                    json.dump(metadata_json_object, outfile)
+                outfile.close()
+                cv2.imwrite(
+                    PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(n_ulcers + 1) + "/img_origin_"+ str(metadata[0]) +"_" + str(i) + "_" + str(n_ulcers+1) +".jpg",
+                    img.img_origin)
+                cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(n_ulcers + 1) + "/mask_"+ str(metadata[0]) +"_" + str(i) + "_" + str(n_ulcers+1) +".jpg",
+                            img.mask)
+                cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(n_ulcers + 1) + "/img_"+ str(metadata[0]) +"_" + str(i) + "_" + str(n_ulcers+1) +".jpg",
+                            img.img)
+                if img.perimetre_done:
+                    cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(n_ulcers + 1) + "/perimetre_"+ str(metadata[0]) +"_" + str(i) + "_" + str(n_ulcers+1) +".jpg",
                         img.perimetre)
-        for j in range(0, len(img.granulation)):
-            print(PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/granulation_1_1_" + str(j + 1) + ".jpg")
-            cv2.imwrite(
-                PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/granulation_1_1_" + str(j + 1) + ".jpg",
-                img.granulation[j])
-        for j in range(0, len(img.slough)):
-            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/slough_1_1_" + str(j + 1) + ".jpg",
+                for j in range(0, len(img.granulation)):
+                    print(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(
+                        n_ulcers + 1) + "/granulation_1_1_" + str(j + 1) + ".jpg")
+                    cv2.imwrite(
+                        PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(n_ulcers + 1) + "/granulation_" + str(metadata[0]) + "_" + str(i) + "_" + str(n_ulcers+1) + str(j + 1) + ".jpg",
+                        img.granulation[j])
+                for j in range(0, len(img.slough)):
+                    cv2.imwrite(
+                        PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(n_ulcers + 1) + "/slough_" + str(metadata[0]) + "_" + str(i) + "_" + str(n_ulcers+1) + str(j + 1) + ".jpg",
                         img.slough[j])
-        for j in range(0, len(img.necrosis)):
-            cv2.imwrite(PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/necrosis_1_1_" + str(j + 1) + ".jpg",
+                for j in range(0, len(img.necrosis)):
+                    cv2.imwrite(
+                        PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(n_ulcers + 1) + "/necrosis_" + str(metadata[0]) + "_" + str(i) + "_" + str(n_ulcers+1) + str(j + 1) + ".jpg",
                         img.necrosis[j])
 
-    def load_img_i(self, i):
+    def load_img_i(self, id, location, dir):
         """
         Reads the image with the specified id from the directory
         Parameters
         ----------
-        i : int
-           id of the image that has to be read
+        id : int patient id
+           id of the patient that has to be read
+        location : int
+            directory index of the ulcer that has to be read
+        dir : int
+            directory index of the image that has to be read
         """
 
-        im = ImageTk.PhotoImage(Image.open(PATH_IMG_i + str(i) + "/mask_" + str(i) + ".jpg"))
+        im = ImageTk.PhotoImage(Image.open(PATH_DATABASE_DIR + str(id) + "/" + str(location) + "/" + str(dir) + "/mask_" + str(id) + "_" + str(location) + "_" + str(dir) + ".jpg"))
         pub.sendMessage("IMAGE_LOAD_i", img_tk=im)
-
-    def load_metadata_i(self, i):
-        """
-        Reads the metadata file with the specified id from the directory
-        Parameters
-        ----------
-        i : int
-           id of the metadata file that has to be read
-        """
-
-        with open(PATH_METADATA_i + str(i) + ".txt") as json_file:
-            data = json.load(json_file)
-            pub.sendMessage("METADATA_LOAD_i", metadata=data)
 
     def check_code(self, code):
         code_exists = os.path.isdir(PATH_DATABASE_DIR + str(code))
@@ -316,15 +300,27 @@ class FileDataManager:
     def check_code_location(self, code, location):
         with open(PATH_DATABASE_DIR + str(code) + "/" + code + ".txt") as json_file:
             patient_ulcers = json.load(json_file)
+            json_file.close()
         for ulcer in patient_ulcers["location"]:
             if ulcer.lower() == location.lower():
                 return False
         return True
 
     def get_locations(self, code):
-        with open(PATH_DATABASE_DIR + str(code) + "/" + code + ".txt") as json_file:
+        with open(PATH_DATABASE_DIR + str(code) + "/" + str(code) + ".txt") as json_file:
             patient_ulcers = json.load(json_file)
+            json_file.close()
         locations = []
         for ulcer in patient_ulcers["location"]:
             locations.append(ulcer)
         return locations
+
+    def get_dates(self, id, location):
+        dates = []
+        n_ulcers = len([name for name in os.listdir(PATH_DATABASE_DIR + id + "/" + str(location))])
+        for x in range(n_ulcers):
+            with open(PATH_DATABASE_DIR + id + "/" + str(location) + "/" + str(x+1) + "/Metadata_"+ str(id) + "_" + str(location) + "_" + str(x+1) +".txt") as json_file:
+                metadata = json.load(json_file)
+                json_file.close()
+                dates.append(metadata["metadata"]["date"])
+        return dates

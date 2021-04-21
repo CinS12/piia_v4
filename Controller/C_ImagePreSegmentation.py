@@ -27,6 +27,9 @@ class ControllerImagePreSegmentation:
         pub.subscribe(self.code_checked, "CODE_CHECKED")
         pub.subscribe(self.new_code_location, "NEW_CODE_LOCATION")
         pub.subscribe(self.old_code_location, "OLD_CODE_LOCATION")
+        pub.subscribe(self.patient_selected, "PATIENT_SELECTED")
+        pub.subscribe(self.location_selected, "LOCATION_SELECTED")
+        pub.subscribe(self.date_selected, "DATE_SELECTED")
 
     def analyse_image(self):
         """
@@ -109,3 +112,14 @@ class ControllerImagePreSegmentation:
         self.is_new_patient = False
         self.is_checked = True
         self.code = code
+
+    def patient_selected(self, id):
+        locations = self.file_data_manager.get_locations(id)
+        self.view.view_page.update_locations(id, locations)
+
+    def location_selected(self, id, location):
+        dates = self.file_data_manager.get_dates(id, location)
+        self.view.view_page.update_dates(id, location, dates)
+
+    def date_selected(self, id, location, dir):
+        self.file_data_manager.load_img_i(id, location, dir)

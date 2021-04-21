@@ -32,11 +32,9 @@ class ControllerSetup:
         pub.subscribe(self.data_ok, "DATA_OK")
 
         pub.subscribe(self.data_files_ko, "DATA_FILES_KO")
-        pub.subscribe(self.data_n_elements, "DATA_N_ELEMENTS")
+        pub.subscribe(self.data_n_pacients, "DATA_N_PACIENTS")
 
-        pub.subscribe(self.ask_image_i, "ASK_IMAGE_i")
         pub.subscribe(self.load_image_i, "IMAGE_LOAD_i")
-        pub.subscribe(self.load_metadata_i, "METADATA_LOAD_i")
 
         self.language_manager = C_LanguageSelection.LanguageSelection(self.parent)
 
@@ -93,23 +91,23 @@ class ControllerSetup:
         """
 
         print("controller - Botó 3!")
-        try:
-            if self.pressure_img.loaded:
-                if self.pressure_img.processed:
-                    if self.img_pre_segmentation.is_checked:
-                        if self.view.processing_page.code_entry.get() == self.img_pre_segmentation.code:
-                            #self.file_data_manager.load_data()
-                            self.model_metadata.getData(data, self.img_pre_segmentation.ulcer_location)
-                        else:
-                            self.view.popupmsg("Codi editat. És necessari comprovar el codi.")
+        #try:
+        if self.pressure_img.loaded:
+            if self.pressure_img.processed:
+                if self.img_pre_segmentation.is_checked:
+                    if self.view.processing_page.code_entry.get() == self.img_pre_segmentation.code:
+                        #self.file_data_manager.load_data()
+                        self.model_metadata.getData(data, self.img_pre_segmentation.ulcer_location)
                     else:
-                        self.view.popupmsg("És necessari comprovar el codi.")
+                        self.view.popupmsg("Codi editat. És necessari comprovar el codi.")
                 else:
-                    self.view.popupmsg("És necessari processar la imatge.")
+                    self.view.popupmsg("És necessari comprovar el codi.")
             else:
-                self.view.popupmsg("És necessari carregar una imatge")
-        except:
+                self.view.popupmsg("És necessari processar la imatge.")
+        else:
             self.view.popupmsg("És necessari carregar una imatge")
+        #except:
+            #self.view.popupmsg("És necessari carregar una imatge")
 
     def load_image(self):
         """
@@ -192,7 +190,7 @@ class ControllerSetup:
         print("controller - data_files_ko")
         self.view.popupmsg("Error de gestió dels fitxers.")
 
-    def data_n_elements(self, num):
+    def data_n_pacients(self, patient_list):
         """
         Calls the View function to update the element's label counter with a new value.
         Parameters
@@ -202,20 +200,7 @@ class ControllerSetup:
         """
 
         print("controller - data_n_elements")
-        self.view.view_page.update_data_n_elements(num)
-
-    def ask_image_i(self, i):
-        """
-        Calls the Data_manager functions to read and load the image and metadata "i".
-        Parameters
-        ----------
-        i : int
-           id of the image and metadata that have to be read
-        """
-
-        print("controller - ask_img_i")
-        self.file_data_manager.load_img_i(i)
-        self.file_data_manager.load_metadata_i(i)
+        self.view.view_page.update_patients(patient_list)
 
     def load_image_i(self, img_tk):
         """
@@ -228,15 +213,3 @@ class ControllerSetup:
 
         print("controller - load_img_i")
         self.view.view_page.load_image_i(img_tk)
-
-    def load_metadata_i(self, metadata):
-        """
-        Calls the View function to load the metadata to the p2_label_metadata.
-        Parameters
-        ----------
-        metadata : JSON Object
-           data sent to be loaded into a label
-        """
-
-        print("controller - load_metadata_i")
-        self.view.view_page.load_metadata_i(metadata)
