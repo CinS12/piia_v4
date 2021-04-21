@@ -319,8 +319,15 @@ class FileDataManager:
         dates = []
         n_ulcers = len([name for name in os.listdir(PATH_DATABASE_DIR + id + "/" + str(location))])
         for x in range(n_ulcers):
-            with open(PATH_DATABASE_DIR + id + "/" + str(location) + "/" + str(x+1) + "/Metadata_"+ str(id) + "_" + str(location) + "_" + str(x+1) +".txt") as json_file:
+            with open(PATH_DATABASE_DIR + str(id) + "/" + str(location) + "/" + str(x+1) + "/Metadata_"+ str(id) + "_" + str(location) + "_" + str(x+1) +".txt") as json_file:
                 metadata = json.load(json_file)
                 json_file.close()
                 dates.append(metadata["metadata"]["date"])
         return dates
+
+    def load_metadata(self, id, location, dir):
+        with open(PATH_DATABASE_DIR + str(id) + "/" + str(location) + "/" + str(dir) + "/Metadata_" + str(id) + "_" + str(
+                location) + "_" + str(dir) + ".txt") as json_file:
+            metadata = json.load(json_file)
+        json_file.close()
+        return metadata

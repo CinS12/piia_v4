@@ -81,13 +81,13 @@ class ViewPage(Page):
 
         self.p2_frame_elements = tk.Frame(self.data_frame, borderwidth=2, relief="groove")
         self.p2_frame_img = tk.Frame(self.p2_frame_elements)
-        self.p2_frame_metadata = tk.Frame(self.p2_frame_elements)
-        self.p2_label_metadata_code = ttk.Label(self.p2_frame_metadata, text="", font=FONT_MSG)
-        self.p2_label_metadata_code.grid(row=1, column=2, padx=5, pady=5)
-        self.p2_label_metadata_grade = ttk.Label(self.p2_frame_metadata, text="", font=FONT_MSG)
-        self.p2_label_metadata_grade.grid(row=2, column=2, padx=5, pady=5)
-        self.p2_label_metadata_cm = ttk.Label(self.p2_frame_metadata, text="", font=FONT_MSG)
-        self.p2_label_metadata_cm.grid(row=3, column=2, padx=5, pady=5)
+        self.p2_frame_metadata = tk.Frame(self.p2_frame_elements, width = 20)
+        self.p2_label_metadata_code = tk.Label(self.p2_frame_metadata, text="", font=FONT_MSG, width= 15, anchor="w")
+        self.p2_label_metadata_code.pack(pady=5)
+        self.p2_label_metadata_grade = tk.Label(self.p2_frame_metadata, text="", font=FONT_MSG, width=15, anchor="w")
+        self.p2_label_metadata_grade.pack(pady=5)
+        self.p2_label_metadata_cm = ttk.Label(self.p2_frame_metadata, text="", font=FONT_MSG, width=15, anchor="w")
+        self.p2_label_metadata_cm.pack(pady=5)
         self.assemble_img_frame()
 
     def assemble_img_frame(self):

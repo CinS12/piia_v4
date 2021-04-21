@@ -123,3 +123,5 @@ class ControllerImagePreSegmentation:
 
     def date_selected(self, id, location, dir):
         self.file_data_manager.load_img_i(id, location, dir)
+        metadata = self.file_data_manager.load_metadata(id, location, dir)
+        self.view.view_page.load_metadata_i(metadata)
