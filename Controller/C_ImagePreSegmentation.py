@@ -2,6 +2,7 @@ from pubsub import pub
 import language_CAST
 import language_CAT
 import language_ENG
+from Model import M_ViewerManager
 class ControllerImagePreSegmentation:
 
     def __init__(self, view, file_data_manager, lang):
@@ -30,6 +31,7 @@ class ControllerImagePreSegmentation:
         pub.subscribe(self.patient_selected, "PATIENT_SELECTED")
         pub.subscribe(self.location_selected, "LOCATION_SELECTED")
         pub.subscribe(self.date_selected, "DATE_SELECTED")
+        pub.subscribe(self.evo_selected, "EVO_SELECTED")
 
     def analyse_image(self):
         """
@@ -86,6 +88,8 @@ class ControllerImagePreSegmentation:
 
     def code_checked(self, existence, code):
         if existence:
+            saved_metadata = self.file_data_manager.get_saved_metadata(code)
+            self.view.processing_page.load_saved_data(saved_metadata)
             locations = self.file_data_manager.get_locations(code)
             self.view.pre_processing_gui.popup_ask_code(code, locations)
         else:
@@ -120,8 +124,13 @@ class ControllerImagePreSegmentation:
     def location_selected(self, id, location):
         dates = self.file_data_manager.get_dates(id, location)
         self.view.view_page.update_dates(id, location, dates)
+        self.view.view_page.evo_button.pack()
 
     def date_selected(self, id, location, dir):
         self.file_data_manager.load_img_i(id, location, dir)
         metadata = self.file_data_manager.load_metadata(id, location, dir)
         self.view.view_page.load_metadata_i(metadata)
+
+    def evo_selected(self, id, location):
+        evo_data = self.file_data_manager.get_evo_data(id, location)
+        M_ViewerManager.ViewerManager(evo_data, self.lang)

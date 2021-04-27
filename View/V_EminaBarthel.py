@@ -36,78 +36,78 @@ class EminaBarthel:
         label = ttk.Label(self.popup, text=title, font=FONT_TITOL)
         label.pack(pady=10)
         text = tk.Text(self.popup, font=FONT_TITOL, relief=tk.GROOVE, width=70, height=3, wrap=tk.WORD)
-        text.insert(tk.END, self.lang.BARTHEL_DESCRIPTION, "desc")
+        text.insert(tk.END, self.lang.EB_BARTHEL_DESCRIPTION, "desc")
         text.config(state=tk.DISABLED)
         text.tag_configure("desc", justify="center")
         text.config(pady=10, padx=10)
         text.pack(pady=20)
         self.barthel_frame = tk.Frame(self.popup)
         self.barthel_frame.pack(pady=5, padx=10)
-        #Descripció
-        label_description = ttk.Label(self.barthel_frame, text="Selecciona els paràmetres corresponents:", font=FONT_MSG)
+        #Selecció
+        label_description = ttk.Label(self.barthel_frame, text=self.lang.EB_SELECT, font=FONT_MSG)
         label_description.grid(row=1, column=2, padx=10, pady=10)
         #Camp menjar
-        barthel_menjar = ttk.Label(self.barthel_frame, text="Menjar", font=FONT_MSG)
+        barthel_menjar = ttk.Label(self.barthel_frame, text=self.lang.EB_EAT, font=FONT_MSG)
         barthel_menjar.grid(row=2, column=1, padx=10, pady=10)
         self.menjar_combobox = ttk.Combobox(self.barthel_frame, state="readonly", width=15, justify="left")
-        self.menjar_combobox["values"] = ["Independent", "Necessita ajuda", "Dependent"]
+        self.menjar_combobox["values"] = [self.lang.EB_INDEP, self.lang.EB_HELP, self.lang.EB_DEP]
         self.menjar_combobox.grid(row=2, column=2, padx=10, pady=10)
         #Camp rentar-se/banyar-se
-        barthel_rentar = ttk.Label(self.barthel_frame, text="Rentar-se (banyar-se)", font=FONT_MSG)
+        barthel_rentar = ttk.Label(self.barthel_frame, text=self.lang.EB_WASH, font=FONT_MSG)
         barthel_rentar.grid(row=3, column=1, padx=10, pady=10)
         self.rentar_combobox = ttk.Combobox(self.barthel_frame, state="readonly", width=15, justify="left")
-        self.rentar_combobox["values"] = ["Independent", "Dependent"]
+        self.rentar_combobox["values"] = [self.lang.EB_INDEP, self.lang.EB_DEP]
         self.rentar_combobox.grid(row=3, column=2, padx=10, pady=10)
         #Camp vestir-se
-        barthel_vestir = ttk.Label(self.barthel_frame, text="Vestir-se", font=FONT_MSG)
+        barthel_vestir = ttk.Label(self.barthel_frame, text=self.lang.EB_DRESS, font=FONT_MSG)
         barthel_vestir.grid(row=4, column=1, padx=10, pady=10)
         self.vestir_combobox = ttk.Combobox(self.barthel_frame, state="readonly", width=15, justify="left")
-        self.vestir_combobox["values"] = ["Independent", "Necessita ajuda", "Dependent"]
+        self.vestir_combobox["values"] = [self.lang.EB_INDEP, self.lang.EB_HELP, self.lang.EB_DEP]
         self.vestir_combobox.grid(row=4, column=2, padx=10, pady=10)
         #Camp arreglar-se
-        barthel_arreglar = ttk.Label(self.barthel_frame, text="Arreglar-se", font=FONT_MSG)
+        barthel_arreglar = ttk.Label(self.barthel_frame, text=self.lang.EB_READY, font=FONT_MSG)
         barthel_arreglar.grid(row=5, column=1, padx=10, pady=10)
         self.arreglar_combobox = ttk.Combobox(self.barthel_frame, state="readonly", width=15, justify="left")
-        self.arreglar_combobox["values"] = ["Independent", "Dependent"]
+        self.arreglar_combobox["values"] = [self.lang.EB_INDEP, self.lang.EB_DEP]
         self.arreglar_combobox.grid(row=5, column=2, padx=10, pady=10)
         #Camp deposició
-        barthel_deposicio = ttk.Label(self.barthel_frame, text="Deposició", font=FONT_MSG)
+        barthel_deposicio = ttk.Label(self.barthel_frame, text=self.lang.EB_DEPO, font=FONT_MSG)
         barthel_deposicio.grid(row=6, column=1, padx=10, pady=10)
         self.deposicio_combobox = ttk.Combobox(self.barthel_frame, state="readonly", width=15, justify="left")
-        self.deposicio_combobox["values"] = ["Continent", "Accident ocasional", "Incontinent"]
+        self.deposicio_combobox["values"] = [self.lang.EB_CONT, self.lang.EB_OCC, self.lang.EB_INCONT]
         self.deposicio_combobox.grid(row=6, column=2, padx=10, pady=10)
         #Camp micció
-        barthel_miccio = ttk.Label(self.barthel_frame, text="Micció", font=FONT_MSG)
+        barthel_miccio = ttk.Label(self.barthel_frame, text=self.lang.EB_MICC, font=FONT_MSG)
         barthel_miccio.grid(row=7, column=1, padx=10, pady=10)
         self.miccio_combobox = ttk.Combobox(self.barthel_frame, state="readonly", width=15, justify="left")
-        self.miccio_combobox["values"] = ["Continent", "Accident ocasional", "Incontinent"]
+        self.miccio_combobox["values"] = [self.lang.EB_CONT, self.lang.EB_OCC, self.lang.EB_INCONT]
         self.miccio_combobox.grid(row=7, column=2, padx=10, pady=10)
         #Camp anar al lavabo
-        barthel_lavabo = ttk.Label(self.barthel_frame, text="Anar al lavabo", font=FONT_MSG)
+        barthel_lavabo = ttk.Label(self.barthel_frame, text=self.lang.EB_WC, font=FONT_MSG)
         barthel_lavabo.grid(row=8, column=1, padx=10, pady=10)
         self.lavabo_combobox = ttk.Combobox(self.barthel_frame, state="readonly", width=15, justify="left")
-        self.lavabo_combobox["values"] = ["Independent", "Necessita ajuda", "Dependent"]
+        self.lavabo_combobox["values"] = [self.lang.EB_INDEP, self.lang.EB_HELP, self.lang.EB_DEP]
         self.lavabo_combobox.grid(row=8, column=2, padx=10, pady=10)
         #Camp traslladar-se (ex: butaca/llit)
-        barthel_trasllat = ttk.Label(self.barthel_frame, text="Traslladar-se (ex: buataca/llit)", font=FONT_MSG)
+        barthel_trasllat = ttk.Label(self.barthel_frame, text=self.lang.EB_MOVE, font=FONT_MSG)
         barthel_trasllat.grid(row=9, column=1, padx=10, pady=10)
         self.trasllat_combobox = ttk.Combobox(self.barthel_frame, state="readonly", width=15, justify="left")
-        self.trasllat_combobox["values"] = ["Independent", "Mínima ajuda", "Gran ajuda", "Dependent"]
+        self.trasllat_combobox["values"] = [self.lang.EB_INDEP, self.lang.EB_MIN_HELP, self.lang.EB_MAX_HELP, self.lang.EB_DEP]
         self.trasllat_combobox.grid(row=9, column=2, padx=10, pady=10)
         #Camp deambulació
-        barthel_deambulacio = ttk.Label(self.barthel_frame, text="Dembulació", font=FONT_MSG)
+        barthel_deambulacio = ttk.Label(self.barthel_frame, text=self.lang.EB_WALK, font=FONT_MSG)
         barthel_deambulacio.grid(row=10, column=1, padx=10, pady=10)
         self.deambulacio_combobox = ttk.Combobox(self.barthel_frame, state="readonly", width=15, justify="left")
-        self.deambulacio_combobox["values"] = ["Independent", "Necessita ajuda", "Independent en cadira de rodes", "Dependent"]
+        self.deambulacio_combobox["values"] = [self.lang.EB_INDEP, self.lang.EB_MIN_HELP, self.lang.EB_WHEEL_HELP, self.lang.EB_DEP]
         self.deambulacio_combobox.grid(row=10, column=2, padx=10, pady=10)
         #Camp pujar i baixar escales
-        barthel_escales = ttk.Label(self.barthel_frame, text="Pujar i baixar escales", font=FONT_MSG)
+        barthel_escales = ttk.Label(self.barthel_frame, text=self.lang.EB_STAIRS, font=FONT_MSG)
         barthel_escales.grid(row=11, column=1, padx=10, pady=10)
         self.escales_combobox = ttk.Combobox(self.barthel_frame, state="readonly", width=15, justify="left")
-        self.escales_combobox["values"] = ["Independent", "Necessita ajuda", "Dependent"]
+        self.escales_combobox["values"] = [self.lang.EB_INDEP, self.lang.EB_HELP, self.lang.EB_DEP]
         self.escales_combobox.grid(row=11, column=2, padx=10, pady=10)
 
-        button_ok = ttk.Button(self.popup, text="Desar", command=self.barthel_getData)
+        button_ok = ttk.Button(self.popup, text=self.lang.EB_SAVE, command=self.barthel_getData)
         button_ok.pack(pady=20)
 
     def popup_emina(self, title):
@@ -133,7 +133,7 @@ class EminaBarthel:
         label = ttk.Label(self.popup, text=title, font=FONT_BENVINGUDA)
         label.pack(pady=10)
         text = tk.Text(self.popup, font=FONT_TITOL, relief=tk.GROOVE, width=70, height=3, wrap=tk.WORD)
-        text.insert(tk.END, self.lang.EMINA_DESCRIPTION, "desc")
+        text.insert(tk.END, self.lang.EB_EMINA_DESCRIPTION, "desc")
         text.config(state=tk.DISABLED)
         text.tag_configure("desc", justify="center")
         text.config(pady=10, padx=10)

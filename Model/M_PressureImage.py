@@ -73,7 +73,14 @@ class Pressure_img:
         self.mask = None
         self.previous_roi = None
         self.perimetre_done = False
-        self.perimetre_cm = 0
+        self.perimetre_total_cm = 0
+        self.area_aux_cm = 0
+        self.area_cm = 0
+        self.area_aux_cm = 0
+        self.area_total_cm = 0
+        self.area_granulation_cm = 0
+        self.area_slough_cm = 0
+        self.area_necrosis_cm = 0
         self.perimetre = None
         self.granulation = []
         self.slough = []
@@ -175,12 +182,15 @@ class Pressure_img:
             self.perimetre_done = True
             pub.sendMessage("UPDATE_PERIMETER_COUNT")
         elif (tissue == "Granulation"):
+            self.area_granulation_cm += round(self.area_aux_cm, 2)
             self.granulation.append(img_cv2_roi)
             pub.sendMessage("UPDATE_GRANULATION_COUNT", number=len(self.granulation))
         elif (tissue == "Necrosis"):
+            self.area_necrosis_cm += round(self.area_aux_cm, 2)
             self.necrosis.append(img_cv2_roi)
             pub.sendMessage("UPDATE_NECROSIS_COUNT", number=len(self.necrosis))
         elif (tissue == "Slough"):
+            self.area_slough_cm += round(self.area_aux_cm, 2)
             self.slough.append(img_cv2_roi)
             pub.sendMessage("UPDATE_SLOUGH_COUNT", number=len(self.slough))
 
@@ -324,25 +334,47 @@ class Pressure_img:
             cv2.fillPoly(mask, a3, [255, 255, 255])
             # returning the image only where mask pixels are nonzero
             masked = cv2.bitwise_and(img, mask)
+            gray = cv2.cvtColor(masked, cv2.COLOR_BGR2GRAY)
+            px_area = cv2.countNonZero(gray)
+            self.area_cm = px_area * self.target_detector.px_dist * self.target_detector.px_dist
+            for ar in args:
+                if ar == 2:
+                    #Zona anella
+                    self.area_cm = self.area_aux_cm - self.area_cm
+            self.area_aux_cm = self.area_cm.copy()
+            print("Àrea: ", round(self.area_cm, 2), " cm^2")
             px_perimeter = a3.shape[1]
+            print("Perímetre zona seleccionada: ", (round(px_perimeter * self.target_detector.px_dist, 2)), " cm")
             for ar in args:
                 if ar == 1:
                     pub.sendMessage("ASK_ROI_CONFIRMATION", img_cv2_mask=img, img_cv2_roi=masked, tissue=tissue,
-                                    scale_factor=100, px_perimeter=px_perimeter, ring=1)
+                                    scale_factor=100, ring=1)
                     return masked
                 else:
+                    #Anella interior
                     sub = cv2.subtract(self.ring_ext, masked)
                     pub.sendMessage("ASK_ROI_CONFIRMATION", img_cv2_mask=img, img_cv2_roi=sub, tissue=tissue,
-                                    scale_factor=100, px_perimeter=px_perimeter, ring=2)
+                                    scale_factor=100, ring=2)
                     return masked
             if (tissue == "Perimeter"):
-                cm_perimeter = px_perimeter * self.target_detector.px_dist
-                cm_perimeter = round(cm_perimeter, 2)
-                self.perimetre_cm = cm_perimeter
+                cm_perimeter_total = px_perimeter * self.target_detector.px_dist
+                cm_perimeter_total = round(cm_perimeter_total, 2)
+                self.perimetre_total_cm = cm_perimeter_total
+                self.area_cm = cm_perimeter_total * self.target_detector.px_dist
+                self.area_total_cm = round(self.area_cm, 2)
+            if (tissue == "Granulation"):
+                cm_area_granulation = round(self.area_cm, 2)
+                self.area_cm = cm_area_granulation
+            if (tissue == "Slough"):
+                cm_area_slough = round(self.area_cm, 2)
+                self.area_cm = cm_area_slough
+            if (tissue == "Necrosis"):
+                cm_area_necrosis = round(self.area_cm, 2)
+                self.area_cm = cm_area_necrosis
             pub.sendMessage("ASK_ROI_CONFIRMATION", img_cv2_mask=img, img_cv2_roi=masked, tissue=tissue,
-                            scale_factor=100, px_perimeter=px_perimeter, ring=0)
+                            scale_factor=100, ring=0)
             # cv2.imshow(tissue+"Tissue", masked)
-            # cv2.imwrite("result.jpg", masked)
+            #cv2.imwrite("area.jpg", area)
             return masked
 
         height, width, channel = im.shape

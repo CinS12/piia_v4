@@ -10,10 +10,6 @@ import os, os.path
 import json
 import cv2
 
-PATH_METADATA_DIR = "../resources/Metadata"
-PATH_IMG_DIR = "../resources/Images"
-PATH_IMG_i = "../resources/Images/Img_"
-PATH_METADATA_i = "../resources/Metadata/Metadata_"
 PATH_DATABASE_DIR = "../resources/Database/"
 
 
@@ -51,42 +47,7 @@ class FileDataManager:
 
     def __init__(self):
         self.id = None
-        self.check_dir()
         return
-
-    def check_dir(self):
-        """
-        Calls the functions to check or create the image and metadata directories.
-        """
-
-        self.check_metadata_dir()
-        self.check_images_dir()
-
-    def check_metadata_dir(self):
-        """
-        Checks or creates the metadata directory.
-        Uses the constant PATH_METADATA_DIR to find the directory.
-        """
-
-        try:
-            os.mkdir(PATH_METADATA_DIR)
-        except OSError:
-            print("Creation of the directory %s failed" % PATH_METADATA_DIR)
-        else:
-            print("Successfully created the directory %s " % PATH_METADATA_DIR)
-
-    def check_images_dir(self):
-        """
-        Checks or creates the images directory.
-        Uses the constant PATH_IMG_DIR to find the directory.
-        """
-
-        try:
-            os.mkdir(PATH_IMG_DIR)
-        except OSError:
-            print("Creation of the directory %s failed" % PATH_IMG_DIR)
-        else:
-            print("Successfully created the directory %s " % PATH_IMG_DIR)
 
     def load_data(self):
         # try:
@@ -153,7 +114,11 @@ class FileDataManager:
             },
             "whitebalanced": img.whitebalanced,
             "perimetre": img.perimetre_done,
-            "perimetre_cm": img.perimetre_cm,
+            "perimetre_total_cm": img.perimetre_total_cm,
+            "area_total_cm2": img.area_total_cm,
+            "area_granulation_cm2": round(img.area_granulation_cm, 2),
+            "area_slough_cm2": round(img.area_slough_cm, 2),
+            "area_necrosis_cm2": round(img.area_necrosis_cm, 2),
             "granulation": len(img.granulation),
             "slough": len(img.slough),
             "necrosis": len(img.necrosis)
@@ -330,4 +295,37 @@ class FileDataManager:
                 location) + "_" + str(dir) + ".txt") as json_file:
             metadata = json.load(json_file)
         json_file.close()
+        return metadata
+
+    def get_evo_data(self, id, location):
+        evo_data = {}
+        evo_data["id"] = id
+        evo_data["perimeter"] = []
+        evo_data["area_total"] = []
+        evo_data["granulation"] = []
+        evo_data["slough"] = []
+        evo_data["necrosis"] = []
+        evo_data["date"] = []
+        n_ulcers = len([name for name in os.listdir(PATH_DATABASE_DIR + id + "/" + str(location))])
+        for x in range(n_ulcers):
+            data_list = []
+            with open(PATH_DATABASE_DIR + str(id) + "/" + str(location) + "/" + str(x + 1) + "/Metadata_" + str(
+                    id) + "_" + str(location) + "_" + str(x + 1) + ".txt") as json_file:
+                metadata = json.load(json_file)
+                json_file.close()
+                evo_data["location"] = metadata["location"]
+                if metadata["perimetre"]:
+                    evo_data["perimeter"].append(metadata["perimetre_total_cm"])
+                    evo_data["area_total"].append(metadata["area_total_cm2"])
+                evo_data["granulation"].append(metadata["area_granulation_cm2"])
+                evo_data["slough"].append(metadata["area_slough_cm2"])
+                evo_data["necrosis"].append(metadata["area_necrosis_cm2"])
+                evo_data["date"].append(metadata["metadata"]["date"])
+        return evo_data
+
+    def get_saved_metadata(self, id):
+        with open(PATH_DATABASE_DIR + str(id) + "/1/1" + "/Metadata_" + str(
+                id) + "_1_1.txt") as json_file:
+            metadata = json.load(json_file)
+            json_file.close()
         return metadata

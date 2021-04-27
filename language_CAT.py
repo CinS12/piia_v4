@@ -18,10 +18,6 @@ class LangCAT:
         self.MAIN_TITLE = "Anotació d'imatges d'úlceres de pressió" #"Pressure Injuries Image Analysis"
         self.BUTTON_1 = "Afegir imatge a la base de dades"
         self.BUTTON_2 = "Consultar base de dades"
-        # Source: (https://ca.wikipedia.org/wiki/Escala_de_Barthel)
-        self.BARTHEL_DESCRIPTION = "Escala ordinal utilitzada per mesurar l'acompliment en activitats de la vida diària bàsiques (AVDB)."
-        # Source: (https://www.murciasalud.es/preevid/1103)
-        self.EMINA_DESCRIPTION = "L'escala Emina és un instrument de valoració del risc de desenvolupament d'úlceres de pressió en pacients hospitalitzats."
 
         # PROCESSING PAGE
         self.TITLE_PROCESSING = self.BUTTON_1
@@ -109,3 +105,41 @@ class LangCAT:
 
         # MODEL PRESSURE IMAGE
         self.MODEL_PRESSURE_IMG = "Seleccionar zona rectangular: Marcador + Ferida. ENTER per acceptar."
+
+        #EMINA-BARTHEL
+        # Source: (https://ca.wikipedia.org/wiki/Escala_de_Barthel)
+        self.EB_BARTHEL_DESCRIPTION = "Escala ordinal utilitzada per mesurar l'acompliment en activitats de la vida diària bàsiques (AVDB)."
+        # Source: (https://www.murciasalud.es/preevid/1103)
+        self.EB_EMINA_DESCRIPTION = "L'escala Emina és un instrument de valoració del risc de desenvolupament d'úlceres de pressió en pacients hospitalitzats."
+        self.EB_SELECT = "Selecciona els paràmetres corresponents:"
+        self.EB_EAT = "Menjar"
+        self.EB_INDEP = "Independent"
+        self.EB_MIN_HELP = "Mínima ajuda"
+        self.EB_HELP = "Necessita ajuda"
+        self.EB_MAX_HELP = "Gran ajuda"
+        self.EB_WHEEL_HELP = "Independent en cadira de rodes"
+        self.EB_DEP = "Dependent"
+        self.EB_WASH = "Rentar-se (banyar-se)"
+        self.EB_DRESS = "Vestir-se"
+        self.EB_READY = "Arreglar-se"
+        self.EB_DEPO = "Deposició"
+        self.EB_CONT = "Continent"
+        self.EB_OCC = "Accident ocasional"
+        self.EB_INCONT = "Incontinent"
+        self.EB_MICC = "Micció"
+        self.EB_WC = "Anar al lavabo"
+        self.EB_MOVE = "Traslladar-se (ex: buataca/llit)"
+        self.EB_WALK = "Deambulació"
+        self.EB_STAIRS = "Pujar i baixar escales"
+        self.EB_SAVE = "Desar"
+
+        #VIEWER MANAGER
+        self.VM_title = "Evolució de la ferida"
+        self.VM_id = "Id pacient: "
+        self.VM_location = "Localització ferida: "
+        self.VM_cm = "cm"
+        self.VM_perimeter_title = "Perímetre total"
+        self.VM_perimeter_area = "Àrea total"
+        self.VM_granulation = "Àrea teixit granulós"
+        self.VM_slough = "Àrea teixit esfàcel"
+        self.VM_necrosis = "Àrea teixit necròtic"

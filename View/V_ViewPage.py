@@ -12,6 +12,8 @@ class ViewPage(Page):
     def __init__(self, parent, lang):
         self.container = parent
         self.lang = lang
+        self.id = ""
+        self.location = ""
         self.page = tk.Frame(self.container)
         self.elements_page()
         return
@@ -31,7 +33,7 @@ class ViewPage(Page):
         self.list_frame.pack()
         self.data_frame.pack()
         self.p2_frame_list.pack(pady=15, padx=5, expand=False, side=tk.LEFT)
-        self.p2_frame_list_3.pack(pady=15, padx=5, expand=False, side=tk.RIGHT)
+        self.evo_frame.pack(pady=15, padx=5, expand=False, side=tk.RIGHT)
         self.p2_frame_list_2.pack(pady=15, padx=5, expand=False, side=tk.RIGHT)
         self.p2_frame_list_1.pack(pady=15, padx=5, expand=False, side=tk.RIGHT)
         self.p2_frame_elements.pack(pady=0, padx=10, side=tk.LEFT)
@@ -70,14 +72,11 @@ class ViewPage(Page):
         self.llista_2.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
         scrollbar_2.config(command=self.llista_2.yview)
 
-        self.p2_frame_list_3 = tk.Frame(self.list_frame, borderwidth=2, relief="groove")
-        self.p2_label_info_3 = ttk.Label(self.p2_frame_list_3, text="Image: ", font=FONT_TITOL)
-        self.p2_label_info_3.pack()
-        scrollbar_3 = tk.Scrollbar(self.p2_frame_list_3)
-        scrollbar_3.pack(side=tk.RIGHT, fill=tk.Y)
-        self.llista_3 = tk.Listbox(self.p2_frame_list_3, yscrollcommand=scrollbar_3.set, width=15, height=7)
-        self.llista_3.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
-        scrollbar_3.config(command=self.llista_3.yview)
+        self.evo_frame = tk.Frame(self.list_frame)
+        self.evo_button = ttk.Button(self.evo_frame, text="Veure evolució", command=self.evo_selected)
+        self.evo_button.pack()
+        self.evo_button.pack_forget()
+
 
         self.p2_frame_elements = tk.Frame(self.data_frame, borderwidth=2, relief="groove")
         self.p2_frame_img = tk.Frame(self.p2_frame_elements)
@@ -130,7 +129,8 @@ class ViewPage(Page):
         Displays all found elements on the list.
         Creates the "double click" event to select an element.
         """
-
+        self.id = id
+        self.location = location
         self.llista_2.delete(0, tk.END)
         for i in range(len(dates)):
             self.llista_2.insert(tk.END, dates[i])
@@ -184,3 +184,6 @@ class ViewPage(Page):
         self.p2_label_metadata_code.config(text="Codi: " + metadata["metadata"]["code"])
         self.p2_label_metadata_grade.config(text="Grau: " + str(metadata["metadata"]["grade"]))
         self.p2_label_metadata_cm.config(text="Data: " + metadata["metadata"]["date"])
+
+    def evo_selected(self):
+        pub.sendMessage("EVO_SELECTED", id=self.id, location=self.location)

@@ -365,3 +365,7 @@ class ProcessingPage(Page):
 
     def check_code(self, code):
         pub.sendMessage("CHECK_CODE_REQUEST", code=code)
+
+    def load_saved_data(self, data):
+        print(data)
+        self.age_pers_entry.insert(tk.END, data["metadata"]["age"])

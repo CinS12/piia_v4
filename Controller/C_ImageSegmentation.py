@@ -100,7 +100,7 @@ class ControllerImageSegmentation:
         print("controller - target_not_found")
         self.view.popupmsg("Atenció. No s'ha trobat el target!")
 
-    def ask_roi_confirmation(self, img_cv2_mask, img_cv2_roi, tissue, scale_factor, px_perimeter, ring):
+    def ask_roi_confirmation(self, img_cv2_mask, img_cv2_roi, tissue, scale_factor, ring):
         """
         Calls the View function to ask user confirmation about a image's roi.
         Parameters
@@ -117,8 +117,6 @@ class ControllerImageSegmentation:
         print("controller - ask_roi_confirmation!")
         self.pressure_img.close_all()
         #try:
-        cm_perimeter = px_perimeter * self.pressure_img.target_detector.px_dist
-        print("Perímetre zona seleccionada: ",cm_perimeter)
         self.view.processing_gui.ask_roi_confirmation(img_cv2_mask, img_cv2_roi, tissue, scale_factor, ring)
         #except:
             #self.view.popupmsg("Alguna cosa ha fallat. Torna-ho a intentar!")
