@@ -368,4 +368,13 @@ class ProcessingPage(Page):
 
     def load_saved_data(self, data):
         print(data)
+        self.age_pers_entry.delete(0, tk.END)
         self.age_pers_entry.insert(tk.END, data["metadata"]["age"])
+        if data["metadata"]["gender"] == "Home" or data["metadata"]["age"] == "Hombre" or data["metadata"]["age"] == "Man":
+            self.gender_combobox.current(0)
+        if data["metadata"]["gender"] == "Dona" or data["metadata"]["age"] == "Mujer" or data["metadata"]["age"] == "Woman":
+            self.gender_combobox.current(1)
+        if data["metadata"]["gender"] == "Altre" or data["metadata"]["age"] == "Otro" or data["metadata"]["age"] == "Other":
+            self.gender_combobox.current(2)
+        self.emina_scale.set(data["metadata"]["escala_emina"])
+        self.barthel_scale.set(data["metadata"]["escala_barthel"])
