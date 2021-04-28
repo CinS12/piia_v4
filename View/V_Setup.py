@@ -2,13 +2,13 @@ import tkinter as tk
 from tkinter import ttk
 from pubsub import pub
 from View import V_MainPage, V_ProcessingPage, V_ViewPage, V_PreSegmentationGUI, V_SegmentationGUI
-import abc
-from abc import ABC, abstractmethod
 
 FONT_BENVINGUDA = ("Verdana", 12)
 FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
-import language_ENG, language_CAT, language_CAST
+from resources import language_CAST, language_ENG, language_CAT
+
+
 class ViewSetup:
 
     def __init__(self, parent, lang):

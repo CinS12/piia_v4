@@ -9,6 +9,7 @@ FONT_MSG = ("Verdana", 8)
 class ToolTip(object):
 
     def __init__(self, widget):
+        print(type(widget))
         self.widget = widget
         self.tipwindow = None
         self.id = None

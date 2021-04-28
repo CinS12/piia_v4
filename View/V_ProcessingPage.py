@@ -31,7 +31,7 @@ class ProcessingPage(Page):
         p1_button_1 = ttk.Button(self.widgets, text=self.lang.IMAGE_LOAD, command=self.carregar_imatge)
         p1_button_2 = ttk.Button(self.page, text=self.lang.BACK, command=self.tornar_main)
         self.p1_button_img = ttk.Button(self.widgets, text=self.lang.IMAGE_PROCESSING, command=self.processar_img)
-        path = "../resources/load_img.png"
+        path = "../resources/Images/load_img.png"
         img = ImageTk.PhotoImage(Image.open(path))
         self.p1_img_label = tk.Label(self.widgets, image=img)
         self.p1_img_label.image = img

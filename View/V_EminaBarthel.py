@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
 from pubsub import pub
-from language_CAT import *
 
 FONT_BENVINGUDA = ("Verdana", 12)
 FONT_TITOL = ("Verdana", 10)

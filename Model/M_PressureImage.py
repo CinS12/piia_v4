@@ -9,9 +9,7 @@ import numpy as np
 from peakdetect import peakdetect
 from pubsub import pub
 
-import language_CAST
-import language_CAT
-import language_ENG
+from resources import language_CAST, language_ENG, language_CAT
 from Model.M_TargetDetector import TargetDetector
 
 

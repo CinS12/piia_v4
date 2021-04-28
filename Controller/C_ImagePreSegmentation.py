@@ -1,8 +1,8 @@
 from pubsub import pub
-import language_CAST
-import language_CAT
-import language_ENG
 from Model import M_ViewerManager
+from resources import language_CAST, language_ENG, language_CAT
+
+
 class ControllerImagePreSegmentation:
 
     def __init__(self, view, file_data_manager, lang):

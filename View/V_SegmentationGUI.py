@@ -114,17 +114,17 @@ class SegmentationGUI:
     def show_example(self, tissue):
         if tissue == 0:
             title = self.lang.SEG_GRANULATION_EX
-            path = "../resources/ex_granulation.png"
+            path = "../resources/Images/ex_granulation.png"
             description = self.lang.HELPER_GRANULATION
         else:
             if tissue == 1:
                 title = self.lang.SEG_NECROSIS_EX
-                path = "../resources/ex_necrosis.png"
+                path = "../resources/Images/ex_necrosis.png"
                 description = self.lang.HELPER_NECROSIS
             else:
                 if tissue == 2:
                     title = self.lang.SEG_SLOUGH_EX
-                    path = "../resources/ex_slough.png"
+                    path = "../resources/Images/ex_slough.png"
                     description = self.lang.HELPER_SLOUGH
         # Crear la finestra
         popup = tk.Toplevel()
@@ -396,11 +396,11 @@ class SegmentationGUI:
         frame = tk.Frame(self.popup)
         frame.pack()
         # Carregar les imatges
-        path = "../resources/anella.png"
+        path = "../resources/Images/anella.png"
         img_a = ImageTk.PhotoImage(Image.open(path))
         img_anella = tk.Label(frame, image=img_a)
         img_anella.grid(row=1, column=1, padx=5, pady=5)
-        path = "../resources/tancat.png"
+        path = "../resources/Images/tancat.png"
         img_t = ImageTk.PhotoImage(Image.open(path))
         img_tancat = tk.Label(frame, image=img_t)
         img_tancat.grid(row=1, column=2, padx=5, pady=5)
