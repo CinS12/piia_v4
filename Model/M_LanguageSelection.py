@@ -1,6 +1,6 @@
 import json
 
-PATH_LANGUAGE = "../resources/Language"
+PATH_LANGUAGE = "resources/Language"
 class ModelLanguageSelection:
     def __init__(self):
         self.lang = ""

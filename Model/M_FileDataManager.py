@@ -10,7 +10,7 @@ import os, os.path
 import json
 import cv2
 
-PATH_DATABASE_DIR = "../resources/Database/"
+PATH_DATABASE_DIR = "resources/Database/"
 
 
 class FileDataManager:

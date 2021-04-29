@@ -107,6 +107,8 @@ class LangCAT:
         self.MODEL_PRESSURE_IMG = "Seleccionar zona rectangular: Marcador + Ferida. ENTER per acceptar."
 
         #EMINA-BARTHEL
+        self.EB_WINDOW_B = "Calcular escala Barthel"
+        self.EB_WINDOW_E = "Calcular escala Emina"
         # Source: (https://ca.wikipedia.org/wiki/Escala_de_Barthel)
         self.EB_BARTHEL_DESCRIPTION = "Escala ordinal utilitzada per mesurar l'acompliment en activitats de la vida diària bàsiques (AVDB)."
         # Source: (https://www.murciasalud.es/preevid/1103)

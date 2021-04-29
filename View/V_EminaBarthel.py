@@ -20,7 +20,6 @@ class EminaBarthel:
         title : String
            title of the widget
         """
-
         self.popup_sit_nutr = ""
         self.popup = tk.Tk()
         ws = self.popup.winfo_screenwidth()
@@ -30,7 +29,7 @@ class EminaBarthel:
         x = (ws / 2) - (w / 2)
         y = (hs / 3) - (h / 3)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.popup.wm_title("Calcular escala Barthel")
+        self.popup.wm_title(self.lang.EB_WINDOW_B)
 
         label = ttk.Label(self.popup, text=title, font=FONT_TITOL)
         label.pack(pady=10)
@@ -127,7 +126,7 @@ class EminaBarthel:
         x = (ws / 2) - (w / 2)
         y = (hs / 3) - (h / 3)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.popup.wm_title("Calcular escala Emina")
+        self.popup.wm_title(self.lang.EB_WINDOW_E)
 
         label = ttk.Label(self.popup, text=title, font=FONT_BENVINGUDA)
         label.pack(pady=10)
