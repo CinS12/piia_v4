@@ -58,9 +58,6 @@ class Pressure_img:
     roi_crop(im, tissue)
        Calls the Point class and functions to let the user
         select a free shape roi with the mouse.
-    flash_reduction(img_cv2_mask)
-        Reduces the glare effect of the image's flash.
-        WARNING: Needs validation!
     """
 
     def __init__(self, parent, lang):
@@ -129,8 +126,8 @@ class Pressure_img:
         Resize the img with the scale factor given (default = 100)
         Parameters
         ----------
-        img : String
-            path to the image's directory
+        img : opencv.Image
+            ulcer's image
         scale_percent: int
             value of the resize scale (default = 100)
         """
@@ -320,11 +317,6 @@ class Pressure_img:
                 list of all selected coordinates as Points.
             """
 
-            """
-            if self.flash_reduced ==True:
-                img = self.flash_reduction(img)
-                self.img = img
-            """
             # blank mask:
             mask = np.zeros_like(img)
             a3 = np.array([vertices], dtype=np.int32)
@@ -388,39 +380,3 @@ class Pressure_img:
 
             if k == 27:
                 break
-
-    def flash_reduction(self, img_cv2_mask):
-        """
-        Reduces the glare effect of the image's flash.
-        WARNING: Needs validation!
-        Parameters
-        ----------
-        img_cv2_mask : image cv2
-            img selected by user to reduce its glare effect by flash.
-        """
-
-        # Split into HSV components
-        h, s, v = cv2.split(cv2.cvtColor(img_cv2_mask, cv2.COLOR_RGB2HSV))
-        histr = cv2.calcHist([img_cv2_mask], [1], None, [256], [0, 256])
-        max, min = peakdetect(histr, lookahead=3, delta=15)
-        x, y = zip(*max)
-        a, b = zip(*min)
-        ret1, threshold = cv2.threshold(img_cv2_mask, a[np.size(a) - 1], 255, cv2.THRESH_BINARY)
-        # Definim el llindar dels píxels saturats segons Lange05
-        llindar_glare = a[np.size(a) - 1]
-        # Find all pixels that are not very saturated
-        nonSat = s < 180
-        # Slightly decrease the area of the non-satuared pixels by a erosion operation.
-        disk_ellipse = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3, 3))
-        nonSat = cv2.erode(nonSat.astype(np.uint8), disk_ellipse)
-        # Set all brightness values, where the pixels are still saturated to 0.
-        v2 = v.copy()
-        v2[nonSat == 0] = 0
-        # Filter bright pixels
-        glare = v2 > llindar_glare
-        # Slightly increase the area for each pixel
-        glare = cv2.dilate(glare.astype(np.uint8), disk_ellipse)
-        # PREGUNTA: Radi/Num de veïns?
-        # Region growing per recuperar la imatge
-        corrected = cv2.inpaint(img_cv2_mask, glare, 3, cv2.INPAINT_NS)
-        return corrected

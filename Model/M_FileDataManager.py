@@ -21,8 +21,6 @@ class FileDataManager:
     ----------
     id : int
         an integer that identifies the file and directory
-    num_file_ok : bool
-        a boolean to check the image and metadata files
     Methods
     -------
     check_dir()
@@ -123,16 +121,16 @@ class FileDataManager:
             "slough": len(img.slough),
             "necrosis": len(img.necrosis)
         }
-        #try:
-        if new_patient:
-            self.save_new_patient(metadata, metadata_json_object, img)
-        else:
-            if new_ulcer:
-                self.save_new_ulcer(metadata, metadata_json_object, img)
+        try:
+            if new_patient:
+                self.save_new_patient(metadata, metadata_json_object, img)
             else:
-                self.save_old_ulcer(metadata, metadata_json_object, img)
-        #except OSError:
-            #print("Error de gestió de fitxers.")
+                if new_ulcer:
+                    self.save_new_ulcer(metadata, metadata_json_object, img)
+                else:
+                    self.save_old_ulcer(metadata, metadata_json_object, img)
+        except OSError:
+            print("Error de gestió de fitxers.")
 
     def save_new_patient(self, metadata, metadata_json_object, img):
         os.mkdir(PATH_DATABASE_DIR + metadata[0])

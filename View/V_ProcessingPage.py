@@ -357,7 +357,7 @@ class ProcessingPage(Page):
         """
 
         # path = Path(__file__).parent / "../resources/load_img.png"
-        path = "resources/load_img.png"
+        path = "resources/Images/load_img.png"
         img = ImageTk.PhotoImage(Image.open(path))
         self.p1_img_label.configure(image=img)
         self.p1_img_label.image = img
