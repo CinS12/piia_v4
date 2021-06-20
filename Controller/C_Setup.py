@@ -177,7 +177,12 @@ class ControllerSetup:
         self.view.processing_page.reset_view()
         #try:
         self.file_data_manager.save_data(self.model_metadata.metadata, self.pressure_img, self.img_pre_segmentation.is_new_patient, self.img_pre_segmentation.is_new_ulcer)
-        self.view.popupmsg("Procés finalitzat amb èxit. Prem OK per continuar.")
+        if (self.lang == 0):
+            self.view.popupmsg("Procés finalitzat amb èxit. Prem OK per continuar.")
+        if (self.lang == 1):
+            self.view.popupmsg("Proceso finalizado con éxito. Pulsa OK para continuar.")
+        if (self.lang == 2):
+            self.view.popupmsg("Process finished successfully. Pulse OK to continue.")
         #except:
         #    self.view.popupmsg("Error de gestió de fitxers.")
 

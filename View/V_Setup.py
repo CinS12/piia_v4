@@ -81,7 +81,7 @@ class ViewSetup:
         popup = tk.Toplevel()
         ws = popup.winfo_screenwidth()
         hs = popup.winfo_screenheight()
-        w = 300
+        w = 320
         h = 75
         x = (ws / 2) - (w / 2)
         y = (hs / 3) - (h / 3)

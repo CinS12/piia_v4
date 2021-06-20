@@ -24,7 +24,7 @@ class LangCAST:
         # PROCESSING PAGE
         self.TITLE_PROCESSING = self.BUTTON_1
         self.IMAGE_LOAD = "Cargar imagen"
-        self.IMAGE_PROCESSING = "Procesar imágenes"
+        self.IMAGE_PROCESSING = "Procesar imagen"
 
         self.META_TITLE = "Recolección de datos"
         self.META_DATA_FILL = "Rellenar los campos siguientes:"
