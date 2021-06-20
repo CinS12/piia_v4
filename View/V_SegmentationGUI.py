@@ -226,11 +226,11 @@ class SegmentationGUI:
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
         self.popup.wm_title(self.lang.SEG_CONFIRM_WB)
         # Definir títol del popup
-        title = ttk.Label(self.popup, text="White Balance Correction", font=FONT_TITOL)
+        title = ttk.Label(self.popup, text=self.lang.SG_WB, font=FONT_TITOL)
         label_warning = ttk.Label(self.popup,
-                                  text="Waring: method is still developing and testing. Please check the result:",
+                                  text=self.lang.SG_WARNING,
                                   font=FONT_MSG)
-        label_info = ttk.Label(self.popup, text="Original image // White balanced image", font=FONT_MSG)
+        label_info = ttk.Label(self.popup, text=self.lang.SG_DESC, font=FONT_MSG)
         title.configure(anchor="center")
         label_warning.configure(anchor="center")
         label_info.configure(anchor="center")
@@ -251,8 +251,8 @@ class SegmentationGUI:
         whitebalanced_label.grid(row=1, column=2, padx=5, pady=5)
         images_frame.pack(pady=30)
         # Botons GUI
-        button1 = ttk.Button(self.popup, text="Accept", command=lambda: self.whitebalanced_ok(img_whitebalanced))
-        button2 = ttk.Button(self.popup, text="Decline", command=self.whitebalanced_ko)
+        button1 = ttk.Button(self.popup, text=self.lang.ACCEPT, command=lambda: self.whitebalanced_ok(img_whitebalanced))
+        button2 = ttk.Button(self.popup, text=self.lang.CANCEL, command=self.whitebalanced_ko)
         button1.pack()
         button2.pack()
         self.popup.mainloop()
@@ -320,9 +320,9 @@ class SegmentationGUI:
         x = (ws / 2) - (w / 2)
         y = (hs / 2) - (h / 2)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.popup.wm_title("Confirmar regió")
+        self.popup.wm_title(self.lang.SG_TITLE)
         # Definir títol del popup
-        title = ttk.Label(self.popup, text="És correcte la regió seleccionada?", font=FONT_TITOL)
+        title = ttk.Label(self.popup, text=self.lang.SG_CONF, font=FONT_TITOL)
         title.configure(anchor="center")
         title.pack(side="top", fill="x", pady=10)
         # Carregar la roi i la imatge
@@ -343,8 +343,8 @@ class SegmentationGUI:
         roi_label.grid(row=1, column=2, padx=5, pady=5)
         images_frame.pack(pady=30)
         # Botons GUI
-        button1 = ttk.Button(self.popup, text="Sí", command=lambda: self.roi_ok(roi_rgb, tissue, ring))
-        button2 = ttk.Button(self.popup, text="No", command=self.segmentacio_ko)
+        button1 = ttk.Button(self.popup, text=self.lang.YES, command=lambda: self.roi_ok(roi_rgb, tissue, ring))
+        button2 = ttk.Button(self.popup, text=self.lang.NO, command=self.segmentacio_ko)
         button1.pack()
         button2.pack()
         self.popup.mainloop()
@@ -388,9 +388,9 @@ class SegmentationGUI:
         x = (ws / 2) - (w / 2)
         y = (hs / 3) - (h / 3)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.popup.wm_title("Tipus de zona")
+        self.popup.wm_title(self.lang.SG_ZONE_TITLE)
         # Definir títol del popup
-        title = ttk.Label(self.popup, text="Selecciona el tipus de zona:", font=FONT_TITOL)
+        title = ttk.Label(self.popup, text=self.lang.SG_ZONE, font=FONT_TITOL)
         title.configure(anchor="center")
         title.pack(side="top", fill="x", pady=20)
         frame = tk.Frame(self.popup)
@@ -406,8 +406,8 @@ class SegmentationGUI:
         img_tancat.grid(row=1, column=2, padx=5, pady=5)
 
         # Botons GUI
-        button1 = ttk.Button(frame, text="Anella", command=lambda: self.zona_anella(tissue))
-        button2 = ttk.Button(frame, text="Tancada", command=lambda: self.zona_tancada(tissue))
+        button1 = ttk.Button(frame, text=self.lang.SG_RING, command=lambda: self.zona_anella(tissue))
+        button2 = ttk.Button(frame, text=self.lang.SG_CLOSED, command=lambda: self.zona_tancada(tissue))
         button1.grid(row=2, column=1, padx=5, pady=10)
         button2.grid(row=2, column=2, padx=5, pady=10)
         self.popup.mainloop()
@@ -429,12 +429,12 @@ class SegmentationGUI:
         x = (ws / 2) - (w / 2)
         y = (hs / 3) - (h / 3)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.popup.wm_title("Perímetre exterior")
-        label = ttk.Label(self.popup, text="Teixit " + tissue + " : selecciona el perímetre exterior de la regió",
+        self.popup.wm_title(self.lang.SG_PER_EXT)
+        label = ttk.Label(self.popup, text=self.lang.SG_TISSUE + tissue + self.lang.SG_SEL_EXT,
                           font=FONT_MSG)
         label.configure(anchor="center")
         label.pack(side="top", fill="x", pady=10)
-        button1 = ttk.Button(self.popup, text="Exterior", command=lambda: self.ring_ext_clicked(tissue=tissue))
+        button1 = ttk.Button(self.popup, text=self.lang.SG_EXT, command=lambda: self.ring_ext_clicked(tissue=tissue))
         button1.pack()
         self.popup.mainloop()
 
@@ -462,12 +462,12 @@ class SegmentationGUI:
         x = (ws / 2) - (w / 2)
         y = (hs / 3) - (h / 3)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.popup.wm_title("Perímetre interior")
-        label = ttk.Label(self.popup, text="Teixit " + tissue + " : selecciona el perímetre interior de la regió",
+        self.popup.wm_title(self.lang.SG_PER_INT)
+        label = ttk.Label(self.popup, text=self.lang.SG_TISSUE + tissue + self.lang.SG_SEL_INT,
                           font=FONT_MSG)
         label.configure(anchor="center")
         label.pack(side="top", fill="x", pady=10)
-        button1 = ttk.Button(self.popup, text="Interior", command=lambda: self.ring_int_clicked(tissue=tissue))
+        button1 = ttk.Button(self.popup, text=self.lang.SG_INT, command=lambda: self.ring_int_clicked(tissue=tissue))
         button1.pack()
         self.popup.mainloop()
 
@@ -476,7 +476,7 @@ class SegmentationGUI:
         Updates the perimeter selection label as selected.
         """
 
-        self.label_perimeter["text"] = "Perímetre seleccionat"
+        self.label_perimeter["text"] = self.lang.SG_PER_SEL
         self.label_perimeter["fg"] = "green"
 
     def update_granulation_count(self, number):

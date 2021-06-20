@@ -1,6 +1,5 @@
 """Script with the GUI text in CATALAN.
 sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
-WARNING: choose language options still in development (no functional).
 """
 
 class LangCAT:
@@ -10,19 +9,21 @@ class LangCAT:
         self.NO = "No"
         self.OK = "Ok"
         self.ACCEPT = "Acceptar"
+        self.CANCEL = "Cancel·lar"
         self.CONTINUE = "Continuar"
+        self.SAVE = "Desar"
+        self.BACK = "Enrere"
         # MENU
         self.LANG = "Idioma"
 
         # MAIN PAGE
-        self.MAIN_TITLE = "Anotació d'imatges d'úlceres de pressió" #"Pressure Injuries Image Analysis"
+        self.MAIN_TITLE = "Anotació d'Imatges d'Úlceres per Pressió"
         self.BUTTON_1 = "Afegir imatge a la base de dades"
         self.BUTTON_2 = "Consultar base de dades"
 
         # PROCESSING PAGE
         self.TITLE_PROCESSING = self.BUTTON_1
         self.IMAGE_LOAD = "Carrega imatge"
-        self.BACK = "Enrere"
         self.IMAGE_PROCESSING = "Processar imatge"
 
         self.META_TITLE = "Recull de dades"
@@ -133,9 +134,33 @@ class LangCAT:
         self.EB_MOVE = "Traslladar-se (ex: buataca/llit)"
         self.EB_WALK = "Deambulació"
         self.EB_STAIRS = "Pujar i baixar escales"
-        self.EB_SAVE = "Desar"
+        self.EB_MENTAL_STATE = "Estat mental"
+        self.EB_ORIENTED = "Orientat"
+        self.EB_DISORIENTED = "Desorientat, apàtic o passiu"
+        self.EB_LET = "Letàrgic o hipercinètic"
+        self.EB_UNC = "Comatós, inconscient"
+        self.EB_MOBILITY = "Mobilitat"
+        self.EB_COMP = "Completa"
+        self.EB_LIT_LIM = "Lleugerament limitada"
+        self.EB_IMP_LIM = "Limitació important"
+        self.EB_IMM = "Immòbil"
+        self.EB_HUM = "Humitat R/C, Incontinencia"
+        self.EB_OCC = "Urinària o fecal ocasional"
+        self.EB_HAB = "Urinària o fecal habitual"
+        self.EB_BOTH = "Urinària i fecal, ambdues"
+        self.EB_NUT = "Nutrició"
+        self.EB_CORR = "Correcta"
+        self.EB_OCC_UNC = "Ocasionalment Incompleta"
+        self.EB_UNC = "Incompleta"
+        self.EB_NO = "No ingereix"
+        self.EB_ACT = "Activitat"
+        self.EB_DMB = "Deambula"
+        self.EB_HLP_DMB = "Deambula amb ajuda"
+        self.EB_ALWS_HLP= "Sempre requereix ajuda"
+        self.EB_NO_DMB = "No deambula"
+        self.EB_TXT = "Introduïr text"
 
-        #VIEWER MANAGER
+        #MODEL VIEWER MANAGER
         self.VM_title = "Evolució de la ferida"
         self.VM_id = "Id pacient: "
         self.VM_location = "Localització ferida: "
@@ -145,3 +170,36 @@ class LangCAT:
         self.VM_granulation = "Àrea teixit granulós"
         self.VM_slough = "Àrea teixit esfàcel"
         self.VM_necrosis = "Àrea teixit necròtic"
+
+        #VIEW PAGE
+        self.VP_CON_DDBB = "Consultar base de dades"
+        self.VP_PAC_ID = "Id pacient: "
+        self.VP_LOC = "Localització: "
+        self.VP_DATE = "Data: "
+        self.VP_EVO = "Veure evolució"
+        self.VP_IMG_LABEL = "<Doble clic per carregar un element de la llista>"
+        self.VP_CODE = "Codi: "
+        self.VP_GRADE = "Grau: "
+
+        #VIEW SETUP
+        self.VS_AT = "Atenció"
+        self.VS_MSG = "Procés finalitzat amb èxit. Prem OK per continuar."
+
+        #VIEW SEG GUI
+        self.SG_WB = "Correcció Balanç de Blancs"
+        self.SG_WARNING = "Waring: method is still developing and testing. Please check the result:"
+        self.SG_DESC = "Original image // White balanced image"
+        self.SG_TITLE = "Confirmar regió"
+        self.SG_CONF = "És correcte la regió seleccionada?"
+        self.SG_ZONE_TITLE = "Tipus de zona"
+        self.SG_ZONE = "Selecciona el tipus de zona:"
+        self.SG_RING = "Anella"
+        self.SG_CLOSED = "Tancada"
+        self.SG_PER_EXT = "Perímetre exterior"
+        self.SG_TISSUE = "Teixit "
+        self.SG_SEL_EXT = " : selecciona el perímetre exterior de la regió"
+        self.SG_EXT = "Exterior"
+        self.SG_PER_INT = "Perímetre interior"
+        self.SG_SEL_INT = " : selecciona el perímetre interior de la regió"
+        self.SG_INT = "Interior"
+        self.SG_PER_SEL = "Perímetre seleccionat"

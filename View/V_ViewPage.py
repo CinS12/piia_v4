@@ -20,12 +20,12 @@ class ViewPage(Page):
 
     def elements_page(self):
         """
-               Creates the frame and main labels of page_2's UI (View images).
-               """
+        Creates the frame and main labels of page_2's UI (View images).
+        """
         self.list_frame = tk.Frame(self.page)
         self.data_frame = tk.Frame(self.page)
-        p2_label_2 = ttk.Label(self.page, text="Consultar base de dades", font=FONT_BENVINGUDA)
-        p2_button_1 = ttk.Button(self.page, text="Enrere", command=self.tornar_main)
+        p2_label_2 = ttk.Label(self.page, text=self.lang.VP_CON_DDBB, font=FONT_BENVINGUDA)
+        p2_button_1 = ttk.Button(self.page, text=self.lang.BACK, command=self.tornar_main)
         self.crear_elements_viewer()
         self.page.grid(row=0, column=0, sticky="NESW")
         p2_label_2.pack(pady=20)
@@ -46,7 +46,7 @@ class ViewPage(Page):
         """
 
         self.p2_frame_list = tk.Frame(self.list_frame, borderwidth=2, relief="groove")
-        self.p2_label_info = ttk.Label(self.p2_frame_list, text="Id pacient: ", font=FONT_TITOL)
+        self.p2_label_info = ttk.Label(self.p2_frame_list, text=self.lang.VP_PAC_ID, font=FONT_TITOL)
         self.p2_label_info.pack()
         scrollbar = tk.Scrollbar(self.p2_frame_list)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
@@ -55,7 +55,7 @@ class ViewPage(Page):
         scrollbar.config(command=self.llista.yview)
 
         self.p2_frame_list_1 = tk.Frame(self.list_frame, borderwidth=2, relief="groove")
-        self.p2_label_info_1 = ttk.Label(self.p2_frame_list_1, text="Localització: ", font=FONT_TITOL)
+        self.p2_label_info_1 = ttk.Label(self.p2_frame_list_1, text=self.lang.VP_LOC, font=FONT_TITOL)
         self.p2_label_info_1.pack()
         scrollbar_1 = tk.Scrollbar(self.p2_frame_list_1)
         scrollbar_1.pack(side=tk.RIGHT, fill=tk.Y)
@@ -64,7 +64,7 @@ class ViewPage(Page):
         scrollbar_1.config(command=self.llista_1.yview)
 
         self.p2_frame_list_2 = tk.Frame(self.list_frame, borderwidth=2, relief="groove")
-        self.p2_label_info_2 = ttk.Label(self.p2_frame_list_2, text="Data: ", font=FONT_TITOL)
+        self.p2_label_info_2 = ttk.Label(self.p2_frame_list_2, text=self.lang.VP_DATE, font=FONT_TITOL)
         self.p2_label_info_2.pack()
         scrollbar_2 = tk.Scrollbar(self.p2_frame_list_2)
         scrollbar_2.pack(side=tk.RIGHT, fill=tk.Y)
@@ -73,7 +73,7 @@ class ViewPage(Page):
         scrollbar_2.config(command=self.llista_2.yview)
 
         self.evo_frame = tk.Frame(self.list_frame)
-        self.evo_button = ttk.Button(self.evo_frame, text="Veure evolució", command=self.evo_selected)
+        self.evo_button = ttk.Button(self.evo_frame, text=self.lang.VP_EVO, command=self.evo_selected)
         self.evo_button.pack()
         self.evo_button.pack_forget()
 
@@ -94,7 +94,7 @@ class ViewPage(Page):
         Creates and places the label_img of page 2 (View images).
         """
 
-        self.p2_label_img = ttk.Label(self.p2_frame_img, text="<Doble clic per carregar un element de la llista>",
+        self.p2_label_img = ttk.Label(self.p2_frame_img, text=self.lang.VP_IMG_LABEL,
                                       font=FONT_MSG)
         self.p2_label_img.grid(row=1, column=2, padx=5, pady=0)
 
@@ -181,9 +181,9 @@ class ViewPage(Page):
            data sent to be loaded into a label
         """
         self.p2_frame_metadata.configure(borderwidth=2, relief="groove")
-        self.p2_label_metadata_code.config(text="Codi: " + metadata["metadata"]["code"])
-        self.p2_label_metadata_grade.config(text="Grau: " + str(metadata["metadata"]["grade"]))
-        self.p2_label_metadata_cm.config(text="Data: " + metadata["metadata"]["date"])
+        self.p2_label_metadata_code.config(text=self.lang.VP_CODE + metadata["metadata"]["code"])
+        self.p2_label_metadata_grade.config(text=self.lang.VP_GRADE + str(metadata["metadata"]["grade"]))
+        self.p2_label_metadata_cm.config(text=self.lang.VP_DATE + metadata["metadata"]["date"])
 
     def evo_selected(self):
         pub.sendMessage("EVO_SELECTED", id=self.id, location=self.location)

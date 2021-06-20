@@ -160,7 +160,7 @@ class ProcessingPage(Page):
         emina_label.grid(row=10, column=1, padx=0, pady=10)
         self.emina_scale = tk.Scale(self.frame_widgets, from_=0, to=15, resolution=1, orient=tk.HORIZONTAL)
         self.emina_scale.grid(row=10, column=2, padx=0, pady=10)
-        barthel_button = ttk.Button(self.frame_widgets, text="Calcular",
+        barthel_button = ttk.Button(self.frame_widgets, text=self.lang.META_CALCULATE,
                                     command=lambda: self.emina_barthel.popup_emina(self.lang.META_EMINA))
         barthel_button.grid(row=10, column=3, pady=10, padx=0)
         # Escala Barthel

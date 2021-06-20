@@ -208,9 +208,6 @@ class FileDataManager:
                 print("Metadata[0]: "+metadata[0])
                 print("i: "+str(i))
                 print("n_ulcers+1: "+ str(n_ulcers+1))
-                #with open(PATH_DATABASE_DIR + metadata[0] + "/" + str(i - 1) + "/" + str(n_ulcers + 1) + "/Metadata_" + str(
-                #        metadata[0]) + "_" + str(i) + "_" + str(n_ulcers + 1) + ".txt",
-                #          "w") as outfile:
                 with open(PATH_DATABASE_DIR + metadata[0] + "/" + str(i) + "/" + str(n_ulcers+1) + "/Metadata_" + str(metadata[0]) + "_" + str(i) + "_" + str(n_ulcers+1) + ".txt",
                           "w") as outfile:
                     json.dump(metadata_json_object, outfile)

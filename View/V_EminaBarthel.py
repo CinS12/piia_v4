@@ -105,7 +105,7 @@ class EminaBarthel:
         self.escales_combobox["values"] = [self.lang.EB_INDEP, self.lang.EB_HELP, self.lang.EB_DEP]
         self.escales_combobox.grid(row=11, column=2, padx=10, pady=10)
 
-        button_ok = ttk.Button(self.popup, text=self.lang.EB_SAVE, command=self.barthel_getData)
+        button_ok = ttk.Button(self.popup, text=self.lang.SAVE, command=self.barthel_getData)
         button_ok.pack(pady=20)
 
     def popup_emina(self, title):
@@ -139,41 +139,41 @@ class EminaBarthel:
         self.emina_frame = tk.Frame(self.popup)
         self.emina_frame.pack(pady=5, padx=10)
         # Descripció
-        label_description = ttk.Label(self.emina_frame, text="Selecciona els paràmetres corresponents:",
+        label_description = ttk.Label(self.emina_frame, text=self.lang.EB_SELECT,
                                       font=FONT_MSG)
         label_description.grid(row=1, column=2, padx=10, pady=10)
         # Estat mental
-        emina_mental = ttk.Label(self.emina_frame, text="Estat mental", font=FONT_MSG)
+        emina_mental = ttk.Label(self.emina_frame, text=self.lang.EB_MENTAL_STATE, font=FONT_MSG)
         emina_mental.grid(row=2, column=1, padx=10, pady=10)
         self.mental_combobox = ttk.Combobox(self.emina_frame, state="readonly", width=30, justify="left")
-        self.mental_combobox["values"] = ["Orientat", "Desorientat, apàtic o passiu", "Letàrgic o hipercinètic", "Comatós, inconscient."]
+        self.mental_combobox["values"] = [self.lang.EB_ORIENTED, self.lang.EB_DISORIENTED, self.lang.EB_LET, self.lang.EB_UNC]
         self.mental_combobox.grid(row=2, column=2, padx=10, pady=10)
         # Movilitat
-        emina_movilitat = ttk.Label(self.emina_frame, text="Movilitat", font=FONT_MSG)
+        emina_movilitat = ttk.Label(self.emina_frame, text=self.lang.EB_MOBILITY, font=FONT_MSG)
         emina_movilitat.grid(row=3, column=1, padx=10, pady=10)
         self.movilitat_combobox = ttk.Combobox(self.emina_frame, state="readonly", width=30, justify="left")
-        self.movilitat_combobox["values"] = ["Completa", "Lleugerament limitada", "Limitació important", "Immòbil"]
+        self.movilitat_combobox["values"] = [self.lang.EB_COMP, self.lang.EB_LIT_LIM, self.lang.EB_IMP_LIM, self.lang.EB_IMM]
         self.movilitat_combobox.grid(row=3, column=2, padx=10, pady=10)
         # Humitat R/C, Incontinencia
-        emina_humitat = ttk.Label(self.emina_frame, text="Humitat R/C, Incontinencia", font=FONT_MSG)
+        emina_humitat = ttk.Label(self.emina_frame, text=self.lang.EB_HUM, font=FONT_MSG)
         emina_humitat.grid(row=4, column=1, padx=10, pady=10)
         self.humitat_combobox = ttk.Combobox(self.emina_frame, state="readonly", width=30, justify="left")
-        self.humitat_combobox["values"] = ["No", "Urinària o fecal ocasional", "Urinària o fecal habitual", "Urinària i fecal, ambdues"]
+        self.humitat_combobox["values"] = [self.lang.NO, self.lang.EB_OCC, self.lang.EB_HAB, self.lang.EB_BOTH]
         self.humitat_combobox.grid(row=4, column=2, padx=10, pady=10)
         # Nutrició
-        emina_nutricio = ttk.Label(self.emina_frame, text="Nutrició", font=FONT_MSG)
+        emina_nutricio = ttk.Label(self.emina_frame, text=self.lang.EB_NUT, font=FONT_MSG)
         emina_nutricio.grid(row=5, column=1, padx=10, pady=10)
         self.nutricio_combobox = ttk.Combobox(self.emina_frame, state="readonly", width=30, justify="left")
-        self.nutricio_combobox["values"] = ["Correcta", "Ocasionalment Incompleta", "Incompleta", "No ingereix"]
+        self.nutricio_combobox["values"] = [self.lang.EB_CORR, self.lang.EB_OCC_UNC, self.lang.EB_UNC, self.lang.EB_NO]
         self.nutricio_combobox.grid(row=5, column=2, padx=10, pady=10)
         # Activitat
-        emina_activitat = ttk.Label(self.emina_frame, text="Activitat", font=FONT_MSG)
+        emina_activitat = ttk.Label(self.emina_frame, text=self.lang.EB_ACT, font=FONT_MSG)
         emina_activitat.grid(row=6, column=1, padx=10, pady=10)
         self.activitat_combobox = ttk.Combobox(self.emina_frame, state="readonly", width=30, justify="left")
-        self.activitat_combobox["values"] = ["Deambula", "Deambula amb ajuda", "Sempre requereix ajuda", "No deambula"]
+        self.activitat_combobox["values"] = [self.lang.EB_DMB, self.lang.EB_HLP_DMB, self.lang.EB_ALWS_HLP, self.lang.EB_NO_DMB]
         self.activitat_combobox.grid(row=6, column=2, padx=10, pady=10)
 
-        button_ok = ttk.Button(self.popup, text="Desar", command=self.emina_getData)
+        button_ok = ttk.Button(self.popup, text=self.lang.SAVE, command=self.emina_getData)
         button_ok.pack()
 
     def barthel_getData(self):
@@ -214,7 +214,7 @@ class EminaBarthel:
         x = (ws / 2) - (w / 2)
         y = (hs / 3) - (h / 3)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.popup.wm_title("Introduïr text")
+        self.popup.wm_title(self.lang.EB_TXT)
         label = ttk.Label(self.popup, text=title, font=FONT_TITOL)
         label.pack(pady=10)
         self.tr_ant_text = tk.Text(self.popup, font=FONT_MSG)
@@ -223,7 +223,7 @@ class EminaBarthel:
         except:
             pass
         self.tr_ant_text.pack(pady=5, padx=10)
-        button_ok = ttk.Button(self.popup, text="Desar", command=self.p1_tr_ant_ok)
+        button_ok = ttk.Button(self.popup, text=self.lang.SAVE, command=self.p1_tr_ant_ok)
         button_ok.pack()
 
     def entry_popup_tr_top(self, title):
@@ -244,7 +244,7 @@ class EminaBarthel:
         x = (ws / 2) - (w / 2)
         y = (hs / 3) - (h / 3)
         self.popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        self.popup.wm_title("Introduïr text")
+        self.popup.wm_title(self.lang.EB_TXT)
         label = ttk.Label(self.popup, text=title, font=FONT_TITOL)
         label.pack(pady=10)
         self.tr_top_text = tk.Text(self.popup, font=FONT_MSG)
@@ -253,7 +253,7 @@ class EminaBarthel:
         except:
             pass
         self.tr_top_text.pack(pady=5, padx=10)
-        button_ok = ttk.Button(self.popup, text="Desar", command=self.p1_tr_top_ok)
+        button_ok = ttk.Button(self.popup, text=self.lang.SAVE, command=self.p1_tr_top_ok)
         button_ok.pack()
 
     def p1_tr_top_ok(self):

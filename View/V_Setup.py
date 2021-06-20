@@ -86,7 +86,7 @@ class ViewSetup:
         x = (ws / 2) - (w / 2)
         y = (hs / 3) - (h / 3)
         popup.geometry('%dx%d+%d+%d' % (w, h, x, y))
-        popup.wm_title("Atenció")
+        popup.wm_title(self.lang.VS_AT)
         label = ttk.Label(popup, text=msg, font=FONT_MSG)
         label.configure(anchor="center")
         label.pack(side="top", fill="x", pady=10)
@@ -118,6 +118,6 @@ class ViewSetup:
         self.view.reset_view()
         #try:
         self.save_data_file()
-        self.view.popupmsg("Procés finalitzat amb èxit. Prem OK per continuar.")
+        self.view.popupmsg(self.lang.VS_MSG)
         #except:
          #   self.view.popupmsg("Error de gestió de fitxers.")
