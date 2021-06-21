@@ -91,22 +91,22 @@ class ControllerSetup:
         """
 
         print("controller - Botó 3!")
-        #try:
-        if self.pressure_img.loaded:
-            if self.pressure_img.processed:
-                if self.img_pre_segmentation.is_checked:
-                    if self.view.processing_page.code_entry.get() == self.img_pre_segmentation.code:
-                        self.model_metadata.getData(data, self.img_pre_segmentation.ulcer_location)
+        try:
+            if self.pressure_img.loaded:
+                if self.pressure_img.processed:
+                    if self.img_pre_segmentation.is_checked:
+                        if self.view.processing_page.code_entry.get() == self.img_pre_segmentation.code:
+                            self.model_metadata.getData(data, self.img_pre_segmentation.ulcer_location)
+                        else:
+                            self.view.popupmsg("Codi editat. És necessari comprovar el codi.")
                     else:
-                        self.view.popupmsg("Codi editat. És necessari comprovar el codi.")
+                        self.view.popupmsg("És necessari comprovar el codi.")
                 else:
-                    self.view.popupmsg("És necessari comprovar el codi.")
+                    self.view.popupmsg("És necessari processar la imatge.")
             else:
-                self.view.popupmsg("És necessari processar la imatge.")
-        else:
+                self.view.popupmsg("És necessari carregar una imatge")
+        except:
             self.view.popupmsg("És necessari carregar una imatge")
-        #except:
-            #self.view.popupmsg("És necessari carregar una imatge")
 
     def load_image(self):
         """
