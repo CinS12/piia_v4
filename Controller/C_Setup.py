@@ -1,13 +1,68 @@
-from pubsub import pub
+"""Controller setup class
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
 
+Class to initialize and manage the Controller logic.
+"""
+from pubsub import pub
 from View import V_Setup
 from Model.M_PressureImage import Pressure_img
 from Controller import C_Metadata, C_ImagePreSegmentation, C_ImageSegmentation
 from Model import M_MetadataManager, M_ImageReader, M_FileDataManager
 from Controller import C_LanguageSelection
 import tkinter as tk
-import ctypes
+
 class ControllerSetup:
+    """
+    Class to initialize and manage the Controller logic.
+    ...
+    Attributes
+    ----------
+    w : int
+        screen width
+    h : int
+        screen height
+    x : int
+        center screen coordinate x
+    y : int
+        center screen coordinate y
+    parent : tkinter Tk
+        root window
+    pressure_img : Pressure_img
+    Methods
+    -------
+    setup_lang_asked(lang)
+        Calls the process to ask the user's language preference.
+    setup_lang_loaded(lang)
+        Calls the process to load the user's language preference.
+    button_1_pressed(lang)
+        Prints that button_1 from view has been pressed.
+    button_2_pressed()
+        Prints that button_2 from view has been pressed and calls the function.
+        load_data from Data_manager.
+    button_3_pressed(data)
+        Prints that button_3 from view has been pressed.
+        Calls the functions to check metadata and images before saving.
+    load_image()
+        Calls the function to load a pressure injury's image.
+    image_loaded(image_original, image_tk)
+        Defines a Pressure_img object and saves its image.
+        Calls the update_image from View to update the label with the loaded image.
+        Calls the function from View to show "process" button.
+    image_accepted()
+        Updates Pressure_img processed boolean to True.
+    tot_ple_ko()
+        Calls a View function to warn the user that all metadata fields must be filled.
+    data_ko(error)
+        Calls a View function to warn the user what field has the wrong input data.
+    data_ok()
+        Sets Pressure_img loaded boolean to False.
+        Calls View function to reset loaded image label.
+        Calls the function to save all the data entered by the user.
+    data_n_pacients(patient_list)
+        Calls the View function to update the element's label counter with a new value.
+    load_image_i(img_tk)
+        Calls the View function to load the image_tk to the p2_label_img.
+    """
     def __init__(self, parent, w, h, x, y):
         self.w = w
         self.h = h
@@ -31,7 +86,6 @@ class ControllerSetup:
         pub.subscribe(self.data_ko, "DATA_KO")
         pub.subscribe(self.data_ok, "DATA_OK")
 
-        pub.subscribe(self.data_files_ko, "DATA_FILES_KO")
         pub.subscribe(self.data_n_pacients, "DATA_N_PACIENTS")
 
         pub.subscribe(self.load_image_i, "IMAGE_LOAD_i")
@@ -40,6 +94,13 @@ class ControllerSetup:
 
 
     def setup_lang_asked(self, lang):
+        """
+        Calls the process to ask the user's language preference.
+        Parameters
+        ----------
+        lang : String
+            language id
+        """
         self.parent.destroy()
         self.parent = tk.Tk()
         self.parent.title("PIIA")
@@ -55,6 +116,13 @@ class ControllerSetup:
         self.parent.mainloop()
 
     def setup_lang_loaded(self, lang):
+        """
+        Calls the process to load the user's language preference.
+        Parameters
+        ----------
+        lang : String
+            language id
+        """
         self.lang = lang
         self.model_reader = M_ImageReader.ImageReader()
         self.model_metadata = M_MetadataManager.MetadataManager()
@@ -111,7 +179,6 @@ class ControllerSetup:
     def load_image(self):
         """
         Calls the function to load a pressure injury's image.
-        WARNING: For optimal visualization, images must be '560x390'
         """
 
         print("MVC controller - load imatge")
@@ -185,14 +252,6 @@ class ControllerSetup:
             self.view.popupmsg("Process finished successfully. Pulse OK to continue.")
         #except:
         #    self.view.popupmsg("Error de gestió de fitxers.")
-
-    def data_files_ko(self):
-        """
-        Calls the View function to warn the user about a file manager error.
-        """
-
-        print("controller - data_files_ko")
-        self.view.popupmsg("Error de gestió dels fitxers.")
 
     def data_n_pacients(self, patient_list):
         """

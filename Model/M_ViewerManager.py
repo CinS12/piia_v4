@@ -1,9 +1,10 @@
-import datetime
+"""Viewer manager class
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
+Class to see the ulcer's state and evolution.
+"""
 import tkinter as tk
 from tkinter import ttk
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
@@ -12,7 +13,20 @@ FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
 
 class ViewerManager:
-
+    """
+    Class to see the ulcer's state and evolution.
+    ...
+    Attributes
+    ----------
+    evo_data : dict
+        clinical metadata
+    lang : String
+        language id
+    Methods
+    -------
+    setup_evolution(evo_data)
+        Shows the ulcer's evolution.
+    """
     def __init__(self, evo_data, lang):
         self.evo_data = evo_data
         self.lang = lang
@@ -20,6 +34,12 @@ class ViewerManager:
         return
 
     def setup_evolution(self, evo_data):
+        """
+        Shows the ulcer's evolution.
+        ----------
+        evo_data : dict
+            clinical metadata
+        """
         self.popup = tk.Tk()
         ws = self.popup.winfo_screenwidth()
         hs = self.popup.winfo_screenheight()

@@ -1,6 +1,7 @@
-"""Pressure injury image class
+"""Pressure injury image sub-class
 sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
 algorithm author:: Pau Nonell Isach <pau.nonell@students.salle.url.edu>
+
 Class to detect the target in the image.
 """
 from PIL import Image
@@ -10,6 +11,40 @@ from pubsub import pub
 
 
 class TargetDetector:
+    """
+    A class used to manage the files's data reading/writing
+    ...
+    Attributes
+    ----------
+    img_bgr : opencv image
+        loaded image of the ulcer
+    img_gray : opencv image
+        grayscale image of the ulcer
+    px_dist : numpy float 64
+        pixel centimeter relation
+    cut_bgr : opencv image
+        masked image of the ulcer
+    roi : opencv image
+        region of interest of the ulcer
+    Methods
+    -------
+    image_setup()
+        Generates the grayscale image and calls the function to find the target.
+    find_marker()
+        Marker's circle detection.
+    createTargetMask(radius, center)
+        Creates a mask from the marker.
+    angleTarget(targetMask, center, radius)
+        Checks the marker angle of rotation.
+    matchMarker(im, angle, center, targetMask, radius)
+        Obtains the image section of the marker, with the correct angle.
+    createRoi(im, targetMask, radius, cut_bgr, angle)
+        Creates a roi with marker's white part. Erosion to set a margin.
+    whiteBalance()
+        Apply white balance correction to the image.
+    measureDistance(radius)
+        Calculates the relation between pixels and centimeters.
+    """
 
     def __init__(self, img):
         self.img_bgr = img.copy()
@@ -21,11 +56,17 @@ class TargetDetector:
         return
 
     def image_setup(self):
+        """
+        Generates the grayscale image and calls the function to find the target.
+        """
         cimg = cv2.cvtColor(self.img_bgr, cv2.COLOR_BGR2GRAY)
         self.img_gray = cimg
         self.find_marker()
 
     def find_marker(self):
+        """
+        Marker's circle detection.
+        """
         # self.img = cv2.medianBlur(self.img, 5)
         # circles = cv2.HoughCircles(self.img, cv2.HOUGH_GRADIENT, 1, 100,
         #                           param1=100, param2=50, minRadius=10, maxRadius=50)
@@ -63,6 +104,15 @@ class TargetDetector:
             pass
 
     def createTargetMask(self, radius, center):
+        """
+        Creates a mask from the marker.
+        Parameters
+        ----------
+        radius : int
+            amount of pixels of the circle's radius.
+        center : array
+            array with the circle's central coordinates.
+        """
         # Crear una màscara del marcador per fer la comprovació
         # zeros = np.zeros((radius*4, radius*4))
         targetMask = np.full((radius * 4, radius * 4), 255, np.uint8)
@@ -70,6 +120,17 @@ class TargetDetector:
         self.angleTarget(targetMask, center, radius)
 
     def angleTarget(self, targetMask, center, radius):
+        """
+        Checks the marker angle of rotation.
+        Parameters
+        ----------
+        targetMask : numpy array (matrix)
+            mask of the target.
+        center : array
+            array with the circle's central coordinates.
+        radius : int
+            amount of pixels of the circle's radius.
+        """
         im = Image.fromarray(targetMask)
         # Inicialitzar array d'angles de 0 a 89
         sums = np.zeros(90)
@@ -97,7 +158,21 @@ class TargetDetector:
         self.matchMarker(im, angle, center, targetMask, radius)
 
     def matchMarker(self, im, angle, center, targetMask, radius):
-        # Obtenir la part de la imatge del marcador amb l'angle correcte
+        """
+        Obtains the image section of the marker, with the correct angle.
+        Parameters
+        ----------
+        im : PIL Image
+            mask of the target.
+        angle : float
+            rotation angle between 0-90.
+        center : array
+            array with the circle's central coordinates.
+        targetMask : numpy array (matrix)
+            mask of the target.
+        radius : int
+            amount of pixels of the circle's radius.
+        """
         J = im.rotate(angle, expand=True)
         width, height = J.size
         cut = self.img_gray[int(round(center[1] - (width / 2))): int(round(center[1] + (width / 2))),
@@ -108,6 +183,21 @@ class TargetDetector:
         self.createRoi(im, targetMask, radius, cut_bgr, angle)
 
     def createRoi(self, im, targetMask, radius, cut_bgr, angle):
+        """
+        Creates a roi with marker's white part. Erosion to set a margin.
+        Parameters
+        ----------
+        im : PIL Image
+            mask of the target.
+        targetMask : numpy array (matrix)
+            mask of the target.
+        radius : int
+            amount of pixels of the circle's radius.
+        cut_bgr : array
+            section of the marker, with the correct angle.
+        angle : float
+            rotation angle between 0-90.
+        """
         # Creem la roi de la part blanca del marcador, amb una erosió per deixar-hi marge
         targetMask = 255 - targetMask
         width, height = im.size
@@ -134,6 +224,9 @@ class TargetDetector:
         self.measureDistance(radius)
 
     def whiteBalance(self):
+        """
+        Apply white balance correction to the image.
+        """
         #roi[roi != 0] = 1
         roi = self.roi.astype('bool')
         cutB = self.cut_bgr[:, :, 0]
@@ -159,6 +252,13 @@ class TargetDetector:
         cv2.waitKey(0)
 
     def measureDistance(self, radius):
+        """
+        Calculates the relation between pixels and centimeters.
+        Parameters
+        ----------
+        radius : int
+            amount of pixels of the circle's radius.
+        """
         # img_to_array = np.array(self.img_gray)
         pxmeasure = 0.5 / radius
         self.px_dist = pxmeasure

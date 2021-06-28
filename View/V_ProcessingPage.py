@@ -1,3 +1,8 @@
+"""Image procesing user interface
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
+Interface that shows the image processing functionalities.
+"""
 import tkinter as tk
 from tkinter import ttk
 from pubsub import pub
@@ -11,12 +16,66 @@ FONT_BENVINGUDA = ("Verdana", 12)
 FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
 
-
 class ProcessingPage(Page):
+    """
+    Interface that shows the image processing functionalities.
+    ...
+    Attributes
+    ----------
+    container : tkinter Tk
+        root window
+    lang : LanguageFile
+        file with the variables translated
+    page : tkinter frame
+        frame to hold widgets
+    emina_barthel : EminaBarthel
+        barthel and emina data managers
+    Methods
+    -------
+    elements_page()
+        Creates the frame and main labels of page_1's UI (Process images).
+    carregar_imatge()
+        Sends a request to Controller to load an image.
+    processar_img()
+        Sends a request to the Controller to start image processing.
+    crear_camps_dades()
+        Creates and places all metadata fields's widgets and button 3 (save data).
+    elements_metadata()
+        Creates, configures and places the data collection widgets.
+    ask_time()
+        Places the widgets of contention's time field.
+    no_time()
+        Hides the widgets of contention's time field.
+    cultiu_si()
+        Updates the value of "cultiu" to Yes.
+    cultiu_no()
+        Updates the value of "cultiu" to Yes.
+    apretar_boto_3()
+        Sends a request to check and storage the metadata and processed image.
+    tornar_main()
+        Go back to main page.
+    update_image(img_tk)
+        Sends a request to Controller to update the image label.
+    botoImg(img_tk)
+        Places the button to process image.
+    update_main_label(img_tk)
+        Updates the label with the ulcer's image.
+    update_barthel(data)
+        Updates barthel's Scale widget with the calculated value.
+    update_emina(data)
+        Updates emina's Scale widget with the calculated value.
+    show_error(data_error)
+        Calls the popup function to display the errors found.
+    reset_view()
+        Resets image label (after processing process).
+    check_code(code)
+        Checks patient's id code.
+    load_saved_data(data)
+        Loads metadata from files to widgets
+    """
     def __init__(self, parent, lang):
         self.container = parent
         self.lang = lang
-        # self.kk = V_ScrollableFrame.Scrollable(self.container)
         self.page = tk.Frame(self.container)
         self.elements_page()
         self.emina_barthel = V_EminaBarthel.EminaBarthel(lang)
@@ -96,6 +155,9 @@ class ProcessingPage(Page):
         self.p1_button_3 = ttk.Button(self.p1_data_frame, text=self.lang.META_SAVE, command=self.apretar_boto_3)
 
     def elements_metadata(self):
+        """
+        Creates, configures and places the data collection widgets.
+        """
         self.p1_data_label = ttk.Label(self.frame_widgets, text=self.lang.META_DATA_FILL, font=FONT_TITOL)
         self.p1_data_label.grid(row=1, column=1, padx=5, pady=10, sticky="w")
         # Codi
@@ -276,6 +338,9 @@ class ProcessingPage(Page):
         pub.sendMessage("BUTTON_3_PRESSED", data=data)
 
     def tornar_main(self):
+        """
+        Go back to main page
+        """
         pub.sendMessage("BACK_TO_MAIN_PAGE")
 
     def update_image(self, img_tk):
@@ -299,6 +364,13 @@ class ProcessingPage(Page):
         self.p1_button_img.grid(row=1, column=1, pady=10, padx=20, sticky="SE")
 
     def update_main_label(self, img_tk):
+        """
+        Updates the label with the ulcer's image.
+        Parameters
+        ----------
+        img_tk : PIL image
+            ulcer's image
+       """
         img_mask_rgb = cv2.cvtColor(img_tk, cv2.COLOR_BGR2RGB)
         img_mask = Image.fromarray(img_mask_rgb)
         img_mask_tk = ImageTk.PhotoImage(image=img_mask)
@@ -364,10 +436,23 @@ class ProcessingPage(Page):
         self.p1_button_img.grid_forget()
 
     def check_code(self, code):
+        """
+        Checks patient's id code.
+        Parameters
+        ----------
+        code : String
+           patient's id
+        """
         pub.sendMessage("CHECK_CODE_REQUEST", code=code)
 
     def load_saved_data(self, data):
-        print(data)
+        """
+        Loads metadata from files to widgets
+        Parameters
+        ----------
+        data : json object
+           patient's clinical metadata
+        """
         self.age_pers_entry.delete(0, tk.END)
         self.age_pers_entry.insert(tk.END, data["metadata"]["age"])
         if data["metadata"]["gender"] == "Home" or data["metadata"]["age"] == "Hombre" or data["metadata"]["age"] == "Man":

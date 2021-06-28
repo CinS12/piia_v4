@@ -1,3 +1,8 @@
+"""Language selection viewer
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
+Interface that allows user's language selection.
+"""
 import sys
 import tkinter as tk
 from tkinter import ttk
@@ -8,10 +13,32 @@ FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
 
 class ViewLanguageSelection():
+    """
+    A class used to render the program language selection's interface.
+    ...
+    Attributes
+    ----------
+    parent : tkinter Tk
+        root window
+    Methods
+    -------
+    ask_lang()
+        Configures and renders the interface of language selection
+        with the available language options.
+    lang_selected(lang)
+        Calls the function to load the variables with the user's language selection.
+    lang_changed()
+        Receives a JSON object with the image data and metadata of a new patient
+        and writes it to a txt file.
+    """
     def __init__(self, parent):
         self.parent = parent
         return
     def ask_lang(self):
+        """
+        Configures and renders the interface of language selection
+        with the available language options.
+        """
         popup = self.parent
         ws = popup.winfo_screenwidth()
         hs = popup.winfo_screenheight()
@@ -36,9 +63,20 @@ class ViewLanguageSelection():
         popup.mainloop()
 
     def lang_selected(self, lang):
+        """
+        Calls the function to load the variables with the user's language selection.
+        Parameters
+        ----------
+        lang : String
+            user's language selection id
+        """
         pub.sendMessage("LANG_SELECTED", lang=lang)
 
     def lang_changed(self):
+        """
+        Tells the user that program needs to be restarted when
+        language is changed on execution time.
+        """
         popup = tk.Toplevel()
         ws = popup.winfo_screenwidth()
         hs = popup.winfo_screenheight()

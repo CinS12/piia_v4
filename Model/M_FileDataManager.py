@@ -1,7 +1,8 @@
 """File and directory manager
 sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
 Tool that allows to check, read and write files to specified directories
-that contain image files and metadata files. The files must be "txt" and "jpg".
+that contain image files and metadata files. The files must be "txt" and "jpg" or "png".
 """
 
 from pubsub import pub
@@ -23,37 +24,41 @@ class FileDataManager:
         an integer that identifies the file and directory
     Methods
     -------
-    check_dir()
-        Calls the functions to check or create the image and metadata directories
-    check_metadata_dir()
-        Checks or creates the metadata directory
-    check_images_dir()
-        Checks or creates the images directory
-    load_data()
-        Sends the id to the Controller
-    save_data(metadata, img)
+    save_data(metadata, img, new_patient, new_ulcer)
         Saves the images and metadata
-    save_metadata(metadata, img)
+    save_metadata(metadata, img, new_patient, new_ulcer)
         Creates a JSON object with the image data and metadata and writes it to a txt file
-    save_img(img)
-        Saves all sub-images from Pressure_img object to a directory
-    load_img_i(i)
-        Reads the image with the specified id from the directory
-    load_metadata_i(i)
-        Reads the metadata file with the specified id from the directory
-       """
+    save_new_patient(metadata, metadata_json_object, img)
+        Receives a JSON object with the image data and metadata of a new patient
+        and writes it to a txt file.
+    save_new_ulcer(metadata, metadata_json_object, img)
+        Receives a JSON object with the image data and metadata of a new ulcer
+        and writes it to a txt file.
+    save_old_ulcer(metadata, metadata_json_object, img)
+        Receives a JSON object with the image data and metadata of an already registered
+        ulcer and writes it to a txt file.
+    load_img_i(id, location, dir)
+        Reads the image with the specified id from the directory.
+    check_code(code)
+        Checks if the introduced code exists on the database.
+    check_code_location(code, location)
+        Checks if the introduced location already exists on the database.
+    get_locations(code)
+        Returns the list of ulcers' locations of a patient.
+    get_dates(id, location)
+        Returns the list of pictures' dates from a selected ulcer.
+    load_metadata(id, location, dir):
+        Returns the saved metadata from a selected picture's file.
+    get_evo_data(id, location)
+        Returns the saved metadata about ulcer's area and perimeter
+        of all locations from a selected injury file.
+    get_saved_metadata(id)
+        Returns the saved metadata from a selected patient's file.
+    """
 
     def __init__(self):
         self.id = None
         return
-
-    def load_data(self):
-        # try:
-        list = os.listdir(PATH_DATABASE_DIR)
-        pub.sendMessage("DATA_N_PACIENTS", patient_list=list)
-
-    # except:
-    # pub.sendMessage("DATA_FILES_KO")
 
     def save_data(self, metadata, img, new_patient, new_ulcer):
         """
@@ -64,6 +69,10 @@ class FileDataManager:
            a list with all the metadata field's information written by the user
         img : Pressure_img
            the pressur image object class with all sub-images processed by user
+        new_patient: bool
+            indicates that a new patient will be registered
+        new_ulcer : bool
+            indicates that a new ulcer will be registered
         """
         print("New patient: ", new_patient)
         print("New ulcer: ", new_ulcer)
@@ -71,7 +80,8 @@ class FileDataManager:
 
     def save_metadata(self, metadata, img, new_patient, new_ulcer):
         """
-        Creates a JSON object with the image data and metadata and writes it to a txt file.
+        Creates a JSON object with the image data and metadata and calls the function
+        to write it on a txt file.
         Parameters
         ----------
         metadata : list
@@ -79,9 +89,9 @@ class FileDataManager:
         img : Pressure_img
            the pressur image object class with all sub-images processed by user
         new_patient: bool
-            indicates that a new patient must be added
-        new_ulcer: bool
-            indicates that a new ulcer must be added
+            indicates that a new patient will be registered
+        new_ulcer : bool
+            indicates that a new ulcer will be registered
         """
 
         metadata_json_object = {
@@ -133,6 +143,19 @@ class FileDataManager:
             print("Error de gestió de fitxers.")
 
     def save_new_patient(self, metadata, metadata_json_object, img):
+        """
+        Receives a JSON object with the image data and metadata of a new patient
+        and writes it to a txt file.
+        Parameters
+        ----------
+        metadata : list
+            a list with all the metadata field's information written by the user
+        metadata_json_object: json object
+            metadata field's information written by the user
+        img : Pressure_img
+           the pressure image object class with all sub-images processed by user
+        """
+
         os.mkdir(PATH_DATABASE_DIR + metadata[0])
         location_json = {"location": [metadata[1]]}
         with open(PATH_DATABASE_DIR + metadata[0] + "/" + metadata[0] + ".txt", "w+") as outfile:
@@ -160,6 +183,19 @@ class FileDataManager:
                         img.necrosis[i])
 
     def save_new_ulcer(self, metadata, metadata_json_object, img):
+        """
+        Receives a JSON object with the image data and metadata of a new ulcer
+        and writes it to a txt file.
+        Parameters
+        ----------
+        metadata : list
+            a list with all the metadata field's information written by the user
+        metadata_json_object: json object
+            metadata field's information written by the user
+        img : Pressure_img
+           the pressure image object class with all sub-images processed by user
+        """
+
         locations_list = {}
         locations_list["location"] = []
         with open(PATH_DATABASE_DIR + metadata[0] + "/" + metadata[0] + ".txt") as json_file:
@@ -196,6 +232,19 @@ class FileDataManager:
                         img.necrosis[j])
 
     def save_old_ulcer(self, metadata, metadata_json_object, img):
+        """
+        Receives a JSON object with the image data and metadata of an already registered ulcer
+        and writes it to a txt file.
+        Parameters
+        ----------
+        metadata : list
+            a list with all the metadata field's information written by the user
+        metadata_json_object: json object
+            metadata field's information written by the user
+        img : Pressure_img
+           the pressure image object class with all sub-images processed by user
+        """
+
         with open(PATH_DATABASE_DIR + metadata[0] + "/" + metadata[0] + ".txt") as json_file:
             locations = json.load(json_file)
             json_file.close()
@@ -239,11 +288,11 @@ class FileDataManager:
 
     def load_img_i(self, id, location, dir):
         """
-        Reads the image with the specified id from the directory
+        Reads the image with the specified id from the directory.
         Parameters
         ----------
-        id : int patient id
-           id of the patient that has to be read
+        id : String
+           id of the patient that has to be loaded
         location : int
             directory index of the ulcer that has to be read
         dir : int
@@ -254,10 +303,26 @@ class FileDataManager:
         pub.sendMessage("IMAGE_LOAD_i", img_tk=im)
 
     def check_code(self, code):
+        """
+        Checks if the introduced code exists on the database.
+        Parameters
+        ----------
+        code : String
+           id of the patient to be checked
+        """
         code_exists = os.path.isdir(PATH_DATABASE_DIR + str(code))
         pub.sendMessage("CODE_CHECKED", existence=code_exists, code=code)
 
     def check_code_location(self, code, location):
+        """
+        Checks if the introduced location already exists on the database.
+        Parameters
+        ----------
+        code : String
+           id of the patient to be checked
+        location : String
+            location of the ulcer
+        """
         with open(PATH_DATABASE_DIR + str(code) + "/" + code + ".txt") as json_file:
             patient_ulcers = json.load(json_file)
             json_file.close()
@@ -267,6 +332,13 @@ class FileDataManager:
         return True
 
     def get_locations(self, code):
+        """
+        Returns the list of ulcers' locations of a patient.
+        Parameters
+        ----------
+        code : String
+           id of the patient to be checked
+        """
         with open(PATH_DATABASE_DIR + str(code) + "/" + str(code) + ".txt") as json_file:
             patient_ulcers = json.load(json_file)
             json_file.close()
@@ -276,6 +348,15 @@ class FileDataManager:
         return locations
 
     def get_dates(self, id, location):
+        """
+        Returns the list of pictures' dates from a selected ulcer.
+        Parameters
+        ----------
+        id : String
+           id of the patient to be checked
+        location : String
+            location of the ulcer
+        """
         dates = []
         n_ulcers = len([name for name in os.listdir(PATH_DATABASE_DIR + id + "/" + str(location))])
         for x in range(n_ulcers):
@@ -286,6 +367,17 @@ class FileDataManager:
         return dates
 
     def load_metadata(self, id, location, dir):
+        """
+        Returns the saved metadata from a selected picture's file.
+        Parameters
+        ----------
+        id : String
+           id of the patient to be checked
+        location : String
+            location of the ulcer
+        dir: int
+            sub-directory where data is saved
+        """
         with open(PATH_DATABASE_DIR + str(id) + "/" + str(location) + "/" + str(dir) + "/Metadata_" + str(id) + "_" + str(
                 location) + "_" + str(dir) + ".txt") as json_file:
             metadata = json.load(json_file)
@@ -293,6 +385,16 @@ class FileDataManager:
         return metadata
 
     def get_evo_data(self, id, location):
+        """
+        Returns the saved metadata about ulcer's area and perimeter
+        of all locations from a selected injury file.
+        Parameters
+        ----------
+        id : String
+           id of the patient to be checked
+        location : String
+            location of the ulcer
+        """
         evo_data = {}
         evo_data["id"] = id
         evo_data["perimeter"] = []
@@ -319,6 +421,13 @@ class FileDataManager:
         return evo_data
 
     def get_saved_metadata(self, id):
+        """
+        Returns the saved metadata from a selected patient's file.
+        Parameters
+        ----------
+        id : String
+           id of the patient to be checked
+        """
         with open(PATH_DATABASE_DIR + str(id) + "/1/1" + "/Metadata_" + str(
                 id) + "_1_1.txt") as json_file:
             metadata = json.load(json_file)

@@ -1,21 +1,45 @@
+"""Tool tip class
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
+Interface that sets up tool tips to guide the user.
+"""
+
 import tkinter as tk
-from PIL import ImageTk, Image
-import cv2
-from tkinter import ttk
 
 FONT_BENVINGUDA = ("Verdana", 12)
 FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
 class ToolTip(object):
-
+    """
+    Interface that sets up tool tips to guide the user.
+    ...
+    Attributes
+    ----------
+    container : tkinter Tk
+        root window
+    lang : LanguageFile
+        file with the variables translated
+    Methods
+    -------
+    showtip(text)
+        Display text in tooltip window.
+    hidetip()
+        Method to make the tooltip no visible.
+    CreateToolTip(text)
+        Creates and configures the tooltip with the message and the event.
+    """
     def __init__(self, widget):
         self.widget = widget
         self.tipwindow = None
-        self.id = None
-        self.x = self.y = 0
 
     def showtip(self, text):
-        "Display text in tooltip window"
+        """
+        Display text in tooltip window.
+        Parameters
+        ----------
+        text : String
+           message to guide the user
+        """
         self.text = text
         if self.tipwindow or not self.text:
             return
@@ -31,12 +55,22 @@ class ToolTip(object):
         label.pack(ipadx=1)
 
     def hidetip(self):
+        """
+        Method to make the tooltip no visible.
+        """
         tw = self.tipwindow
         self.tipwindow = None
         if tw:
             tw.destroy()
 
     def CreateToolTip(widget, text):
+        """
+        Creates and configures the tooltip with the message and the event.
+        Parameters
+        ----------
+        text : String
+           message to guide the user
+        """
         toolTip = ToolTip(widget)
         def enter(event):
             toolTip.showtip(text)

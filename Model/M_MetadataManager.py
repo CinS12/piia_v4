@@ -20,7 +20,14 @@ class MetadataManager:
         user data inputs from all metadata fields
     Methods
     -------
-    getData(data)
+    carregar_imatge()
+        File dialog to ask user for an image. Calls the functions to check img size.
+        Sends a request to the Controller with the PIL image read.
+    check_img_size(img)
+        Checks if image has too much resolution. Calls the function to resize if needed.
+    resize_img(img, scale_percent)
+        Resizes the img according to the scale_percent.
+    getData(data, location)
         Saves the data from the list to the metadata variables.
         Calls the functions to check input data and sends the request.
     camps_plens(code, age, gender, n_imm, n_hosp, n_inst, date, conten,
@@ -55,7 +62,6 @@ class MetadataManager:
         """
         File dialog to ask user for an image. Calls the functions to check img size.
         Sends a request to the Controller with the PIL image read.
-        WARNING: For optimal visualization, images must be '560x390'
         """
         self.image_size_ok = False
         path = 0
@@ -118,6 +124,8 @@ class MetadataManager:
         ----------
         data : list
            a list with all the metadata field's information answered by the user
+        location : String
+            ulcer's location
         """
 
         # Codi

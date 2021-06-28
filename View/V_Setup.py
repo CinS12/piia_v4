@@ -1,3 +1,9 @@
+"""Main user interface manager
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
+Interface that sets up the main functionalities.
+"""
+
 import tkinter as tk
 from tkinter import ttk
 from pubsub import pub
@@ -10,7 +16,38 @@ from resources import language_CAST, language_ENG, language_CAT
 
 
 class ViewSetup:
-
+    """
+    Interface that sets up the main functionalities.
+    ...
+    Attributes
+    ----------
+    container : tkinter Tk
+        root window
+    lang : LanguageFile
+        file with the variables translated
+    Methods
+    -------
+    setup()
+        Calls the functions to create and show the main window.
+    crear_menu()
+        Creates and configures the top menu bar widget.
+    change_lang(lang)
+        Proceeds with language change process on execution time.
+    back_to_main_page()
+        Goes back to main page.
+    go_to_processing_page()
+        Goes to processing page.
+    go_to_view_page()
+        Goes to processing page.
+    popupmsg(msg)
+        Displays a popup window with the message.
+    data_ko(error)
+        Calls a View function to warn the user what field has the wrong input data.
+    data_ok()
+        Sets Pressure_img loaded boolean to False.
+        Calls View function to reset loaded image label.
+        Calls the function to save all the data entered by the user.
+    """
     def __init__(self, parent, lang):
         self.container = parent
         self.lang = lang
@@ -58,15 +95,31 @@ class ViewSetup:
         self.container.config(menu=self.menubar)
 
     def change_lang(self, lang):
+        """
+        Proceeds with language change process on execution time.
+        Parameters
+        ----------
+        lang : int
+           language id
+        """
         pub.sendMessage("CHANGE_LANG", lang=lang)
 
     def back_to_main_page(self):
+        """
+        Goes back to main page.
+        """
         self.main_page.page.tkraise()
 
     def go_to_processing_page(self):
+        """
+        Goes to processing page.
+        """
         self.processing_page.page.tkraise()
 
     def go_to_view_page(self):
+        """
+        Goes to processing page.
+        """
         self.view_page.page.tkraise()
 
     def popupmsg(self, msg):

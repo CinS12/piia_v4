@@ -1,3 +1,8 @@
+"""Emina and Barthel indexes view
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
+Class to render Emina and Barthel data collection process.
+"""
 import tkinter as tk
 from tkinter import ttk
 from pubsub import pub
@@ -7,6 +12,41 @@ FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
 
 class EminaBarthel:
+    """
+    Class to render Emina and Barthel data collection process.
+    ...
+    Attributes
+    ----------
+    lang : LanguageFile
+        file with translated variables
+    popup_tr_ant : String
+        clinical metadata about antibiotic
+    popup_tr_top : String
+        clinical metadata about topic
+    Methods
+    -------
+    popup_barthel(title)
+        Display a popup for barthel scale's value calculation.
+    popup_emina(title)
+        Display a popup for emina scale's value calculation.
+    save_new_patient(metadata, metadata_json_object, img)
+        Receives a JSON object with the image data and metadata of a new patient
+        and writes it to a txt file.
+    barthel_getData()
+        Saves the barthel sacle answers to an attribute,
+        sends a request with this data and closes popup.
+    emina_getData()
+        Saves the emina sacle answers to an attribute,
+        sends a request with this data and closes popup.
+    entry_popup_tr_ant(title)
+        Display a popup for antibiotics treatment's comments.
+    entry_popup_tr_top(title)
+        Display a popup for topical treatment's comments.
+    p1_tr_top_ok()
+        Saves the topical treatment's comments to an attribute and closes popup.
+    p1_tr_ant_ok()
+        Saves the antibiotics treatment's comments to an attribute and closes popup.
+    """
     def __init__(self, lang):
         self.lang = lang
         self.popup_tr_ant = []

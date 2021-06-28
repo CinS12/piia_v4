@@ -1,5 +1,10 @@
-import ctypes
+"""Segmentation user interface
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
 
+Interface that shows the segmentation functionalities.
+"""
+
+import ctypes
 import cv2
 from pubsub import pub
 import tkinter as tk
@@ -13,7 +18,71 @@ FONT_MSG = ("Verdana", 8)
 
 
 class SegmentationGUI:
-
+    """
+    Interface that shows the segmentation functionalities.
+    ...
+    Attributes
+    ----------
+    lang : LanguageFile
+        file with the variables translated
+    container : tkinter Tk
+        root window
+    Methods
+    -------
+    segmentation_gui(img_imgtk_mask, img_cv2_mask)
+        Creates a GUI for the image segmentation and processing.
+    whitebalance(img_cv2_mask)
+        Sends a request to the Controller for whitebalance correction.
+    ask_perimeter()
+        Sends a request to the Controller for perimeter's roi selection.
+    roi_granulation()
+        Sends a request to the Controller for granulation's roi selection.
+    roi_necrosis()
+        Sends a request to the Controller for necrosis's roi selection.
+    roi_slough()
+        Sends a request to the Controller for slough's roi selection.
+    img_processed_accepted()
+        Sends the request that image has been processed.
+    ask_whitebalance_confirmation(img_cv2_mask, img_whitebalanced)
+        Displays a popup window to ask user confirmation about the white balanced result.
+    whitebalanced_ok(img_cv2_roi)
+        Sends a request to Controller with the image's white balanced result.
+    whitebalanced_ko()
+        Closes popup and all cv2 windows.
+    update_whitebalanced_label(img_cv2_flash)
+        Updates the image's label of GUI processing with the whitebalanced one.
+    ask_roi_confirmation(img_cv2_mask, img_cv2_roi, tissue, scale_percent, ring)
+        Displays a popup window to ask user confirmation about cropped roi
+        comparing it with the image mask.
+    roi_ok(img_cv2_roi, tissue, ring)
+        Closes the popup window and sends a request with the roi and tissue's type.
+    segmentacio_ko()
+        Closes the cv2 and popup window.
+    ask_zone_type(tissue)
+        Interface to ask roi's type: closed or ring.
+    zona_anella(tissue)
+        Proceed to segmentate as a ring zone.
+    zona_tancada(tissue)
+        Proceed to segmentate as a closed zone.
+    ask_ring_out(tissue)
+        Proceed to segmentate the external ring perimeter.
+    ring_ext_clicked(tissue)
+        External ring perimeter selected.
+    ring_int_clicked(tissue)
+        Inner ring perimeter selected.
+    updateLabelGUI(img_mask)
+        Updates the segmentation label with the image processed by user.
+    ask_ring_in(self, tissue)
+        Proceed to segmentate the inner ring perimeter.
+    update_perimeter_count()
+        Updates the perimeter selection label as selected.
+    update_granulation_count(number)
+        Update the granulation tissue's label with the number of rois selected.
+    update_necrosis_count(number)
+        Update the necrosis tissue's label with the number of rois selected.
+    update_slough_count(number)
+        Update the slough tissue's label with the number of rois selected.
+    """
     def __init__(self, parent, lang):
         self.lang = lang
         self.container = parent
@@ -161,7 +230,7 @@ class SegmentationGUI:
 
     def whitebalance(self, img_cv2_mask):
         """
-        Sends a request to the Controller for flash reduction.
+        Sends a request to the Controller for whitebalance correction.
         Parameters
         ----------
         img_cv2_mask : image cv2
@@ -377,7 +446,13 @@ class SegmentationGUI:
         pub.sendMessage("ROI_KO")
 
     def ask_zone_type(self, tissue):
-
+        """
+        Interface to ask roi's type: closed or ring.
+        Parameters
+        ----------
+        tissue : String
+            tissue of the roi
+        """
         cv2.destroyAllWindows()
         # Crear la finestra
         self.popup = tk.Toplevel()
@@ -413,14 +488,35 @@ class SegmentationGUI:
         self.popup.mainloop()
 
     def zona_anella(self, tissue):
+        """
+        Proceed to segmentate as a ring zone.
+        Parameters
+        ----------
+        tissue : String
+            tissue of the roi
+        """
         self.popup.destroy()
         pub.sendMessage("RING_ZONE", tissue=tissue)
 
     def zona_tancada(self, tissue):
+        """
+        Proceed to segmentate as a closed zone.
+        Parameters
+        ----------
+        tissue : String
+            tissue of the roi
+        """
         self.popup.destroy()
         pub.sendMessage("CLOSED_ZONE", tissue=tissue)
 
     def ask_ring_out(self, tissue):
+        """
+        Proceed to segmentate the external ring perimeter.
+        Parameters
+        ----------
+        tissue : String
+            tissue of the roi
+        """
         self.popup = tk.Toplevel()
         ws = self.popup.winfo_screenwidth()
         hs = self.popup.winfo_screenheight()
@@ -439,14 +535,35 @@ class SegmentationGUI:
         self.popup.mainloop()
 
     def ring_ext_clicked(self, tissue):
+        """
+       External ring perimeter selected.
+       Parameters
+       ----------
+       tissue : String
+           tissue of the roi
+       """
         self.popup.destroy()
         pub.sendMessage("RING_EXT", tissue=tissue)
 
     def ring_int_clicked(self, tissue):
+        """
+       Inner ring perimeter selected.
+       Parameters
+       ----------
+       tissue : String
+           tissue of the roi
+       """
         self.popup.destroy()
         pub.sendMessage("RING_INT", tissue=tissue)
 
     def updateLabelGUI(self, img_mask):
+        """
+       Updates the segmentation label with the image processed by user.
+       Parameters
+       ----------
+       img_mask : opencv image
+           image processed by user
+       """
         img_mask_rgb = cv2.cvtColor(img_mask, cv2.COLOR_BGR2RGB)
         img_mask = Image.fromarray(img_mask_rgb)
         img_mask_tk = ImageTk.PhotoImage(image=img_mask)
@@ -454,6 +571,13 @@ class SegmentationGUI:
         self.img_show.image = img_mask_tk
 
     def ask_ring_in(self, tissue):
+        """
+        Proceed to segmentate the inner ring perimeter.
+        Parameters
+        ----------
+        tissue : String
+            tissue of the roi
+        """
         self.popup = tk.Toplevel()
         ws = self.popup.winfo_screenwidth()
         hs = self.popup.winfo_screenheight()

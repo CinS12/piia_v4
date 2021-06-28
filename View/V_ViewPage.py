@@ -1,3 +1,8 @@
+"""View page user interface
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
+Interface that sets up the viewer page.
+"""
 import tkinter as tk
 from tkinter import ttk
 from pubsub import pub
@@ -9,6 +14,54 @@ FONT_MSG = ("Verdana", 8)
 
 
 class ViewPage(Page):
+    """
+    Interface that sets up the main functionalities.
+    ...
+    Attributes
+    ----------
+    container : tkinter Tk
+        root window
+    lang : LanguageFile
+        file with the variables translated
+    id : Sting
+        patient id code
+    location : String
+        selected ulcer's location
+    page : tkinter Frame
+        frame where widgets will be placed
+
+    Methods
+    -------
+    elements_page()
+        Creates the frame and main elements of the viewer UI.
+    crear_elements_viewer()
+        Creates and places the main frames and labels of the viewer.
+    assemble_img_frame()
+        Creates and places the label_img for the ulcer's image.
+    tornar_main()
+        Goes back to the main page.
+    update_patients(list)
+        Displays all found elements on the list.
+        Creates the "double click" event to select an element.
+    update_locations(id, list)
+        Displays all found elements on the list.
+        Creates the "double click" event to select an element.
+    update_dates(id, location, dates)
+        Displays all found elements on the list.
+        Creates the "double click" event to select an element.
+    select_date(id, location)
+        Proceeds to show the image of the selected ulcer.
+    select_patient()
+        Sends the request with the id of list's selected element.
+    select_location(id)
+        Sends the request with the id of list's selected element.
+    load_image_i(img_tk)
+        Loads the image to the label_img of page 2 (Viewer).
+    load_metadata_i(metadata)
+        Loads the metadata to the metadata labels of page 2 (Viewer).
+    evo_selected()
+        Proceeds to show the evolution of the selected ulcer.
+    """
     def __init__(self, parent, lang):
         self.container = parent
         self.lang = lang
@@ -20,7 +73,7 @@ class ViewPage(Page):
 
     def elements_page(self):
         """
-        Creates the frame and main labels of page_2's UI (View images).
+        Creates the frame and main labels of the viewer UI.
         """
         self.list_frame = tk.Frame(self.page)
         self.data_frame = tk.Frame(self.page)
@@ -42,7 +95,7 @@ class ViewPage(Page):
 
     def crear_elements_viewer(self):
         """
-        Creates and places the main frames and labels of page 2 (View images).
+        Creates and places the main frames and labels of the viewer.
         """
 
         self.p2_frame_list = tk.Frame(self.list_frame, borderwidth=2, relief="groove")
@@ -91,7 +144,7 @@ class ViewPage(Page):
 
     def assemble_img_frame(self):
         """
-        Creates and places the label_img of page 2 (View images).
+        Creates and places the label_img for the ulcer's image.
         """
 
         self.p2_label_img = ttk.Label(self.p2_frame_img, text=self.lang.VP_IMG_LABEL,
@@ -99,6 +152,9 @@ class ViewPage(Page):
         self.p2_label_img.grid(row=1, column=2, padx=5, pady=0)
 
     def tornar_main(self):
+        """
+        Goes back to the main page.
+        """
         pub.sendMessage("BACK_TO_MAIN_PAGE")
 
     def update_patients(self, list):
@@ -116,6 +172,12 @@ class ViewPage(Page):
         """
         Displays all found elements on the list.
         Creates the "double click" event to select an element.
+        Parameters
+        ----------
+        id : String
+           patient id code
+        list : list
+            list of all locations
         """
 
         self.llista_1.delete(0, tk.END)
@@ -128,6 +190,14 @@ class ViewPage(Page):
         """
         Displays all found elements on the list.
         Creates the "double click" event to select an element.
+        Parameters
+        ----------
+        id : String
+           patient id code
+        location : String
+            ulcer's location
+        dates  list
+            list of all images dates
         """
         self.id = id
         self.location = location
@@ -137,6 +207,15 @@ class ViewPage(Page):
         self.llista_2.bind('<Double-1>', lambda _: self.select_date(id, location))
 
     def select_date(self, id, location):
+        """
+        Proceeds to show the image of the selected ulcer.
+        Parameters
+        ----------
+        id : String
+           patient id code
+        location : String
+            ulcer's location
+        """
         index_selected = self.llista_2.curselection()
         date_selected = self.llista_2.get(index_selected[0])
         pub.sendMessage("DATE_SELECTED", id=id, location=location, dir=index_selected[0]+1)
@@ -144,8 +223,6 @@ class ViewPage(Page):
     def select_patient(self, aux):
         """
         Sends the request with the id of list's selected element.
-        Parameters
-        ----------
         """
         n_elements = self.llista.curselection()
         pub.sendMessage("PATIENT_SELECTED", id=self.llista.get(n_elements[0]))
@@ -155,6 +232,8 @@ class ViewPage(Page):
         Sends the request with the id of list's selected element.
         Parameters
         ----------
+        id : String
+           patient id code
         """
         n_elements = self.llista_1.curselection()
         location = n_elements[0] + 1
@@ -186,4 +265,7 @@ class ViewPage(Page):
         self.p2_label_metadata_cm.config(text=self.lang.VP_DATE + metadata["metadata"]["date"])
 
     def evo_selected(self):
+        """
+        Proceeds to show the evolution of the selected ulcer.
+        """
         pub.sendMessage("EVO_SELECTED", id=self.id, location=self.location)

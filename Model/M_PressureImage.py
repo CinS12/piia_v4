@@ -1,12 +1,12 @@
 """Pressure injury image class
 sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
 Class to manage the pressure injurie's images.
 Its stucture allows to process the user's selected images and masks.
 """
 
 import cv2
 import numpy as np
-from peakdetect import peakdetect
 from pubsub import pub
 
 from resources import language_CAST, language_ENG, language_CAT
@@ -19,6 +19,10 @@ class Pressure_img:
     ...
     Attributes
     ----------
+    parent : tkinter frame
+        frame containing elements to be rendered
+    lang : language file
+        language selection
     img_origin : image cv2
         original uploaded image.
     img : image cv2

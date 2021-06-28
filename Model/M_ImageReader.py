@@ -1,3 +1,8 @@
+"""Image reader class
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
+Class responsible for reading and scaling images.
+"""
 from PIL import ImageTk
 from tkinter import filedialog
 import cv2
@@ -5,13 +10,15 @@ from pubsub import pub
 
 class ImageReader:
     """
-    Class responsible for managing the data of the application.
-    It receives user input from the controller.
+    Class responsible for reading and scaling images from the system
+    to the program.
     ...
     Attributes
     ----------
-    metadata : list
+    image_size_ok : bool
         user data inputs from all metadata fields
+    img : image opencv
+        image loaded
     Methods
     -------
     carregar_imatge()
@@ -32,7 +39,6 @@ class ImageReader:
         """
         File dialog to ask user for an image. Calls the functions to check img size.
         Sends a request to the Controller with the PIL image read.
-        WARNING: For optimal visualization, images must be '560x390'
         """
         self.image_size_ok = False
         path = 0

@@ -1,8 +1,68 @@
-import cv2
+"""Image segmentation class
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
+Class to manage the segmentation process.
+"""
 from pubsub import pub
 
-
 class ControllerImageSegmentation:
+    """
+    Class to see the ulcer's state and evolution.
+    ...
+    Attributes
+    ----------
+    view : ViewSetup
+        view manager
+    pressure_img : Pressure_img
+        ulcer's image
+    Methods
+    -------
+    segmentation_gui(img_imgtk_mask, img_cv2_mask)
+        Updates the Pressure_img mask image, calls the target_detection
+        process and calls the View UI for processing.
+    whitebalance(img_cv2_mask)
+        Checks if flash reduction has been called and calls
+        Pressure_img function to reduce flash if not.
+        Calls the View function to ask user confirmation.
+    whitebalance_confirmated(img_cv2_whitebalanced)
+        Updates Pressure_img mask and flash_reduced boolean.
+        Calls the View function to update image label.
+    ask_perimeter()
+        Checks if perimeter has been cropped and calls the Pressure_img function if not.
+    target_not_found()
+        Calls the view function to tell user that marker has not been detected.
+    ask_roi_confirmation(img_cv2_mask, img_cv2_roi, tissue, scale_factor, ring)
+        Calls the View function to ask user confirmation about a image's roi.
+    roi_granulation()
+        Updates the Pressure_img mask image
+        Calls the Pressure_img function to allow the user to select the granulation roi.
+    roi_necrosis()
+        Updates the Pressure_img mask image
+        Calls the Pressure_img function to allow the user to select the necrosis roi.
+    roi_slough()
+        Updates the Pressure_img mask image
+        Calls the Pressure_img function to allow the user to select the slough roi.
+    closed_zone(tissue)
+        Calls the function for a closed roi selection.
+    ring_zone(tissue)
+        Calls the function for a ring roi selection.
+    ring_ext(tissue)
+        Calls the function for a external ring roi selection.
+    ring_int(tissue)
+        Calls the function for an inner ring roi selection.
+    roi_confirmated(img_cv2_roi, tissue, ring)
+        Calls the Pressure_img function to update granulation/necrosis/slough fields.
+    roi_ko()
+        Loads the auxiliar mask.
+    update_perimeter_count()
+        Updates the View of perimeter label.
+    update_granulation_count(number)
+        Updates the View of granulation's label with the number of roi's already selected.
+    update_necrosis_count(number)
+        Updates the View of necrosis's label with the number of roi's already selected.
+    update_slough_count(number)
+        Updates the View of slough's label with the number of roi's already selected.
+    """
     def __init__(self, view):
         self.view = view
         self.pressure_img = None
@@ -36,7 +96,8 @@ class ControllerImageSegmentation:
 
     def segmentation_gui(self, img_imgtk_mask, img_cv2_mask):
         """
-        Updates the Pressure_img mask image, calls the target_detection process and calls the View UI for processing.
+        Updates the Pressure_img mask image, calls the target_detection
+        process and calls the View UI for processing.
         Parameters
         ----------
         img_imgtk_mask : PIL Image BGR
@@ -97,6 +158,9 @@ class ControllerImageSegmentation:
             self.pressure_img.roi_crop(img_cv2_mask, "Perimeter")
 
     def target_not_found(self):
+        """
+        Calls the view function to tell user that marker has not been detected.
+        """
         print("controller - target_not_found")
         self.view.popupmsg("Atenció. No s'ha trobat el target!")
 
@@ -148,19 +212,47 @@ class ControllerImageSegmentation:
         self.view.processing_gui.ask_zone_type("Slough")
 
     def closed_zone(self, tissue):
+        """
+        Calls the function for a closed roi selection.
+        Parameters
+        ----------
+        tissue : String
+           tissue type
+        """
         img_cv2_mask = self.pressure_img.mask
         self.pressure_img.roi_crop(img_cv2_mask, tissue)
 
     def ring_zone(self, tissue):
+        """
+        Calls the function for a ring roi selection.
+        Parameters
+        ----------
+        tissue : String
+           tissue type
+        """
         print("controller - ring_zone!")
         self.view.processing_gui.ask_ring_out(tissue)
 
     def ring_ext(self, tissue):
+        """
+        Calls the function for a external ring roi selection.
+        Parameters
+        ----------
+        tissue : String
+           tissue type
+        """
         print("controller - ring_ext!")
         img_cv2_mask = self.pressure_img.mask
         self.pressure_img.roi_crop(img_cv2_mask, tissue, 1)
 
     def ring_int(self, tissue):
+        """
+        Calls the function for an inner ring roi selection.
+        Parameters
+        ----------
+        tissue : String
+           tissue type
+        """
         print("controller - ring_int!")
         img_cv2_mask = self.pressure_img.ring_ext
         self.pressure_img.roi_crop(img_cv2_mask, tissue, 2)
@@ -196,6 +288,9 @@ class ControllerImageSegmentation:
             #Guardar imatge
 
     def roi_ko(self):
+        """
+        Loads the auxiliar mask.
+        """
         self.pressure_img.mask = self.pressure_img.previous_roi
 
     def update_perimeter_count(self):

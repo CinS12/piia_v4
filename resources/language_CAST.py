@@ -1,4 +1,4 @@
-"""Script with the GUI text in CATALAN.
+"""Script with the GUI text in SPANISH.
 sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
 """
 

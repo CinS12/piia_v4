@@ -1,3 +1,9 @@
+"""Pre-segmentation user interface
+sectionauthor:: Artur Martí Gelonch <artur.marti@students.salle.url.edu>
+
+Interface that shows the pre-segmentation functionalities.
+"""
+
 import cv2
 from pubsub import pub
 import tkinter as tk
@@ -8,9 +14,39 @@ FONT_BENVINGUDA = ("Verdana", 12)
 FONT_TITOL = ("Verdana", 10)
 FONT_MSG = ("Verdana", 8)
 
-
 class PreSegmentationGUI:
-
+    """
+    A class used to show the pre-segmentation functionalities.
+    ...
+    Attributes
+    ----------
+    container : tkinter Tk
+        root window
+    lang : LanguageFile
+        file with the variables translated
+    code_option : int
+        indicates patient's id code state
+    Methods
+    -------
+    ask_mask_confirmation(img_cv2_mask, scale_percent)
+        Displays a popup window to ask user confirmation about cropped mask.
+    segmentacio_ok(img_imgtk_mask, img_cv2_mask)
+        Closes the popup window and sends a request with the image(mask) and roi.
+    segmentacio_ko()
+        Closes the cv2 and popup window.
+    popup_new_code(code)
+        Shows the UI for a no registered patient's id code location data collection.
+    new_code(self, code, popup, location)
+        Checks that location is not empty.
+    popup_ask_code(code, locations)
+        Shows the UI for an already registered patient's id code location collection.
+    check_option(code, popup, new_ulcer, old_ulcer)
+        Proceed to the user's location selection according to location's previous existence.
+    new_ulcer_view(label, entry_new_ulcer, combobox_old_ulcer)
+        Shows the widgets to collect a new ulcer's location.
+    old_ulcer_view(label, entry_new_ulcer, combobox_old_ulcer)
+        Shows the widgets to collect an already existing ulcer's location.
+    """
     def __init__(self, parent, lang):
         self.container = parent
         self.lang = lang
@@ -85,7 +121,13 @@ class PreSegmentationGUI:
         self.popup.destroy()
 
     def popup_new_code(self, code):
-
+        """
+        Shows the UI for a no registered patient's id code location collection.
+        Parameters
+        ----------
+        code : String
+           patient id
+        """
         popup = tk.Toplevel()
         ws = popup.winfo_screenwidth()
         hs = popup.winfo_screenheight()
@@ -109,6 +151,17 @@ class PreSegmentationGUI:
         popup.mainloop()
 
     def new_code(self, code, popup, location):
+        """
+        Checks that location is not empty.
+        Parameters
+        ----------
+        code : String
+           patient id
+        popup : tkinter Toplevel
+            popup window
+        location : String
+            ulcer's location
+        """
         if location != "":
             popup.destroy()
             pub.sendMessage("NEW_CODE_LOCATION", location=location, new_patient=True, code=code)
@@ -116,7 +169,15 @@ class PreSegmentationGUI:
             pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_NEW_LOCATION_EMPTY)
 
     def popup_ask_code(self, code, locations):
-
+        """
+        Shows the UI for an already registered patient's id code location collection.
+        Parameters
+        ----------
+        code : String
+           patient id
+        locations : list
+            locations of all registered patient's ulcers
+        """
         popup = tk.Toplevel()
         ws = popup.winfo_screenwidth()
         hs = popup.winfo_screenheight()
@@ -151,6 +212,15 @@ class PreSegmentationGUI:
         popup.mainloop()
 
     def check_option(self, code, popup, new_ulcer, old_ulcer):
+        """
+        Proceed to the user's location selection according to location's previous existence.
+        Parameters
+        ----------
+        code : String
+           patient id
+        locations : list
+            locations of all registered patient's ulcers
+        """
         if self.code_option is not None:
             if self.code_option == 0:
                 if new_ulcer != "":
@@ -165,12 +235,34 @@ class PreSegmentationGUI:
             pub.sendMessage("POPUP_MSG", msg=self.lang.PRE_CODE_RADIOBUTTONS)
 
     def new_ulcer_view(self, label, entry_new_ulcer, combobox_old_ulcer):
+        """
+        Shows the widgets to collect a new ulcer's location.
+        Parameters
+        ----------
+        label : tkinter label
+           label to place text
+        entry_new_ulcer : tkinter entry
+            entry to collect text from user
+        combobox_old_ulcer : tkinter combobox
+            combobox to collect user's selection
+        """
         combobox_old_ulcer.pack_forget()
         label.pack(side=tk.LEFT, padx=10)
         entry_new_ulcer.pack(pady=10)
         self.code_option = 0
 
     def old_ulcer_view(self, label, entry_new_ulcer, combobox_old_ulcer):
+        """
+        Shows the widgets to collect an already existing ulcer's location.
+        Parameters
+        ----------
+        label : tkinter label
+           label to place text
+        entry_new_ulcer : tkinter entry
+            entry to collect text from user
+        combobox_old_ulcer : tkinter combobox
+            combobox to collect user's selection
+        """
         label.pack(side=tk.LEFT, padx=10)
         entry_new_ulcer.pack_forget()
         combobox_old_ulcer.pack(pady=5)
