@@ -60,6 +60,14 @@ class FileDataManager:
         self.id = None
         return
 
+    def load_data(self):
+        # try:
+        list = os.listdir(PATH_DATABASE_DIR)
+        pub.sendMessage("DATA_N_PACIENTS", patient_list=list)
+
+    # except:
+    # pub.sendMessage("DATA_FILES_KO")
+
     def save_data(self, metadata, img, new_patient, new_ulcer):
         """
         Calls functions to save the images and metadata
